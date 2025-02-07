@@ -10,8 +10,8 @@ import edu.ucsd.cse110.habitizer.lib.domain.Routine;
 import edu.ucsd.cse110.habitizer.lib.domain.Task;
 
 public class InMemoryDataSource {
-    private int nextRoutineId = 3;      // Starts after default routines
-    private int nextTaskId = 14;         // Start after default tasks
+    private int nextRoutineId = 3;  // Start after default routines
+    private int nextTaskId = 14;    // Start after default tasks
 
     private final Map<Integer, Routine> routines = new HashMap<>();
     private final Map<Integer, Task> tasks = new HashMap<>();
@@ -20,14 +20,13 @@ public class InMemoryDataSource {
         loadDefaultData();
     }
 
-    // Default routines and tasks using static list
-    public final static List<Routine> DEFAULT_ROUTINES = List.of(
+    // Default routines and tasks using static lists
+    public static final List<Routine> DEFAULT_ROUTINES = List.of(
             new Routine(1, "Morning"),
             new Routine(2, "Evening")
     );
 
     public static final List<Task> DEFAULT_TASKS = List.of(
-            // Morning
             new Task(1, "Shower"),
             new Task(2, "Brush teeth"),
             new Task(3, "Dress"),
@@ -35,14 +34,12 @@ public class InMemoryDataSource {
             new Task(5, "Make lunch"),
             new Task(6, "Dinner prep"),
             new Task(7, "Pack bag"),
-            // Evening
             new Task(8, "Charge devices"),
             new Task(9, "Make dinner"),
             new Task(10, "Eat dinner"),
             new Task(11, "Wash dishes"),
             new Task(12, "Pack bag for morning"),
             new Task(13, "Homework")
-            // Add jammies and brush teeth?
     );
 
     public void loadDefaultData() {
@@ -54,21 +51,21 @@ public class InMemoryDataSource {
             addRoutine(routine);
         }
 
-        // assign tasks to routines
-        routines.get(1).addTask(1);
-        routines.get(1).addTask(2);
-        routines.get(1).addTask(3);
-        routines.get(1).addTask(4);
-        routines.get(1).addTask(5);
-        routines.get(1).addTask(6);
-        routines.get(1).addTask(7);
+        // Assign task objects to routines
+        addTaskToRoutine(1, 1);  // Morning Routine
+        addTaskToRoutine(1, 2);
+        addTaskToRoutine(1, 3);
+        addTaskToRoutine(1, 4);
+        addTaskToRoutine(1, 5);
+        addTaskToRoutine(1, 6);
+        addTaskToRoutine(1, 7);
 
-        routines.get(2).addTask(8);
-        routines.get(2).addTask(9);
-        routines.get(2).addTask(10);
-        routines.get(2).addTask(11);
-        routines.get(2).addTask(12);
-        routines.get(2).addTask(13);
+        addTaskToRoutine(2, 8);  // Evening Routine
+        addTaskToRoutine(2, 9);
+        addTaskToRoutine(2, 10);
+        addTaskToRoutine(2, 11);
+        addTaskToRoutine(2, 12);
+        addTaskToRoutine(2, 13);
     }
 
     public List<Routine> getAllRoutines() {
@@ -87,13 +84,34 @@ public class InMemoryDataSource {
         return tasks.get(taskId);
     }
 
+    // Get all tasks for a specific routine
+    public List<Task> getTasksForRoutine(int routineId) {
+        Routine routine = getRoutineById(routineId);
+        if (routine == null) return List.of();
+        return routine.getTasks();
+    }
+
     public void addRoutine(Routine routine) {
-        routine = new Routine(nextRoutineId++, routine.getName());
+        if (routine.id() == 0) {
+            routine = new Routine(nextRoutineId++, routine.getName());
+        }
         routines.put(routine.id(), routine);
     }
 
     public void addTask(Task task) {
-        task = new Task(nextTaskId++, task.title());
+        if (task.id() == 0) {
+            task = new Task(nextTaskId++, task.title());
+        }
         tasks.put(task.id(), task);
+    }
+
+    // Adds task object to routine
+    public void addTaskToRoutine(int routineId, int taskId) {
+        Routine routine = getRoutineById(routineId);
+        Task task = getTaskById(taskId);
+
+        if (routine != null && task != null) {
+            routine.addTask(task);
+        }
     }
 }

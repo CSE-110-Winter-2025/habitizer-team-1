@@ -10,12 +10,12 @@ import java.util.List;
 public class Routine implements Serializable {
     private @Nullable Integer id;
     private @NonNull String name;
-    private List<Integer> taskIds;          // Store task ids instead of task objects
+    private List<Task> tasks;          // Store task ids instead of task objects
 
-    public Routine (int id, String name) {
+    public Routine (int id, @NonNull String name) {
         this.id = id;
         this.name = name;
-        this.taskIds = new ArrayList<Integer>();
+        this.tasks = new ArrayList<Task>();
     }
 
     public @Nullable Integer id() {
@@ -26,12 +26,12 @@ public class Routine implements Serializable {
         return name;
     }
 
-    public void addTask(int task) {
-        taskIds.add(task);
+    public void addTask(Task task) {
+        tasks.add(task);
     }
 
-    public List<Integer> getTaskIds() {
-        return taskIds;                     // Returns task IDs
+    public List<Task> getTasks() {
+        return tasks;                     // Returns task object list
     }
 
 }

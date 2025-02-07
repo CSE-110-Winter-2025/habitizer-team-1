@@ -11,40 +11,47 @@ import java.util.Optional;
 
 public class RoutineTest {
     private Routine routine;
+    private Task task1, task2, task3;
 
     @Before
     public void setUp() {
         routine = new Routine(1, "Morning Routine");
+        task1 = new Task(101, "Wake up");
+        task2 = new Task(102, "Brush Teeth");
+        task3 = new Task(103, "Eat Breakfast");
     }
 
     @Test
     public void testRoutineInitialization() {
         assertNotNull(routine);
-        assertEquals(Integer.valueOf(1), routine.id());
+        assertEquals(0, routine.getTasks().size());
         assertEquals("Morning Routine", routine.getName());
-        assertTrue(routine.getTaskIds().isEmpty()); // Routine should start with no tasks
+        assertTrue(routine.getTasks().isEmpty()); // Routine should start with no tasks
     }
 
     @Test
     public void testAddTask() {
-        routine.addTask(101); // Adding a task ID
+        routine.addTask(task1); // Adding a Task object
 
-        List<Integer> taskIds = routine.getTaskIds();
-        assertEquals(1, taskIds.size());
-        assertEquals(Integer.valueOf(101), taskIds.get(0));
+        List<Task> tasks = routine.getTasks();
+        assertEquals(1, tasks.size());
+        assertEquals(task1, tasks.get(0)); // Check if the correct Task is stored
     }
 
     @Test
-    public void testMultipleTasks() {
-        routine.addTask(101);
-        routine.addTask(102);
-        routine.addTask(103);
+    public void testAddMultipleTasks() {
+        routine.addTask(task1);
+        routine.addTask(task2);
+        routine.addTask(task3);
 
-        List<Integer> taskIds = routine.getTaskIds();
-        assertEquals(3, taskIds.size());
-        assertEquals(Integer.valueOf(101), taskIds.get(0));
-        assertEquals(Integer.valueOf(102), taskIds.get(1));
-        assertEquals(Integer.valueOf(103), taskIds.get(2));
+        List<Task> tasks = routine.getTasks();
+        assertEquals(3, tasks.size());
+        assertEquals(task1, tasks.get(0));
+        assertEquals(task2, tasks.get(1));
+        assertEquals(task3, tasks.get(2));
     }
+
+    
+
 }
 

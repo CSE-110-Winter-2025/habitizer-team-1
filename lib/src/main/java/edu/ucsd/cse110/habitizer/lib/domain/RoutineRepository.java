@@ -17,27 +17,23 @@ public class RoutineRepository {
         return dataSource.getAllRoutines();
     }
 
-    public List<Task> getTasksForRoutine(int routineId) {
+    // gets task objects from routine
+    public List<Task> getRoutineTasks(int routineId) {
         Routine routine = getRoutineById(routineId);
         if (routine == null) return List.of();
-
-        return routine.getTaskIds().stream()
-                .map(dataSource::getTaskById)
-                .collect(Collectors.toList());
+        return routine.getTasks();
     }
 
     public Routine getRoutineById(int routineId) {
-        return dataSource.getAllRoutines().stream()
-                .filter(routine -> routine.id() == routineId)
-                .findFirst()
-                .orElse(null);
+        return dataSource.getRoutineById(routineId);
     }
 
+    // adds task objects to routine
     public void addTaskToRoutine(int routineId, Task task) {
-        dataSource.addTask(task);  // Save the new task
+        dataSource.addTask(task);
         Routine routine = getRoutineById(routineId);
         if (routine != null) {
-            routine.addTask(task.id()); // Add task ID to routine
+            routine.addTask(task);
         }
     }
 }
