@@ -20,7 +20,7 @@ public class InMemoryDataSource {
         loadDefaultData();
     }
 
-    // Default routines and tasks using static lists
+    // Default routines and tasks using lists
     public static final List<Routine> DEFAULT_ROUTINES = List.of(
             new Routine(1, "Morning"),
             new Routine(2, "Evening")
@@ -42,13 +42,14 @@ public class InMemoryDataSource {
             new Task(13, "Homework")
     );
 
+    // load default data
     public void loadDefaultData() {
         for (Task task : DEFAULT_TASKS) {
-            addTask(task);
+            tasks.put(task.id(), task);
         }
 
         for (Routine routine : DEFAULT_ROUTINES) {
-            addRoutine(routine);
+            routines.put(routine.id(), routine);
         }
 
         // Assign task objects to routines
@@ -68,49 +69,58 @@ public class InMemoryDataSource {
         addTaskToRoutine(2, 13);
     }
 
+    // returns all the current routines stored
     public List<Routine> getAllRoutines() {
         return new ArrayList<>(routines.values());
     }
 
+    // returns all tasks in all routines
     public List<Task> getAllTasks() {
         return new ArrayList<>(tasks.values());
     }
 
+    // return routine object from its id
     public Routine getRoutineById(int routineId) {
         return routines.get(routineId);
     }
 
+    // return task object from its id
     public Task getTaskById(int taskId) {
         return tasks.get(taskId);
     }
 
-    // Get all tasks for a specific routine
-    public List<Task> getTasksForRoutine(int routineId) {
+    // get all tasks for a specific routine using the routine's id
+    public List<Task> getRoutineTasks(int routineId) {
         Routine routine = getRoutineById(routineId);
         if (routine == null) return List.of();
         return routine.getTasks();
     }
 
+    // add routine to list of routines
     public void addRoutine(Routine routine) {
+        // prevents duplicates, a routine w/o an id defaults to 0, so create new object
         if (routine.id() == 0) {
             routine = new Routine(nextRoutineId++, routine.getName());
         }
         routines.put(routine.id(), routine);
     }
 
+    // adds task to list of all tasks
     public void addTask(Task task) {
+        // prevents duplicates, a task w/o an id defaults to 0, so create new object
         if (task.id() == 0) {
             task = new Task(nextTaskId++, task.title());
         }
         tasks.put(task.id(), task);
     }
 
-    // Adds task object to routine
+    // Adds task object to routine using their ids
     public void addTaskToRoutine(int routineId, int taskId) {
         Routine routine = getRoutineById(routineId);
         Task task = getTaskById(taskId);
 
-        if (routine != null && task != null) {
+        // no null or duplicates
+        if (routine != null && task != null && !tasks.containsKey(task)) {
             routine.addTask(task);
         }
     }
