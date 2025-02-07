@@ -15,7 +15,7 @@ public class Routine implements Serializable {
     public Routine (int id, String name) {
         this.id = id;
         this.name = name;
-        this.tasksIds = new ArrayList<>();
+        this.taskIds = new ArrayList<Integer>();
     }
 
     public @Nullable Integer id() {
@@ -26,8 +26,8 @@ public class Routine implements Serializable {
         return name;
     }
 
-    public void addTask(int taskid) {
-        tasksIds.add(taskId);
+    public void addTask(int task) {
+        taskIds.add(task);
     }
 
     public List<Integer> getTaskIds() {

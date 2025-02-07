@@ -20,7 +20,7 @@ public class RoutineTest {
     @Test
     public void testRoutineInitialization() {
         assertNotNull(routine);
-        assertEquals(Optional.of(1), routine.id());
+        assertEquals(Integer.valueOf(1), routine.id());
         assertEquals("Morning Routine", routine.getName());
         assertTrue(routine.getTaskIds().isEmpty()); // Routine should start with no tasks
     }
