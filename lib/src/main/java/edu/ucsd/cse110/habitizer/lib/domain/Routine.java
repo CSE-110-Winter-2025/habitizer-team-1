@@ -10,7 +10,7 @@ import java.util.List;
 public class Routine implements Serializable {
     private @Nullable Integer id;
     private @NonNull String name;
-    private List<Task> tasks;          // Store task ids instead of task objects
+    private List<Task> tasks;          // store task objects
 
     public Routine (int id, @NonNull String name) {
         this.id = id;
