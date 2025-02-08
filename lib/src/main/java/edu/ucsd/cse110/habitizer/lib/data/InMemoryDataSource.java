@@ -9,83 +9,73 @@ import edu.ucsd.cse110.habitizer.lib.domain.Routine;
 import edu.ucsd.cse110.habitizer.lib.domain.Task;
 
 public class InMemoryDataSource {
-    private int nextRoutineId = 3;  // Start after default routines
-    private int nextTaskId = 14;    // Start after default tasks
+    private int nextRoutineId = 2;  // Start after default routines - index 0 based
+    private int nextTaskId = 13;    // Start after default tasks - index 0 based
 
-    private final Map<Integer, Routine> routines = new HashMap<>();
-    private final Map<Integer, Task> tasks = new HashMap<>();
+    private final ArrayList<Routine> routines = new ArrayList<>();
+    private final ArrayList<Task> tasks = new ArrayList<>();
 
+    // When create the data source, load the default routines and tasks
     public InMemoryDataSource() {
         loadDefaultData();
     }
 
-    // Default routines and tasks using lists
-    public static final List<Routine> DEFAULT_ROUTINES = List.of(
-            new Routine(1, "Morning"),
-            new Routine(2, "Evening")
-    );
-
-    public static final List<Task> DEFAULT_TASKS = List.of(
-            new Task(1, "Shower"),
-            new Task(2, "Brush teeth"),
-            new Task(3, "Dress"),
-            new Task(4, "Make coffee"),
-            new Task(5, "Make lunch"),
-            new Task(6, "Dinner prep"),
-            new Task(7, "Pack bag"),
-            new Task(8, "Charge devices"),
-            new Task(9, "Make dinner"),
-            new Task(10, "Eat dinner"),
-            new Task(11, "Wash dishes"),
-            new Task(12, "Pack bag for morning"),
-            new Task(13, "Homework")
-    );
-
     // load default data
     public void loadDefaultData() {
-        for (Task task : DEFAULT_TASKS) {
-            tasks.put(task.id(), task);
-        }
+        // clear in case of duplicates
+        routines.clear();
+        tasks.clear();
 
-        for (Routine routine : DEFAULT_ROUTINES) {
-            routines.put(routine.id(), routine);
-        }
+        // add default tasks to tasks list
+        tasks.addAll(List.of(
+                new Task(0, "Shower"),
+                new Task(1, "Brush teeth"),
+                new Task(2, "Dress"),
+                new Task(3, "Make coffee"),
+                new Task(4, "Make lunch"),
+                new Task(5, "Dinner prep"),
+                new Task(6, "Pack bag"),
+                new Task(7, "Charge devices"),
+                new Task(8, "Make dinner"),
+                new Task(9, "Eat dinner"),
+                new Task(10, "Wash dishes"),
+                new Task(11, "Pack bag for morning"),
+                new Task(12, "Homework")
+        ));
 
-        // helps avoid duplicates when loading default data
+        // add default routines to routines list
+        routines.add(new Routine(0, "Morning"));
+        routines.add(new Routine(1, "Evening"));
+
+        // method to assign tasks to routines
         assignDefaultTasks();
     }
 
     // used to assign the default tasks to routines
     private void assignDefaultTasks() {
         // Clear existing tasks to prevent duplicates
+        routines.get(0).getTasks().clear();
         routines.get(1).getTasks().clear();
-        routines.get(2).getTasks().clear();
 
+        // first 7 tasks (ids 0-6) are morning routine
+        for (int i = 0; i < 7; i++) {
+            routines.get(0).addTask(getTaskById(i));
+        }
 
-        addTaskToRoutine(1, 1);  // Morning Routine
-        addTaskToRoutine(1, 2);
-        addTaskToRoutine(1, 3);
-        addTaskToRoutine(1, 4);
-        addTaskToRoutine(1, 5);
-        addTaskToRoutine(1, 6);
-        addTaskToRoutine(1, 7);
-
-        addTaskToRoutine(2, 8);  // Evening Routine
-        addTaskToRoutine(2, 9);
-        addTaskToRoutine(2, 10);
-        addTaskToRoutine(2, 11);
-        addTaskToRoutine(2, 12);
-        addTaskToRoutine(2, 13);
+        // task ids 7-12 are evening routine
+        for (int i = 7; i < 13; i++) {
+            routines.get(1).addTask(getTaskById(i));
+        }
     }
 
     // returns all the current routines stored
-    public List<Routine> getAllRoutines() {
-        return new ArrayList<>(routines.values());
+    public List<Routine> getRoutines() {
+        return new ArrayList<>(routines);
     }
 
     // returns all tasks in all routines
-    public List<Task> getAllTasks() {
-        return new ArrayList<>(tasks.values());
+    public List<Task> getTasks() {
+        return new ArrayList<>(tasks);
     }
 
     // return routine object from its id
@@ -107,29 +97,20 @@ public class InMemoryDataSource {
 
     // add routine to list of routines
     public void addRoutine(Routine routine) {
-        // prevents duplicates, a routine w/o an id defaults to 0, so create new object
-        if (routine.id() == 0) {
-            routine = new Routine(nextRoutineId++, routine.getName());
-        }
-        routines.put(routine.id(), routine);
+        routines.add(new Routine(nextRoutineId++, routine.getName()));
     }
 
     // adds task to list of all tasks
     public void addTask(Task task) {
-        // prevents duplicates, a task w/o an id defaults to 0, so create new object
-        if (task.id() == 0) {
-            task = new Task(nextTaskId++, task.title());
-        }
-        tasks.put(task.id(), task);
+        tasks.add(new Task(nextTaskId++, task.title()));
     }
 
     // Adds task object to routine using their ids
-    public void addTaskToRoutine(int routineId, int taskId) {
+    public void addTaskToRoutine(int routineId, Task task) {
         Routine routine = getRoutineById(routineId);
-        Task task = getTaskById(taskId);
 
         // no null or duplicates
-        if (routine != null && task != null && !tasks.containsKey(task)) {
+        if (routine != null && task != null && !tasks.contains(task)) {
             routine.addTask(task);
         }
     }

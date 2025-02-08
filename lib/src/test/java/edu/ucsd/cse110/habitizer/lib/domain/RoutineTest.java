@@ -50,8 +50,5 @@ public class RoutineTest {
         assertEquals(task2, tasks.get(1));
         assertEquals(task3, tasks.get(2));
     }
-
-
-
 }
 

@@ -13,8 +13,8 @@ public class RoutineRepository {
         this.dataSource = new InMemoryDataSource();
     }
 
-    public List<Routine> getAllRoutines() {
-        return dataSource.getAllRoutines();
+    public List<Routine> getRoutines() {
+        return dataSource.getRoutines();
     }
 
     // gets task objects from routine

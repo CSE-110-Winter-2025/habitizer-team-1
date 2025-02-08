@@ -10,7 +10,7 @@ import java.util.List;
 public class Routine implements Serializable {
     private @Nullable Integer id;
     private @NonNull String name;
-    private List<Task> tasks;          // store task objects
+    private List<Task> tasks;           // store task objects
 
     public Routine (int id, @NonNull String name) {
         this.id = id;
@@ -33,5 +33,4 @@ public class Routine implements Serializable {
     public List<Task> getTasks() {
         return tasks;                     // Returns task object list
     }
-
 }
