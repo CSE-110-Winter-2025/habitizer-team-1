@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 import edu.ucsd.cse110.habitizer.lib.domain.Routine;
 import edu.ucsd.cse110.habitizer.lib.domain.Task;
@@ -52,7 +51,17 @@ public class InMemoryDataSource {
             routines.put(routine.id(), routine);
         }
 
-        // Assign task objects to routines
+        // helps avoid duplicates when loading default data
+        assignDefaultTasks();
+    }
+
+    // used to assign the default tasks to routines
+    private void assignDefaultTasks() {
+        // Clear existing tasks to prevent duplicates
+        routines.get(1).getTasks().clear();
+        routines.get(2).getTasks().clear();
+
+
         addTaskToRoutine(1, 1);  // Morning Routine
         addTaskToRoutine(1, 2);
         addTaskToRoutine(1, 3);
