@@ -23,12 +23,24 @@ public class InMemoryDataSourceTest {
         assertEquals(2, routines.size()); // Morning and Evening routines
         assertEquals("Morning", routines.get(0).getName());
         assertEquals("Evening", routines.get(1).getName());
+
+        // check ids of evening routine
+        List<Task> tasks = dataSource.getRoutineTasks(1);
+        assertEquals("Charge devices", tasks.get(0).title());
+        assertEquals((Integer) 7, tasks.get(0).id());
+        assertEquals("Make dinner", tasks.get(1).title());
+
+        assertEquals("Eat dinner", tasks.get(2).title());
+        assertEquals("Wash dishes", tasks.get(3).title());
+        assertEquals("Pack bag for morning", tasks.get(4).title());
+        assertEquals("Homework", tasks.get(5).title());
     }
 
     @Test
     public void testDefaultTasksLoaded() {
         List<Task> tasks = dataSource.getTasks();
         assertEquals(13, tasks.size()); // Should match the number of predefined tasks
+
     }
 
     @Test
@@ -56,23 +68,55 @@ public class InMemoryDataSourceTest {
 
     @Test
     public void testAddTaskToRoutine() {
-        Task newTask = new Task(15, "Exercise");
+        // add task by adding it to data source first
+        Task newTask = new Task(25, "Exercise");
         dataSource.addTask(newTask);
-        dataSource.addTaskToRoutine(1, newTask); // Add to Morning Routine
+        dataSource.addTaskToRoutine(1, newTask); // Add to Evening Routine
 
         List<Task> tasks = dataSource.getRoutineTasks(1);
         assertTrue(tasks.contains(newTask));
+
+        // add task without adding it to data source
+        Task newTask2 = new Task(15, "Brush Teeth");
+        dataSource.addTaskToRoutine(1, newTask2); // Add to Evening Routine
+        assertTrue(tasks.contains(newTask2));
+
+
+        // Check correct task order with new task
+        assertEquals("Charge devices", tasks.get(0).title());
+        assertEquals("Make dinner", tasks.get(1).title());
+        assertEquals("Eat dinner", tasks.get(2).title());
+        assertEquals("Wash dishes", tasks.get(3).title());
+        assertEquals("Pack bag for morning", tasks.get(4).title());
+        assertEquals("Homework", tasks.get(5).title());
+        assertEquals("Exercise", tasks.get(6).title());
+        assertEquals("Brush Teeth", tasks.get(7).title());
+        assertEquals((Integer) 25, tasks.get(6).id());
+        assertEquals("Exercise", dataSource.getTaskById(25).title());
+    }
+
+    @Test
+    public void testAddTaskToRoutineWithNull() {
+        // add task by adding it to data source first
+        Task newTask = new Task(null, "Exercise");
+        newTask = dataSource.addTask(newTask);
+        dataSource.addTaskToRoutine(1, newTask); // Add to Evening Routine
+
+        List<Task> tasks = dataSource.getRoutineTasks(1);
+        assertTrue(tasks.contains(newTask));
+
+        assertEquals("Exercise", tasks.get(6).title());
+        assertEquals((Integer) 13, tasks.get(6).id());
     }
 
     @Test
     public void testGetRoutines() {
         List<Routine> routines = dataSource.getRoutines();
-        assertEquals(routines.get(0).getName(), "Morning");
-        assertEquals(routines.get(0).id(), (Integer) 0);
+        assertEquals("Morning", routines.get(0).getName());
+        assertEquals((Integer) 0, routines.get(0).id());
 
-        assertEquals(routines.get(1).getName(), "Evening");
-        assertEquals(routines.get(1).id(), (Integer) 1);
+        assertEquals("Evening", routines.get(1).getName());
+        assertEquals((Integer) 1, routines.get(1).id());
     }
-
     
 }

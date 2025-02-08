@@ -33,4 +33,9 @@ public class Routine implements Serializable {
     public List<Task> getTasks() {
         return tasks;                     // Returns task object list
     }
+
+    // creates routine with a new id - used in InMemoryDataSource to avoid duplicate ids
+    public Routine withId(int id) {
+        return new Routine(id, this.name);
+    }
 }

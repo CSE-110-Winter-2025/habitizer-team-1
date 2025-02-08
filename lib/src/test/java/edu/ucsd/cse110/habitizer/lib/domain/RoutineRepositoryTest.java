@@ -28,30 +28,29 @@ public class RoutineRepositoryTest {
     @Test
     public void testGetRoutineTasks() {
         repository = new RoutineRepository();
-        List<Task> tasks = repository.getRoutineTasks(1); // Morning routine
+        List<Task> tasks = repository.getRoutineTasks(0); // Morning routine
         assertNotNull(tasks);
         assertEquals(7, tasks.size()); // Morning routine should have 7 tasks
     }
 
     @Test
     public void testAddTaskToRoutine() {
-        Task newTask = new Task(14, "Read a book");
-        repository.addTaskToRoutine(1, newTask); // Add to Morning Routine
+        Task newTask = new Task(13, "Read a book");
+        repository.addTaskToRoutine(0, newTask); // Add to Morning Routine
 
-        List<Task> tasks = repository.getRoutineTasks(1);
+        List<Task> tasks = repository.getRoutineTasks(0);
         assertTrue(tasks.contains(newTask));
         assertEquals(8, tasks.size()); // Morning routine should now have 8 tasks
     }
 
     @Test
     public void testRetrieveUpdatedRoutineTasks() {
-        Task newTask = new Task(15, "Stretch");
-        repository.addTaskToRoutine(1, newTask); // Add to Morning Routine
+        Task newTask = new Task(13, "Stretch");
+        repository.addTaskToRoutine(1, newTask); // Add to Evening Routine
 
         Routine routine = repository.getRoutineById(1);
         assertNotNull(routine);
         assertTrue(routine.getTasks().contains(newTask));
-        assertEquals(8, routine.getTasks().size()); // Ensure task count increased
+        assertEquals(7, routine.getTasks().size()); // Ensure task count increased
     }
-
 }
