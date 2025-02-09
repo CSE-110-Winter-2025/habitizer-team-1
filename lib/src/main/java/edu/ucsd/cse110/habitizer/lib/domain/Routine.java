@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Routine implements Serializable {
-    private @Nullable Integer id;
+    private final @Nullable Integer id;
     private @NonNull String name;
     private List<Task> tasks;           // store task objects
 
