@@ -50,5 +50,20 @@ public class RoutineTest {
         assertEquals(task2, tasks.get(1));
         assertEquals(task3, tasks.get(2));
     }
+
+    @Test
+    public void testRoutineStartsTimer() {
+        routine.startRoutine();
+        assertTrue(routine.getTotalTime() >= 0);
+    }
+
+    @Test
+    public void testRoutineCompletesWhenAllTasksAreDone() {
+        routine.startRoutine();
+        task1.setComplete(true);
+        task2.setComplete(true);
+
+        assertEquals(0, routine.getTotalTime());  // Should stop automatically
+    }
 }
 
