@@ -14,5 +14,4 @@ dependencies {
 
     testImplementation(libs.junit4)
     testImplementation(libs.hamcrest)
-    testImplementation(libs.mockito.core)
 }
