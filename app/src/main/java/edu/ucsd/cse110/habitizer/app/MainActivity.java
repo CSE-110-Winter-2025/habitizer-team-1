@@ -8,7 +8,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
-import edu.ucsd.cse110.habitizer.app.ui.task.TaskFragment;
+import edu.ucsd.cse110.habitizer.app.ui.routine.RoutineListFragment;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -18,7 +18,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         if (savedInstanceState == null) {
-            loadFragment(new TaskFragment());
+            loadFragment(new RoutineListFragment());
         }
     }
 

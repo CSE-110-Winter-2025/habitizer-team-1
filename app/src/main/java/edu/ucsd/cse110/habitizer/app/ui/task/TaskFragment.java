@@ -24,26 +24,13 @@ public class TaskFragment extends Fragment {
     private Routine routine;
     private TaskViewAdapter taskAdapter;
 
-    public TaskFragment() {
-
+    public TaskFragment(Routine routine) {
+        this.routine = routine;
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_task, container, false);
-
-        // Testing values
-        routine = new Routine(1, "Morning");
-        routine.addTasks(List.of(
-                // Morning
-                new Task(1, "Shower"),
-                new Task(2, "Brush teeth"),
-                new Task(3, "Dress"),
-                new Task(4, "Make coffee"),
-                new Task(5, "Make lunch"),
-                new Task(6, "Dinner prep"),
-                new Task(7, "Pack bag")
-        ));
 
         TextView routineName = view.findViewById(R.id.routineName);
         TextView time = view.findViewById(R.id.timeRemaining);
@@ -72,7 +59,9 @@ public class TaskFragment extends Fragment {
         tasks.setLayoutManager(new LinearLayoutManager(getActivity()));
         tasks.setAdapter(taskAdapter);
 
-        backButton.setOnClickListener(v -> {}); // US2
+        backButton.setOnClickListener(v -> {
+            requireActivity().getSupportFragmentManager().popBackStack();
+        }); // US2
         endRoutineButton.setOnClickListener(v -> {});
 
         time.setText("0 minutes"); // Placeholder
