@@ -5,6 +5,7 @@ import androidx.annotation.Nullable;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 public class Routine implements Serializable {
@@ -28,6 +29,10 @@ public class Routine implements Serializable {
 
     public void addTask(Task task) {
         tasks.add(task);
+    }
+
+    public void addTasks(Collection<Task> tasks) {
+        this.tasks.addAll(tasks);
     }
 
     public List<Task> getTasks() {
