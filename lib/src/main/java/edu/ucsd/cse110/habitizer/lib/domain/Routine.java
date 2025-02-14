@@ -5,6 +5,7 @@ import androidx.annotation.Nullable;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 public class Routine implements Serializable {
@@ -33,6 +34,10 @@ public class Routine implements Serializable {
         tasks.add(task);
     }
 
+    public void addTasks(Collection<Task> tasks) {
+        this.tasks.addAll(tasks);
+    }
+
     public List<Task> getTasks() {
         return tasks;                     // Returns task object list
     }
@@ -41,12 +46,13 @@ public class Routine implements Serializable {
         return totalTimer;
     }
 
+
     // creates routine with a new id - used in InMemoryDataSource to avoid duplicate ids
-    public Routine withId(int id) {
+    public Routine withId ( int id){
         return new Routine(id, this.name);
     }
 
-    public void startRoutine() {
+    public void startRoutine () {
         totalTimer.start();
     }
 
@@ -70,3 +76,4 @@ public class Routine implements Serializable {
 
 
 }
+

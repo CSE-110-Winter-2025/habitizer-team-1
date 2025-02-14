@@ -34,14 +34,6 @@ public class TaskFragment extends Fragment {
 
         // Testing values
         routine = new Routine(1, "Morning");
-        routine.addTask(new Task(1, "Shower"));
-        routine.addTask(new Task(2, "Brush teeth"));
-        routine.addTask(new Task(3, "Dress"));
-        routine.addTask(new Task(4, "Make coffee"));
-        routine.addTask(new Task(5, "Make lunch"));
-        routine.addTask(new Task(6, "Dinner prep"));
-        routine.addTask(new Task(7, "Pack bag"));
-
 
         TextView routineName = view.findViewById(R.id.routineName);
         TextView time = view.findViewById(R.id.timeRemaining);
