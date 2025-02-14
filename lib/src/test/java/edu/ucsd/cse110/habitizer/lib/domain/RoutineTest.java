@@ -54,7 +54,7 @@ public class RoutineTest {
     @Test
     public void testRoutineStartsTimer() {
         routine.startRoutine();
-        assertTrue(routine.getTotalTime() >= 0);
+        assertTrue(routine.getTotalTimer().getSecondsElapsed() >= 0);
     }
 
     @Test
@@ -63,7 +63,7 @@ public class RoutineTest {
         task1.setComplete(true);
         task2.setComplete(true);
 
-        assertEquals(0, routine.getTotalTime());  // Should stop automatically
+        assertEquals(0, routine.getTotalTimer().getSecondsElapsed());  // Should stop automatically
     }
 }
 

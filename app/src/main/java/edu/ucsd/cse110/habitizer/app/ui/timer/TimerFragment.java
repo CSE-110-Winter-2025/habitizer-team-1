@@ -34,7 +34,7 @@ public class TimerFragment extends Fragment {
 
         // Initialize routine (dummy routine for now)
         routine = new Routine(1, "Morning Routine");
-        routine.startRoutine();
+
 
         // Update to match new listener method with formatted time
         routine.getTotalTimer().setListener(new TotalTimer.TimerListener() {
@@ -49,8 +49,8 @@ public class TimerFragment extends Fragment {
             }
         });
 
-        startRoutineButton.setOnClickListener(v -> routine.startRoutine());
-        endRoutineButton.setOnClickListener(v -> routine.endRoutine());
+        startRoutineButton.setOnClickListener(v -> routine.getTotalTimer().start());
+        endRoutineButton.setOnClickListener(v -> routine.getTotalTimer().stop());
 
         return view;
     }

@@ -46,7 +46,7 @@ public class TotalTimer {
                         listener.onTick(secondsElapsed, formatTime(secondsElapsed));
                     }
 
-                    checkTasksCompleted();
+                    routine.checkTasksCompleted();
                 }
             }
         }, 1000, 1000); // Start after 1 second, repeat every 1 second
@@ -102,20 +102,8 @@ public class TotalTimer {
         this.listener = listener;
     }
 
-    /**
-     * Checks whether all tasks in the routine are completed.
-     * If all tasks are done, the timer is stopped, and the listener is notified.
-     */
-    private void checkTasksCompleted() {
-        List<Task> tasks = routine.getTasks();
-
-        if (!tasks.isEmpty() && tasks.stream().allMatch(Task::complete)) {
-            stop(); // Stop the timer first
-
-            if (listener != null) {
-                listener.onRoutineCompleted(secondsElapsed, formatTime(secondsElapsed));
-            }
-        }
+    public synchronized TimerListener getListener() {
+        return listener;
     }
 
 
