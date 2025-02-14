@@ -3,6 +3,9 @@ package edu.ucsd.cse110.habitizer.lib.domain;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+
 import java.io.Serializable;
 import java.util.Objects;
 
@@ -12,10 +15,13 @@ public class Task implements Serializable {
 
     private @NonNull Boolean complete;
 
+    private @Nullable String completionTime;
+
     public Task(@NonNull Integer id, @NonNull String title){
         this.id = id;
         this.title = title;
         this.complete = false; // default creating a task sets it to false
+        this.completionTime = null;
     }
 
     public @Nullable Integer id() {
@@ -46,11 +52,29 @@ public class Task implements Serializable {
     }
 
     // allows you to custom set complete
+    /*
     public void setComplete(@NonNull Boolean complete) {
         this.complete = complete;
+    }
+     */
+
+    public void setComplete(@NonNull Boolean complete) {
+        this.complete = complete;
+        if (complete) {
+            this.completionTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss"));
+        } else {
+            this.completionTime = null;
+        }
+    }
+
+    public @Nullable String getCompletionTime() {
+        return completionTime;
     }
 
     public Task withId(int id) {
         return new Task(id, this.title);
     }
+
+
+
 }

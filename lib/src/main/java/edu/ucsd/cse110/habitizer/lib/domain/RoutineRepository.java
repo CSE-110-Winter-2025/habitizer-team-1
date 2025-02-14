@@ -8,9 +8,11 @@ import java.util.stream.Collectors;
 
 public class RoutineRepository {
     private final InMemoryDataSource dataSource;
+    private final LapTimer lapTimer;
 
     public RoutineRepository() {
         this.dataSource = new InMemoryDataSource();
+        this.lapTimer = new LapTimer();
     }
 
     public List<Routine> getRoutines() {
@@ -36,5 +38,19 @@ public class RoutineRepository {
             routine.addTask(task);
         }
     }
+
+    public void markTaskComplete(int taskId) {
+        Task task = dataSource.getTaskById(taskId);
+        if (task != null && !task.complete()) {
+            task.setComplete(true);
+            lapTimer.recordLap();
+        }
+    }
+
+    public List<String> getLapTimes() {
+        return lapTimer.getLapTimes();
+    }
+
+
 }
 
