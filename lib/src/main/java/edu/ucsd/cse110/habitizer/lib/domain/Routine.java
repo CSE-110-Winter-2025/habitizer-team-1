@@ -6,6 +6,7 @@ import androidx.annotation.Nullable;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 public class Routine implements Serializable {
     private final @Nullable Integer id;
