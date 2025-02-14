@@ -49,4 +49,8 @@ public class Task implements Serializable {
     public void setComplete(@NonNull Boolean complete) {
         this.complete = complete;
     }
+
+    public Task withId(int id) {
+        return new Task(id, this.title);
+    }
 }
