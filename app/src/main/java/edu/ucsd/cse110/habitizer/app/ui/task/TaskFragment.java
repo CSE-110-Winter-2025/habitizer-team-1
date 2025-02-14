@@ -15,7 +15,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
-import java.util.Locale;
 
 import edu.ucsd.cse110.habitizer.app.R;
 import edu.ucsd.cse110.habitizer.lib.domain.Routine;
@@ -35,7 +34,6 @@ public class TaskFragment extends Fragment {
 
         // Testing values
         routine = new Routine(1, "Morning");
-        routine.startRoutine();
         routine.addTasks(List.of(
                 // Morning
                 new Task(1, "Shower"),
@@ -75,9 +73,9 @@ public class TaskFragment extends Fragment {
         tasks.setAdapter(taskAdapter);
 
         backButton.setOnClickListener(v -> {}); // US2
-        endRoutineButton.setOnClickListener(v -> routine.endRoutine());
+        endRoutineButton.setOnClickListener(v -> {});
 
-        time.setText(String.format(Locale.ENGLISH, "%d minutes", routine.getTotalTime() / 60)); // Display time in minutes
+        time.setText("0 minutes"); // Placeholder
         return view;
     }
 }

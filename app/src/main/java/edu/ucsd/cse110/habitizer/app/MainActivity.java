@@ -9,7 +9,6 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import edu.ucsd.cse110.habitizer.app.ui.task.TaskFragment;
-import edu.ucsd.cse110.habitizer.app.ui.timer.TimerFragment;
 
 public class MainActivity extends AppCompatActivity {
 
