@@ -47,7 +47,7 @@ public class TaskFragment extends Fragment {
 
         repository = ((HabitizerApplication) requireActivity().getApplication()).getRoutineRepository();
 
-        // Retrieve the routine passed in, then get the repository's routine instance
+        // Retrieve the routine passed in, get the repository's routine instance
         if (getArguments() != null) {
             Routine passed = (Routine) getArguments().getSerializable("routine");
             routine = repository.getRoutineById(passed.id());
