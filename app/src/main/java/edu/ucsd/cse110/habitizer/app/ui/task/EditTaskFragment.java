@@ -20,16 +20,16 @@ import edu.ucsd.cse110.habitizer.app.R;
 import edu.ucsd.cse110.habitizer.lib.domain.Routine;
 import edu.ucsd.cse110.habitizer.lib.domain.Task;
 
-public class TaskFragment extends Fragment {
+public class EditTaskFragment extends Fragment {
     private Routine routine;
     private TaskViewAdapter taskAdapter;
 
-    public TaskFragment(Routine routine) {
+    public EditTaskFragment(Routine routine) {
         this.routine = routine;
     }
 
-    public static TaskFragment newInstance(Routine routine) {
-        TaskFragment fragment = new TaskFragment(routine);
+    public static EditTaskFragment newInstance(Routine routine) {
+        EditTaskFragment fragment = new EditTaskFragment(routine);
         Bundle args = new Bundle();
         args.putSerializable("routine", routine);
         fragment.setArguments(args);
@@ -46,7 +46,7 @@ public class TaskFragment extends Fragment {
 
         routineName.setText(routine.getName());
 
-        taskAdapter = new TaskViewAdapter(routine.getTasks(), task -> markTaskComplete(task));
+        taskAdapter = new TaskViewAdapter(routine.getTasks(), task -> renameTask(task));
         tasks.setLayoutManager(new LinearLayoutManager(getActivity()));
         tasks.setAdapter(taskAdapter);
 
@@ -55,8 +55,20 @@ public class TaskFragment extends Fragment {
         return view;
     }
 
-    private void markTaskComplete(Task task) {
-        task.setComplete(true);
-        taskAdapter.notifyDataSetChanged();
+    private void renameTask(Task task) {
+        final EditText input = new EditText(getActivity());
+        input.setText(task.title());
+        input.setInputType(InputType.TYPE_CLASS_TEXT);
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setTitle("Rename Task")
+                .setMessage("Enter a new name for the task")
+                .setView(input)
+                .setPositiveButton("Rename", (dialog, id) -> {
+                    task.setTitle(input.getText().toString().trim());
+                    taskAdapter.notifyDataSetChanged();
+                })
+                .setNegativeButton("Cancel", null)
+                .show();
     }
 }

@@ -11,6 +11,7 @@ import androidx.fragment.app.Fragment;
 
 import edu.ucsd.cse110.habitizer.app.R;
 import edu.ucsd.cse110.habitizer.app.ui.task.TaskFragment;
+import edu.ucsd.cse110.habitizer.app.ui.task.EditTaskFragment;
 import edu.ucsd.cse110.habitizer.lib.domain.Routine;
 import edu.ucsd.cse110.habitizer.lib.domain.RoutineRepository;
 import android.app.AlertDialog;
@@ -24,7 +25,7 @@ public class RoutineListFragment extends Fragment {
     private LinearLayout buttonContainer;
     private Button editButton;
 
-    // State
+    // State - tracks edit mode
     private boolean isEditing = false;
 
     @Override
@@ -69,7 +70,7 @@ public class RoutineListFragment extends Fragment {
 
     private void toggleEditState(){
         this.isEditing = !this.isEditing;
-        editButton.setText(this.isEditing ? "Save" : "Edit");
+        editButton.setText(this.isEditing ? "Editing" : "Edit");
         renderRoutineButtons();
     }
     
@@ -88,24 +89,34 @@ public class RoutineListFragment extends Fragment {
             params.setMargins(0, 0, 0, 16);
             params.gravity = android.view.Gravity.CENTER;
             button.setLayoutParams(params);
-            
-            if (this.isEditing) {
-                button.setOnClickListener(v -> showRenameDialog(routine, button));
-            } else {
-                button.setOnClickListener(v -> {
-                    TaskFragment taskFragment = new TaskFragment(routine);
-                    requireActivity()
-                        .getSupportFragmentManager()
-                        .beginTransaction()
-                        .replace(R.id.fragment_container, taskFragment)
-                        .addToBackStack(null)
-                        .commit();
-                });
-            }
+
+
+            // Set OnClickListener so the fragment change occurs only on click
+            button.setOnClickListener(v -> {
+                if (isEditing) {
+                    // Open EditTaskFragment if in edit mode
+                    EditTaskFragment editTaskFragment = EditTaskFragment.newInstance(routine);
+                    requireActivity().getSupportFragmentManager().beginTransaction()
+                            .replace(R.id.fragment_container, editTaskFragment)
+                            .addToBackStack(null)
+                            .commit();
+                } else {
+                    // Otherwise open TaskFragment to start running the routine
+                    TaskFragment taskFragment = TaskFragment.newInstance(routine);
+                    requireActivity().getSupportFragmentManager().beginTransaction()
+                            .replace(R.id.fragment_container, taskFragment)
+                            .addToBackStack(null)
+                            .commit();
+                }
+            });
             
             buttonContainer.addView(button);
         }
     }
+
+    /*
+
+    Code that can be used to rename a routine
 
     private void showRenameDialog(Routine routine, Button button) {
         AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
@@ -124,6 +135,8 @@ public class RoutineListFragment extends Fragment {
                .setNegativeButton("Cancel", null)
                .show();
     }
+
+     */
 }
     
 
