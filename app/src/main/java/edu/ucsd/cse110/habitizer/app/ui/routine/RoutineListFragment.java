@@ -70,7 +70,7 @@ public class RoutineListFragment extends Fragment {
 
     private void toggleEditState(){
         this.isEditing = !this.isEditing;
-        editButton.setText(this.isEditing ? "Editing" : "Edit");
+        editButton.setText(this.isEditing ? "Edit" : "Start");
         renderRoutineButtons();
     }
     

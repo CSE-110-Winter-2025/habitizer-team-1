@@ -18,11 +18,15 @@ import java.util.List;
 
 import edu.ucsd.cse110.habitizer.app.R;
 import edu.ucsd.cse110.habitizer.lib.domain.Routine;
+import edu.ucsd.cse110.habitizer.lib.domain.RoutineRepository;
 import edu.ucsd.cse110.habitizer.lib.domain.Task;
+import edu.ucsd.cse110.habitizer.app.ui.HabitizerApplication;
 
 public class EditTaskFragment extends Fragment {
     private Routine routine;
     private TaskViewAdapter taskAdapter;
+
+    private RoutineRepository repository;
 
     public EditTaskFragment(Routine routine) {
         this.routine = routine;
@@ -38,11 +42,22 @@ public class EditTaskFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_task, container, false);
+        View view = inflater.inflate(R.layout.fragment_task_edit, container, false);
+
+        // use one shared repository
+        repository = ((HabitizerApplication) requireActivity().getApplication()).getRoutineRepository();
+
+        // Retrieve the routine passed via arguments, and then get the repository instance.
+        if (getArguments() != null) {
+            Routine passed = (Routine) getArguments().getSerializable("routine");
+            // Work on same routine instance stored in the repository
+            routine = repository.getRoutineById(passed.id());
+        }
 
         TextView routineName = view.findViewById(R.id.routineName);
         RecyclerView tasks = view.findViewById(R.id.taskRecyclerView);
         Button backButton = view.findViewById(R.id.backButton);
+        Button addTaskButton =  view.findViewById(R.id.addTaskButton);
 
         routineName.setText(routine.getName());
 
@@ -52,6 +67,7 @@ public class EditTaskFragment extends Fragment {
 
         backButton.setOnClickListener(v -> requireActivity().getSupportFragmentManager().popBackStack());
 
+        addTaskButton.setOnClickListener(v -> addTask());
         return view;
     }
 
@@ -67,6 +83,28 @@ public class EditTaskFragment extends Fragment {
                 .setPositiveButton("Rename", (dialog, id) -> {
                     task.setTitle(input.getText().toString().trim());
                     taskAdapter.notifyDataSetChanged();
+                })
+                .setNegativeButton("Cancel", null)
+                .show();
+    }
+
+    private void addTask() {
+        final EditText input = new EditText(getActivity());
+        input.setHint("Add task");
+        input.setInputType(InputType.TYPE_CLASS_TEXT);
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setTitle("Add")
+                .setView(input)
+                .setPositiveButton("Add", (dialog, id) -> {
+                    String newTaskName = input.getText().toString().trim();
+                    // Do not allow empty tasks
+                    if (!newTaskName.isEmpty()) {
+                        //RoutineRepository repository = new RoutineRepository();
+                        Task newTask = new Task(null, newTaskName);
+                        repository.addTaskToRoutine(routine.id(), newTask);
+                        taskAdapter.notifyDataSetChanged();
+                    }
                 })
                 .setNegativeButton("Cancel", null)
                 .show();
