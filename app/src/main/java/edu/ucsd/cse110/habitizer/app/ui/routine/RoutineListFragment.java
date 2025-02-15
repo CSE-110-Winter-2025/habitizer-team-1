@@ -91,7 +91,7 @@ public class RoutineListFragment extends Fragment {
             button.setLayoutParams(params);
 
 
-            // Set OnClickListener so the fragment change occurs only on click
+            // Set OnClickListener so the fragment change occurs only when clicking the button
             button.setOnClickListener(v -> {
                 if (isEditing) {
                     // Open EditTaskFragment if in edit mode

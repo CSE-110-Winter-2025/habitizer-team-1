@@ -29,8 +29,6 @@ public class TaskFragment extends Fragment {
     // shared repository throughout app
     private RoutineRepository repository;
 
-    private View view;
-
     public TaskFragment(Routine routine) {
         this.routine = routine;
     }

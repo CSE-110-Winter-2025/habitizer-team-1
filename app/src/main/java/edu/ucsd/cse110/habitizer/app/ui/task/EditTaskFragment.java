@@ -81,8 +81,12 @@ public class EditTaskFragment extends Fragment {
                 .setMessage("Enter a new name for the task")
                 .setView(input)
                 .setPositiveButton("Rename", (dialog, id) -> {
-                    task.setTitle(input.getText().toString().trim());
-                    taskAdapter.notifyDataSetChanged();
+                    String newTaskName = input.getText().toString().trim();
+                    // no empty task names
+                    if (!newTaskName.isEmpty()) {
+                        task.setTitle(input.getText().toString().trim());
+                        taskAdapter.notifyDataSetChanged();
+                    }
                 })
                 .setNegativeButton("Cancel", null)
                 .show();
@@ -100,7 +104,6 @@ public class EditTaskFragment extends Fragment {
                     String newTaskName = input.getText().toString().trim();
                     // Do not allow empty tasks
                     if (!newTaskName.isEmpty()) {
-                        //RoutineRepository repository = new RoutineRepository();
                         Task newTask = new Task(null, newTaskName);
                         repository.addTaskToRoutine(routine.id(), newTask);
                         taskAdapter.notifyDataSetChanged();
