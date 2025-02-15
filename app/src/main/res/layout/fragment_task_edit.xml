@@ -5,7 +5,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    // Routine name at the top of screen
     <TextView
         android:id="@+id/routineName"
         android:layout_width="187dp"
