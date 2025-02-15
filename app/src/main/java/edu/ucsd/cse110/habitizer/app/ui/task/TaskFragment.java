@@ -20,6 +20,8 @@ import edu.ucsd.cse110.habitizer.app.R;
 import edu.ucsd.cse110.habitizer.lib.domain.Routine;
 import edu.ucsd.cse110.habitizer.lib.domain.RoutineRepository;
 import edu.ucsd.cse110.habitizer.lib.domain.Task;
+import edu.ucsd.cse110.habitizer.lib.domain.TotalTimer;
+import edu.ucsd.cse110.habitizer.lib.domain.TotalTimer.TimerListener;
 import edu.ucsd.cse110.habitizer.app.ui.HabitizerApplication;
 
 public class TaskFragment extends Fragment {
@@ -29,8 +31,11 @@ public class TaskFragment extends Fragment {
     // shared repository throughout app
     private RoutineRepository repository;
 
+    private TotalTimer totalTimer;
+
     public TaskFragment(Routine routine) {
         this.routine = routine;
+        this.totalTimer = new TotalTimer(routine);
     }
 
     public static TaskFragment newInstance(Routine routine) {
@@ -54,8 +59,12 @@ public class TaskFragment extends Fragment {
         }
 
         TextView routineName = view.findViewById(R.id.routineName);
+        //TextView elapsedTimeView = view.findViewById(R.id.elapsedTime);
         RecyclerView tasks = view.findViewById(R.id.taskRecyclerView);
         Button backButton = view.findViewById(R.id.backButton);
+        Button endRoutineButton = view.findViewById(R.id.endRoutineButton);
+        TextView timeRemaining = view.findViewById(R.id.timeRemaining);
+
 
         routineName.setText(routine.getName());
 
@@ -64,6 +73,28 @@ public class TaskFragment extends Fragment {
         tasks.setAdapter(taskAdapter);
 
         backButton.setOnClickListener(v -> requireActivity().getSupportFragmentManager().popBackStack());
+
+        // Initialize and start the TotalTimer when the fragment loads
+        totalTimer = new TotalTimer(routine);
+        totalTimer.setListener(new TotalTimer.TimerListener() {
+            @Override
+            public void onTick(int secondsElapsed, String formattedTime) {
+                requireActivity().runOnUiThread(() -> timeRemaining.setText(formattedTime));
+            }
+
+            @Override
+            public void onRoutineCompleted(int totalTime, String formattedTime) {
+                requireActivity().runOnUiThread(() -> timeRemaining.setText("Completed in: " + formattedTime));
+            }
+        });
+
+        totalTimer.start(); // Start the timer when the fragment loads
+
+        // Stop the timer when the routine ends
+        endRoutineButton.setOnClickListener(v -> {
+            totalTimer.stop();
+        });
+
 
         return view;
     }
@@ -82,6 +113,12 @@ public class TaskFragment extends Fragment {
             taskAdapter.setTasks(routine.getTasks());
             taskAdapter.notifyDataSetChanged();
         }
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        totalTimer.stop(); // Stop the timer, avoid memory leaks
     }
 
 

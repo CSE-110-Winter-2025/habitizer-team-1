@@ -26,11 +26,11 @@
         android:layout_marginStart="220dp"
         android:layout_marginTop="63dp"
         android:paddingStart="16dp"
-        android:text="0 minutes"
         android:textColor="#777"
-        android:textSize="16sp"
+        android:textSize="24sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/taskRecyclerView"
