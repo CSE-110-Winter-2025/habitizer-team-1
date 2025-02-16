@@ -1,5 +1,6 @@
 package edu.ucsd.cse110.habitizer.app.ui.task;
 
+import android.graphics.Paint;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -36,7 +37,33 @@ public class TaskViewAdapter extends RecyclerView.Adapter<TaskViewAdapter.TaskVi
         Task task = tasks.get(position);
         holder.taskName.setText(task.title());
         holder.taskDuration.setText("0 min"); // placeholder
-        holder.itemView.setOnClickListener(v -> clickListener.onTaskClick(task));
+//        holder.itemView.setOnClickListener(v -> clickListener.onTaskClick(task));
+
+        // Apply strikethrough based on completion status
+        if (task.complete()) {
+            holder.taskName.setPaintFlags(holder.taskName.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+            // disable clicks on completed tasks
+            holder.itemView.setOnClickListener(null); // Disable clicks
+        } else {
+            holder.taskName.setPaintFlags(holder.taskName.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
+            holder.taskDuration.setPaintFlags(holder.taskDuration.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
+            // Set the click listener only if the task is NOT complete
+            holder.itemView.setOnClickListener(v -> {
+                // Mark the task as complete
+                task.setComplete(true);
+
+                // Apply strikethrough
+                holder.taskName.setPaintFlags(holder.taskName.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+                holder.taskDuration.setPaintFlags(holder.taskDuration.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+
+                // Disable clicks on the task
+                holder.itemView.setOnClickListener(null);
+
+                clickListener.onTaskClick(task); // Notify the fragment
+                notifyItemChanged(position); // Update the view
+            });
+        }
+
     }
 
     @Override
@@ -46,6 +73,7 @@ public class TaskViewAdapter extends RecyclerView.Adapter<TaskViewAdapter.TaskVi
 
     public void setTasks(List<Task> tasks) {
         this.tasks = tasks;
+        notifyDataSetChanged();
     }
 
     public static class TaskViewHolder extends RecyclerView.ViewHolder {

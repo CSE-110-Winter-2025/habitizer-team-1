@@ -36,5 +36,10 @@ public class RoutineRepository {
             routine.addTask(task);
         }
     }
+
+
+    public void markTaskComplete(Task task) {
+        task.setComplete(true);
+    }
 }
 

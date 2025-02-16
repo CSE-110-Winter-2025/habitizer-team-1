@@ -1,6 +1,7 @@
 package edu.ucsd.cse110.habitizer.app.ui.task;
 
 import android.app.AlertDialog;
+import android.graphics.Paint;
 import android.os.Bundle;
 import android.text.InputType;
 import android.view.LayoutInflater;
@@ -32,6 +33,7 @@ public class TaskFragment extends Fragment {
     private RoutineRepository repository;
 
     private TotalTimer totalTimer;
+
 
     public TaskFragment(Routine routine) {
         this.routine = routine;
@@ -95,6 +97,7 @@ public class TaskFragment extends Fragment {
             totalTimer.stop();
         });
 
+        // text changes
 
         return view;
     }

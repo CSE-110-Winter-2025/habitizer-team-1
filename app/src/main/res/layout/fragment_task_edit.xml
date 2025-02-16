@@ -36,11 +36,11 @@
         android:id="@+id/taskRecyclerView"
         android:layout_width="340dp"
         android:layout_height="508dp"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="25dp"
         app:layout_constraintBottom_toTopOf="@id/buttonContainer"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/timeRemaining"
+        app:layout_constraintTop_toBottomOf="@+id/routineName"
         tools:listitem="@layout/recycler_view_item" />
 
     <LinearLayout
