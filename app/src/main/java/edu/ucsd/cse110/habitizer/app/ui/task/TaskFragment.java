@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
@@ -55,23 +56,25 @@ public class TaskFragment extends Fragment {
         // Retrieve the routine passed in, get the repository's routine instance
         if (getArguments() != null) {
             Routine passed = (Routine) getArguments().getSerializable("routine");
-            routine = repository.getRoutineById(passed.id());
+            if (passed != null && passed.id() != null) {
+                routine = repository.getRoutineById(passed.id());
+            }
         }
 
-        // get views for each feature
         TextView routineName = view.findViewById(R.id.routineName);
-        //TextView elapsedTimeView = view.findViewById(R.id.elapsedTime);
         RecyclerView tasks = view.findViewById(R.id.taskRecyclerView);
         Button backButton = view.findViewById(R.id.backButton);
         TextView timeEstimateView = view.findViewById(R.id.timeEstimate);
         Button endRoutineButton = view.findViewById(R.id.endRoutineButton);
+        TextView timeRemaining = view.findViewById(R.id.timeRemaining);
         ImageButton stopButton = view.findViewById(R.id.button_stop);
         ImageButton advanceButton = view.findViewById(R.id.button_advance);
-        TextView timeRemaining = view.findViewById(R.id.timeRemaining);
-
 
         routineName.setText(routine.getName());
+
+        // if the estimated time has changes, it is updated
         updateTimeEstimate(timeEstimateView);
+
 
         taskAdapter = new TaskViewAdapter(routine.getTasks(), task -> markTaskComplete(task));
         tasks.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -149,6 +152,7 @@ public class TaskFragment extends Fragment {
         if (estimate == null) {
             timeEstimateView.setText("out of - minutes");
         } else {
+            // use user input
             timeEstimateView.setText("out of " + estimate + " minutes");
         }
     }

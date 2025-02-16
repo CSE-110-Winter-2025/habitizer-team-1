@@ -79,4 +79,30 @@
             android:text="End Routine" />
     </LinearLayout>
 
+
+    <ImageButton
+        android:id="@+id/button_stop"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="10dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:contentDescription="@string/stoptimer"
+        android:src="@drawable/pause"
+        app:layout_constraintEnd_toStartOf="@id/button_advance"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageButton
+        android:id="@+id/button_advance"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="10dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:contentDescription="@string/advancetime"
+        android:src="@drawable/advance"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -85,6 +85,8 @@ public class EditTaskFragment extends Fragment {
                         String text = input.getText().toString().trim();
                         // Use null if empty
                         Integer newEstimate = text.isEmpty() ? null : Integer.parseInt(text);
+
+                        // If user inputs a value less than 10000, then update the time estimate
                         if (newEstimate != null && newEstimate < 10000) {
                             routine.setTimeEstimate(newEstimate);
                             updateTimeEstimateText(timeEstimateView);

@@ -70,7 +70,6 @@ public class Routine implements Serializable {
      * Checks whether all tasks in the routine are completed.
      * If all tasks are done, the timer is stopped, and the listener is notified.
      */
-
     public void checkTasksCompleted() {
         System.out.println("Checking if all tasks are complete...");
 
