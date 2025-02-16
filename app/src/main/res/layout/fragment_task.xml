@@ -6,24 +6,23 @@
     android:layout_height="match_parent">
 
     <TextView
-        android:id="@+id/timeRemaining2"
+        android:id="@+id/timeRemaining"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="220dp"
-        android:layout_marginTop="63dp"
+        android:layout_marginTop="55dp"
         android:paddingStart="16dp"
         android:text="0 minutes"
         android:textColor="#777"
         android:textSize="16sp"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/routineName"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/routineName"
-        android:layout_width="187dp"
+        android:layout_width="wrap_content"
         android:layout_height="64dp"
-        android:layout_marginStart="36dp"
-        android:layout_marginTop="44dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="36dp"
         android:fontFamily="sans-serif"
         android:paddingStart="16dp"
         android:text="Morning"
@@ -33,16 +32,16 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/timeRemaining"
-        android:layout_width="wrap_content"
+        android:id="@+id/timeEstimate"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="220dp"
-        android:layout_marginTop="63dp"
+        android:layout_marginTop="55dp"
         android:paddingStart="16dp"
-        android:text="0 minutes"
+        android:text="out of - minutes"
         android:textColor="#777"
         android:textSize="16sp"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/timeRemaining"
         app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.recyclerview.widget.RecyclerView
@@ -53,7 +52,7 @@
         app:layout_constraintBottom_toTopOf="@id/buttonContainer"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/timeRemaining"
+        app:layout_constraintTop_toBottomOf="@id/timeEstimate"
         tools:listitem="@layout/recycler_view_item" />
 
     <LinearLayout

@@ -14,6 +14,12 @@ public class Routine implements Serializable {
     private List<Task> tasks = new ArrayList<>(); // Ensure it's never null
     private TotalTimer totalTimer; // Reference to TotalTimer
 
+
+    // stores timeEstimate for Routine, null is the default to represent no time inputted so Integer is used
+    private Integer timeEstimate = null;
+
+
+
     public Routine(int id, @NonNull String name) {
         this.id = id;
         this.name = name;
@@ -77,6 +83,16 @@ public class Routine implements Serializable {
         }
     }
 
+
+    // returns stored timeEstimate
+    public Integer getTimeEstimate() {
+        return this.timeEstimate;
+    }
+
+    // changes timeEstimated
+    public void setTimeEstimate(Integer timeEstimate) {
+        this.timeEstimate = timeEstimate;
+    }
 
 }
 

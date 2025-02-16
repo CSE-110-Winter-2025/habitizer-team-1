@@ -56,8 +56,10 @@ public class TaskFragment extends Fragment {
         TextView routineName = view.findViewById(R.id.routineName);
         RecyclerView tasks = view.findViewById(R.id.taskRecyclerView);
         Button backButton = view.findViewById(R.id.backButton);
+        TextView timeEstimateView = view.findViewById(R.id.timeEstimate);
 
         routineName.setText(routine.getName());
+        updateTimeEstimate(timeEstimateView);
 
         taskAdapter = new TaskViewAdapter(routine.getTasks(), task -> markTaskComplete(task));
         tasks.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -88,5 +90,15 @@ public class TaskFragment extends Fragment {
     private void markTaskComplete(Task task) {
         task.setComplete(true);
         taskAdapter.notifyDataSetChanged();
+    }
+
+    // Helper method to update the time estimate TextView
+    private void updateTimeEstimate(TextView timeEstimateView) {
+        Integer estimate = routine.getTimeEstimate();
+        if (estimate == null) {
+            timeEstimateView.setText("out of - minutes");
+        } else {
+            timeEstimateView.setText("out of " + estimate + " minutes");
+        }
     }
 }
