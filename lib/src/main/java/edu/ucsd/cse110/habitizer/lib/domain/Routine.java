@@ -52,6 +52,9 @@ public class Routine implements Serializable {
         return new Routine(id, this.name);
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
     public void startRoutine () {
         totalTimer.start();
     }
