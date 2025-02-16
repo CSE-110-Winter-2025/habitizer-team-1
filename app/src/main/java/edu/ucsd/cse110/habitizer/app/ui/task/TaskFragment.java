@@ -40,6 +40,7 @@ public class TaskFragment extends Fragment {
     private RoutineRepository repository;
 
     private TotalTimer totalTimer;
+    private TotalTimer lapTimer;
 
     private List<Long> lapTimes = new ArrayList<>(); // Store lap timestamps
 
@@ -47,6 +48,7 @@ public class TaskFragment extends Fragment {
     public TaskFragment(Routine routine) {
         this.routine = routine;
         this.totalTimer = new TotalTimer(routine);
+        this.lapTimer = new TotalTimer(routine);
     }
 
     public static TaskFragment newInstance(Routine routine) {
@@ -112,7 +114,7 @@ public class TaskFragment extends Fragment {
 
         // text changes
 
-        totalTimer.setListener(new TimerListener() {
+        lapTimer.setListener(new TimerListener() {
             @Override
             public void onTick(int secondsElapsed, String formattedTime) {
                 // Update UI for all tasks (or just the current task) with elapsed time
@@ -162,9 +164,18 @@ public class TaskFragment extends Fragment {
 private void markTaskComplete(Task task) {
     task.setComplete(true);
 
+    long currentTime = totalTimer.getSecondsElapsed();
+    long lastLapTime = routine.getLastLapTime(); // Retrieve the last lap time
+    long lapTime = currentTime - lastLapTime; // Calculate the time since last task completion
+    task.setLapTime(lapTime);
+    routine.setLastLapTime(currentTime);
+
+    //requireActivity().runOnUiThread(() -> updateTaskLapTimeUI(task));
+
+
     // Save the lap time for the task
-    int taskLapTime = totalTimer.getSecondsElapsed(); // Assuming `totalTimer` tracks elapsed time for the current task
-    task.setLapTime(taskLapTime);
+    //int taskLapTime = totalTimer.getSecondsElapsed(); // Assuming `totalTimer` tracks elapsed time for the current task
+    //task.setLapTime(taskLapTime);
 
     if (routine != null) { //Null check for safety
 

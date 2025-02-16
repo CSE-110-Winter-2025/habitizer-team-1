@@ -88,6 +88,16 @@ public class Routine implements Serializable {
         return allDone;
     }
 
+    private long lastLapTime = 0; // Keeps track of the last recorded lap time
+
+    public long getLastLapTime() {
+        return lastLapTime;
+    }
+
+    public void setLastLapTime(long lastLapTime) {
+        this.lastLapTime = lastLapTime;
+    }
+
 
 }
 

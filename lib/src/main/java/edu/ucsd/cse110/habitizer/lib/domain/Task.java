@@ -4,8 +4,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
 
 public class Task implements Serializable {
@@ -14,14 +12,23 @@ public class Task implements Serializable {
 
     private @NonNull Boolean complete;
 
-    private int lapTime;
+    private long lapTime;
+    private long lastLapTime = 0; //last recorded laptime
 
     public int getLapTime() {
-        return lapTime;
+        return (int)lapTime;
     }
 
-    public void setLapTime(int lapTime) {
+    public void setLapTime(long lapTime) {
         this.lapTime = lapTime;
+    }
+
+    public void setLastLapTime(long lastLapTime) {
+        this.lastLapTime = lastLapTime;
+    }
+
+    public long getLastLapTime() {
+        return lastLapTime;
     }
 
     public Task(@NonNull Integer id, @NonNull String title){
