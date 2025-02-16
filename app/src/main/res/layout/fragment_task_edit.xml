@@ -21,14 +21,16 @@
 
     <TextView
         android:id="@+id/timeRemaining"
-        android:layout_width="wrap_content"
+        android:layout_width="86dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="220dp"
-        android:layout_marginTop="63dp"
+        android:layout_marginTop="64dp"
+        android:layout_marginEnd="16dp"
         android:paddingStart="16dp"
         android:text="0 minutes"
         android:textColor="#777"
         android:textSize="16sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.861"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 

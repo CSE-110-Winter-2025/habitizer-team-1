@@ -1,5 +1,7 @@
 package edu.ucsd.cse110.habitizer.app.ui.task;
 
+import static edu.ucsd.cse110.habitizer.lib.domain.TotalTimer.formatTime;
+
 import android.app.AlertDialog;
 import android.graphics.Paint;
 import android.os.Bundle;
@@ -137,7 +139,7 @@ private void markTaskComplete(Task task) {
             totalTimer.stop();
             requireActivity().runOnUiThread(() -> {
                 TextView timeRemaining = requireActivity().findViewById(R.id.timeRemaining);
-//                timeRemaining.setText("Completed in: " + formatTime(totalTimer.getTotalSeconds()));
+                timeRemaining.setText("Completed in:\n " + formatTime(totalTimer.getSecondsElapsed()));
             });
         }
     }
