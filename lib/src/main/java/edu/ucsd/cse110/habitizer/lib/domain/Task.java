@@ -4,6 +4,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 public class Task implements Serializable {
@@ -11,6 +13,16 @@ public class Task implements Serializable {
     private @NonNull String title; // should it be final? aak in office hours
 
     private @NonNull Boolean complete;
+
+    private int lapTime;
+
+    public int getLapTime() {
+        return lapTime;
+    }
+
+    public void setLapTime(int lapTime) {
+        this.lapTime = lapTime;
+    }
 
     public Task(@NonNull Integer id, @NonNull String title){
         this.id = id;
@@ -41,6 +53,7 @@ public class Task implements Serializable {
         return Objects.hash(id, title, complete);
     }
 
+
     public void setTitle(@NonNull String title) {
         this.title = title;
     }
@@ -51,6 +64,9 @@ public class Task implements Serializable {
     }
 
     public Task withId(int id) {
+        //Task newTask = new Task(id, this.title);
+        //newTask.setComplete(this.complete); // Preserve the complete status
+        //return newTask;
         return new Task(id, this.title);
     }
 }

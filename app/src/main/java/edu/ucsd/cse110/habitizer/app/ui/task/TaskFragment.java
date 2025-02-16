@@ -17,7 +17,12 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
+import java.util.Locale;
 
 import edu.ucsd.cse110.habitizer.app.R;
 import edu.ucsd.cse110.habitizer.lib.domain.Routine;
@@ -35,6 +40,8 @@ public class TaskFragment extends Fragment {
     private RoutineRepository repository;
 
     private TotalTimer totalTimer;
+
+    private List<Long> lapTimes = new ArrayList<>(); // Store lap timestamps
 
 
     public TaskFragment(Routine routine) {
@@ -76,6 +83,7 @@ public class TaskFragment extends Fragment {
         tasks.setLayoutManager(new LinearLayoutManager(getActivity()));
         tasks.setAdapter(taskAdapter);
 
+
         backButton.setOnClickListener(v -> {
             // Reset task states to incomplete before going back
             repository.resetRoutine(routine.id());
@@ -103,6 +111,27 @@ public class TaskFragment extends Fragment {
         });
 
         // text changes
+
+        totalTimer.setListener(new TimerListener() {
+            @Override
+            public void onTick(int secondsElapsed, String formattedTime) {
+                // Update UI for all tasks (or just the current task) with elapsed time
+                requireActivity().runOnUiThread(() -> {
+                    // Here you can update the UI for tasks in progress
+                    taskAdapter.notifyDataSetChanged();
+                });
+            }
+
+            @Override
+            public void onRoutineCompleted(int totalTime, String formattedTime) {
+                // Handle when all tasks are completed
+                requireActivity().runOnUiThread(() -> {
+                    TextView timeRemaining = requireActivity().findViewById(R.id.timeRemaining);
+                    timeRemaining.setText("Completed in:\n" + formattedTime);
+                });
+            }
+        });
+
 
         return view;
     }
@@ -132,8 +161,15 @@ public class TaskFragment extends Fragment {
 
 private void markTaskComplete(Task task) {
     task.setComplete(true);
+
+    // Save the lap time for the task
+    int taskLapTime = totalTimer.getSecondsElapsed(); // Assuming `totalTimer` tracks elapsed time for the current task
+    task.setLapTime(taskLapTime);
+
     if (routine != null) { //Null check for safety
+
         routine.checkTasksCompleted();
+
         if (routine.allTasksCompleted()) {
             // Stop the timer if all tasks are complete
             totalTimer.stop();
@@ -145,5 +181,7 @@ private void markTaskComplete(Task task) {
     }
     taskAdapter.notifyDataSetChanged();
 }
+
+
 
 }

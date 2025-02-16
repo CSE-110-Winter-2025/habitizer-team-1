@@ -124,4 +124,5 @@ public class TotalTimer {
         void onTick(int secondsElapsed, String formattedTime); // Called every second with updated elapsed time
         void onRoutineCompleted(int totalTime, String formattedTime); // Called when all tasks are completed
     }
+
 }

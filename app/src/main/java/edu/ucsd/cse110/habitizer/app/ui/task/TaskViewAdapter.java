@@ -1,5 +1,7 @@
 package edu.ucsd.cse110.habitizer.app.ui.task;
 
+import static edu.ucsd.cse110.habitizer.lib.domain.TotalTimer.formatTime;
+
 import android.graphics.Paint;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,6 +11,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import edu.ucsd.cse110.habitizer.lib.domain.Task;
+import edu.ucsd.cse110.habitizer.lib.domain.TotalTimer;
 
 import edu.ucsd.cse110.habitizer.app.R;
 
@@ -44,12 +47,17 @@ public class TaskViewAdapter extends RecyclerView.Adapter<TaskViewAdapter.TaskVi
             holder.taskName.setPaintFlags(holder.taskName.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
             // disable clicks on completed tasks
             holder.itemView.setOnClickListener(null); // Disable clicks
+
+            holder.taskDuration.setVisibility(View.VISIBLE);
+            holder.taskDuration.setText("Lap Time: " + formatTime(task.getLapTime()));
+
         } else {
             holder.taskName.setPaintFlags(holder.taskName.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
             // Set the click listener only if the task is NOT complete
             holder.itemView.setOnClickListener(v -> {
                 // Mark the task as complete
                 task.setComplete(true);
+
 
                 // Apply strikethrough
                 holder.taskName.setPaintFlags(holder.taskName.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
@@ -60,6 +68,7 @@ public class TaskViewAdapter extends RecyclerView.Adapter<TaskViewAdapter.TaskVi
                 clickListener.onTaskClick(task); // Notify the fragment
                 notifyItemChanged(position); // Update the view
             });
+            holder.taskDuration.setVisibility(View.GONE);
         }
 
     }
@@ -75,12 +84,14 @@ public class TaskViewAdapter extends RecyclerView.Adapter<TaskViewAdapter.TaskVi
     }
 
     public static class TaskViewHolder extends RecyclerView.ViewHolder {
-        TextView taskName, taskDuration;
+        TextView taskName, taskDuration, lapTime;
 
         public TaskViewHolder(View itemView) {
             super(itemView);
             taskName = itemView.findViewById(R.id.taskName);
             taskDuration = itemView.findViewById(R.id.taskDuration);
+            lapTime = itemView.findViewById(R.id.lapTime);
         }
     }
+
 }
