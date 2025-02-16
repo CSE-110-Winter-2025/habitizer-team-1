@@ -72,7 +72,7 @@ public class EditTaskFragment extends Fragment {
         TextView timeEstimateView = view.findViewById(R.id.timeEstimate);
         updateTimeEstimateText(timeEstimateView); // set initial text
 
-        // Set an onClick listener so that tapping timeEstimate opens a dialog.
+        // Set an onClick listener so that tapping timeEstimate opens a dialog
         timeEstimateView.setOnClickListener(v -> {
             final EditText input = new EditText(getActivity());
             input.setHint("Enter time estimate in minutes");
@@ -140,9 +140,11 @@ public class EditTaskFragment extends Fragment {
                 .show();
     }
 
-    // if timeEstimate is changed,
+    // updates timeEstimate
     private void updateTimeEstimateText(TextView view) {
         Integer estimate = routine.getTimeEstimate();
+
+        // null means no change and default is -
         if (estimate == null) {
             view.setText("- minutes");
         } else {

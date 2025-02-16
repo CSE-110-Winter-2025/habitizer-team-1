@@ -53,6 +53,7 @@ public class TaskFragment extends Fragment {
             routine = repository.getRoutineById(passed.id());
         }
 
+        // get views for each feature
         TextView routineName = view.findViewById(R.id.routineName);
         RecyclerView tasks = view.findViewById(R.id.taskRecyclerView);
         Button backButton = view.findViewById(R.id.backButton);
@@ -92,9 +93,11 @@ public class TaskFragment extends Fragment {
         taskAdapter.notifyDataSetChanged();
     }
 
-    // Helper method to update the time estimate TextView
+    // Updates the time estimate TextView
     private void updateTimeEstimate(TextView timeEstimateView) {
         Integer estimate = routine.getTimeEstimate();
+
+        // default if no inputted estimated time is null
         if (estimate == null) {
             timeEstimateView.setText("out of - minutes");
         } else {
