@@ -47,7 +47,6 @@ public class RoutineRepository {
         if (routine != null) {
             for(Task task : routine.getTasks()){
                 task.setComplete(false);
-                // dataSource.updateTask(task); // Update the task in the data source
             }
 
         }

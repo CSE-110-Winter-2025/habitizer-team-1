@@ -124,14 +124,24 @@ public class TaskFragment extends Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        repository.resetRoutine(routine.id());
+        repository.resetRoutine(routine.id()); //ensure that all tasks statuses are reset
         totalTimer.stop(); // Stop the timer, avoid memory leaks
     }
 
-
-    private void markTaskComplete(Task task) {
-        task.setComplete(true);
-        taskAdapter.notifyDataSetChanged();
+private void markTaskComplete(Task task) {
+    task.setComplete(true);
+    if (routine != null) { //Null check for safety
+        routine.checkTasksCompleted();
+        if (routine.allTasksCompleted()) {
+            // Stop the timer if all tasks are complete
+            totalTimer.stop();
+            requireActivity().runOnUiThread(() -> {
+                TextView timeRemaining = requireActivity().findViewById(R.id.timeRemaining);
+//                timeRemaining.setText("Completed in: " + formatTime(totalTimer.getTotalSeconds()));
+            });
+        }
     }
+    taskAdapter.notifyDataSetChanged();
+}
 
 }
