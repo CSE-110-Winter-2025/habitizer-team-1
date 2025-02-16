@@ -83,11 +83,12 @@ public class EditTaskFragment extends Fragment {
                     .setView(input)
                     .setPositiveButton("OK", (dialog, which) -> {
                         String text = input.getText().toString().trim();
-                        // Use null if empty, otherwise parse integer
+                        // Use null if empty
                         Integer newEstimate = text.isEmpty() ? null : Integer.parseInt(text);
-                        routine.setTimeEstimate(newEstimate);
-                        //repository.updateRoutine(routine); // update in repository if you have this method
-                        updateTimeEstimateText(timeEstimateView);
+                        if (newEstimate != null && newEstimate < 10000) {
+                            routine.setTimeEstimate(newEstimate);
+                            updateTimeEstimateText(timeEstimateView);
+                        }
                     })
                     .setNegativeButton("Cancel", null)
                     .show();
