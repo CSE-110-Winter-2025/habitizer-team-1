@@ -150,10 +150,10 @@ public class TaskFragment extends Fragment {
 
         // default if no inputted estimated time is null
         if (estimate == null) {
-            timeEstimateView.setText("out of - minutes");
+            timeEstimateView.setText("/ - minutes");
         } else {
             // use user input
-            timeEstimateView.setText("out of " + estimate + " minutes");
+            timeEstimateView.setText("/ " + estimate + " minutes");
         }
     }
 }
