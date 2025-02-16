@@ -87,12 +87,20 @@ public class TaskFragment extends Fragment {
         totalTimer.setListener(new TotalTimer.TimerListener() {
             @Override
             public void onTick(int secondsElapsed, String formattedTime) {
-                requireActivity().runOnUiThread(() -> timeRemaining.setText(formattedTime));
+                // round down to minutes during running time
+                int minutes = secondsElapsed / 60;
+                requireActivity().runOnUiThread(() ->
+                        timeRemaining.setText(minutes + " m")
+                );
             }
 
             @Override
             public void onRoutineCompleted(int totalTime, String formattedTime) {
-                requireActivity().runOnUiThread(() -> timeRemaining.setText("Completed in: " + formattedTime));
+                // round up when completed
+                int minutes = (totalTime + 59) / 60;
+                requireActivity().runOnUiThread(() ->
+                        timeRemaining.setText(minutes + " m")
+                );
             }
 
             @Override
@@ -108,6 +116,15 @@ public class TaskFragment extends Fragment {
         // Stop the timer when the routine ends
         endRoutineButton.setOnClickListener(v -> {
             totalTimer.stop();
+
+            // Get final elapsed time in seconds from the timer
+            int finalTime = totalTimer.getTotalTime();
+
+            // Round up to minutes when end routine button is pressed
+            int minutes = (finalTime + 59) / 60;
+            requireActivity().runOnUiThread(() ->
+                    timeRemaining.setText(minutes + " m")
+            );
         });
 
         stopButton.setOnClickListener(v -> totalTimer.togglePause());
