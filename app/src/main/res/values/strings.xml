@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Habitizer</string>
+    <string name="advancetime">AdvanceTime</string>
+    <string name="stoptimer">StopTimer</string>
 </resources>
