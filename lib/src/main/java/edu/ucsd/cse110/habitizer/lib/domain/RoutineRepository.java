@@ -41,5 +41,16 @@ public class RoutineRepository {
     public void markTaskComplete(Task task) {
         task.setComplete(true);
     }
+
+    public void resetRoutine(int routineId) {
+        Routine routine = getRoutineById(routineId);
+        if (routine != null) {
+            for(Task task : routine.getTasks()){
+                task.setComplete(false);
+                // dataSource.updateTask(task); // Update the task in the data source
+            }
+
+        }
+    }
 }
 

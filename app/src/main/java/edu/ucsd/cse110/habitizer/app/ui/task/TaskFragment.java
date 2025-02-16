@@ -74,8 +74,11 @@ public class TaskFragment extends Fragment {
         tasks.setLayoutManager(new LinearLayoutManager(getActivity()));
         tasks.setAdapter(taskAdapter);
 
-        backButton.setOnClickListener(v -> requireActivity().getSupportFragmentManager().popBackStack());
-
+        backButton.setOnClickListener(v -> {
+            // Reset task states to incomplete before going back
+            repository.resetRoutine(routine.id());
+            requireActivity().getSupportFragmentManager().popBackStack();
+        });
         // Initialize and start the TotalTimer when the fragment loads
         totalTimer = new TotalTimer(routine);
         totalTimer.setListener(new TotalTimer.TimerListener() {
@@ -121,6 +124,7 @@ public class TaskFragment extends Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+        repository.resetRoutine(routine.id());
         totalTimer.stop(); // Stop the timer, avoid memory leaks
     }
 
@@ -129,4 +133,5 @@ public class TaskFragment extends Fragment {
         task.setComplete(true);
         taskAdapter.notifyDataSetChanged();
     }
+
 }

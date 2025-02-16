@@ -46,7 +46,6 @@ public class TaskViewAdapter extends RecyclerView.Adapter<TaskViewAdapter.TaskVi
             holder.itemView.setOnClickListener(null); // Disable clicks
         } else {
             holder.taskName.setPaintFlags(holder.taskName.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
-            holder.taskDuration.setPaintFlags(holder.taskDuration.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
             // Set the click listener only if the task is NOT complete
             holder.itemView.setOnClickListener(v -> {
                 // Mark the task as complete
@@ -54,7 +53,6 @@ public class TaskViewAdapter extends RecyclerView.Adapter<TaskViewAdapter.TaskVi
 
                 // Apply strikethrough
                 holder.taskName.setPaintFlags(holder.taskName.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
-                holder.taskDuration.setPaintFlags(holder.taskDuration.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
 
                 // Disable clicks on the task
                 holder.itemView.setOnClickListener(null);
