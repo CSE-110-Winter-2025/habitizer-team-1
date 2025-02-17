@@ -44,20 +44,13 @@ public class TaskFragment extends Fragment {
     private RoutineRepository repository;
 
     private TotalTimer totalTimer;
-    private TotalTimer lapTimer;
-
-    private List<Long> lapTimes = new ArrayList<>(); // Store lap timestamps
-
 
     private boolean isEditing;
 
     public TaskFragment(Routine routine) {
         this.routine = routine;
         this.totalTimer = new TotalTimer(routine);
-        this.lapTimer = new TotalTimer(routine);
     }
-
-
 
     public static TaskFragment newInstance(Routine routine) {
         TaskFragment fragment = new TaskFragment(routine);
@@ -66,8 +59,6 @@ public class TaskFragment extends Fragment {
         fragment.setArguments(args);
         return fragment;
     }
-
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -174,33 +165,6 @@ public class TaskFragment extends Fragment {
             );
         });
 
-
-
-        lapTimer.setListener(new TimerListener() {
-            @Override
-            public void onTick(int secondsElapsed, String formattedTime) {
-                // Update UI for all tasks (or just the current task) with elapsed time
-                requireActivity().runOnUiThread(() -> {
-                    // Here you can update the UI for tasks in progress
-                    taskAdapter.notifyDataSetChanged();
-                });
-            }
-
-            @Override
-            public void onRoutineCompleted(int totalTime, String formattedTime) {
-                // Handle when all tasks are completed
-                requireActivity().runOnUiThread(() -> {
-                    TextView timeRemaining = requireActivity().findViewById(R.id.timeRemaining);
-                    timeRemaining.setText("Completed in:\n" + formattedTime);
-                });
-            }
-
-            @Override
-            public void onPauseToggled(boolean isPaused) {
-
-            }
-
-        });
 
 
         // text changes
