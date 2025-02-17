@@ -38,14 +38,9 @@ public class RoutineRepository {
         }
     }
 
-
-    public void markTaskComplete(Task task) {
-        task.setComplete(true);
-    }
-
     public void resetRoutine(int routineId) {
         Routine routine = getRoutineById(routineId);
-        if (routine != null) {
+        if (routine != null && routine.getTasks() != null) {
             for(Task task : routine.getTasks()){
                 task.setComplete(false);
             }

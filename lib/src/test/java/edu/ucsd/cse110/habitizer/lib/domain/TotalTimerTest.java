@@ -143,5 +143,53 @@ public class TotalTimerTest {
         totalTimer.stop();
     }
 
+    @Test
+    public void testPauseAndResume() throws InterruptedException {
+        totalTimer.start();
+
+        // Wait 2 seconds
+        Thread.sleep(2000);
+
+        totalTimer.togglePause(); // Pause the timer
+        int pausedTime = totalTimer.getSecondsElapsed();
+
+        // Wait another 2 seconds (timer should remain paused)
+        Thread.sleep(2000);
+
+        assertEquals("Time should not advance while paused", pausedTime, totalTimer.getSecondsElapsed());
+
+        totalTimer.togglePause(); // Resume the timer
+
+        // Wait 2 more seconds
+        Thread.sleep(2000);
+
+        assertTrue("Time should continue after resume", totalTimer.getSecondsElapsed() > pausedTime);
+
+        totalTimer.stop();
+    }
+
+    @Test
+    public void testAdvanceTimeWhilePaused() throws InterruptedException {
+        totalTimer.start();
+
+        // Wait 2 seconds
+        Thread.sleep(2000);
+
+        totalTimer.togglePause(); // Pause the timer
+        int pausedTime = totalTimer.getSecondsElapsed();
+
+        totalTimer.advanceTime(); // Manually advance by 30 seconds
+
+        assertEquals("Time should advance even when paused", pausedTime + 30, totalTimer.getSecondsElapsed());
+
+        totalTimer.togglePause(); // Resume the timer
+
+        // Wait 2 more seconds
+        Thread.sleep(2000);
+
+        assertTrue("Timer should resume from the new advanced time", totalTimer.getSecondsElapsed() > pausedTime + 30);
+
+        totalTimer.stop();
+    }
 
 }

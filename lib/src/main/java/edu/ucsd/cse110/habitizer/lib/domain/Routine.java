@@ -89,14 +89,18 @@ public class Routine implements Serializable {
         }
     }
 
-    public boolean allTasksCompleted() {
-        for (Task task : this.getTasks()) {
-            if (!task.complete()) {
-                return false;
+    public boolean allTasksCompleted(){
+        boolean allDone = true;
+        for(Task task : this.getTasks()) {
+            if(!task.complete()) {
+                allDone = false;
+                return allDone;
             }
         }
-        return true;
+
+        return allDone;
     }
+
 
 }
 

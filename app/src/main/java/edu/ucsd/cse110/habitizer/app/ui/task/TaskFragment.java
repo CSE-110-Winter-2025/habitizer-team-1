@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
@@ -75,6 +76,8 @@ public class TaskFragment extends Fragment {
         RecyclerView tasks = view.findViewById(R.id.taskRecyclerView);
         Button backButton = view.findViewById(R.id.backButton);
         Button endRoutineButton = view.findViewById(R.id.endRoutineButton);
+        ImageButton stopButton = view.findViewById(R.id.button_stop);
+        ImageButton advanceButton = view.findViewById(R.id.button_advance);
         TextView timeRemaining = view.findViewById(R.id.timeRemaining);
 
 
@@ -101,6 +104,13 @@ public class TaskFragment extends Fragment {
             public void onRoutineCompleted(int totalTime, String formattedTime) {
                 requireActivity().runOnUiThread(() -> timeRemaining.setText("Completed in: " + formattedTime));
             }
+
+            @Override
+            public void onPauseToggled(boolean isPaused) {
+                requireActivity().runOnUiThread(() -> {
+                    stopButton.setImageResource(isPaused ? R.drawable.pause : R.drawable.pause); //let them both be pause icon for now
+                });
+            }
         });
 
         totalTimer.start(); // Start the timer when the fragment loads
@@ -114,6 +124,8 @@ public class TaskFragment extends Fragment {
 
         // text changes
         taskAdapter.setEditingMode(false); // ensures that it can strikethrough
+        stopButton.setOnClickListener(v -> totalTimer.togglePause());
+        advanceButton.setOnClickListener(v -> totalTimer.advanceTime());
 
         return view;
     }
