@@ -14,13 +14,15 @@ public class Routine implements Serializable {
     private List<Task> tasks = new ArrayList<>(); // Ensure it's never null
     private TotalTimer totalTimer; // Reference to TotalTimer
 
+    private boolean ended;
+
     public Routine(int id, @NonNull String name) {
         this.id = id;
         this.name = name;
         this.tasks = new ArrayList<>();
         this.totalTimer = new TotalTimer(this); // Initialize TotalTimer
+        this.ended = false;
     }
-
 
     public @Nullable Integer id() {
         return id;
@@ -55,6 +57,15 @@ public class Routine implements Serializable {
     public void setName(String name) {
         this.name = name;
     }
+
+    public void setEnded(boolean ended) {
+        this.ended =  ended;
+    }
+
+    public boolean getEnded(){
+        return this.ended;
+    }
+
     public void startRoutine () {
         totalTimer.start();
     }
@@ -69,6 +80,7 @@ public class Routine implements Serializable {
         System.out.println("Checking if all tasks are complete...");
 
         if (!tasks.isEmpty() && tasks.stream().allMatch(Task::complete)) {
+            this.ended = true; // set isComplete to true
             totalTimer.stop(); // Ensure this is executed
             TotalTimer.TimerListener listener = totalTimer.getListener();
             if (listener != null) {
@@ -85,6 +97,7 @@ public class Routine implements Serializable {
                 return allDone;
             }
         }
+
         return allDone;
     }
 

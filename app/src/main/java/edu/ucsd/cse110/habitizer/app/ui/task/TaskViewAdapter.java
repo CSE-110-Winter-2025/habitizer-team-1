@@ -19,6 +19,9 @@ public class TaskViewAdapter extends RecyclerView.Adapter<TaskViewAdapter.TaskVi
     private List<Task> tasks;
     private final TaskClickListener clickListener;
 
+    private boolean isRoutineEnded = false;
+    private boolean isEditing = false;
+
     public TaskViewAdapter(List<Task> tasks, TaskClickListener clickListener) {
         this.tasks = tasks;
         this.clickListener = clickListener;
@@ -40,25 +43,32 @@ public class TaskViewAdapter extends RecyclerView.Adapter<TaskViewAdapter.TaskVi
 //        holder.itemView.setOnClickListener(v -> clickListener.onTaskClick(task));
 
         // Apply strikethrough based on completion status
-        if (task.complete()) {
+        if (!isEditing && task.complete()) {
             holder.taskName.setPaintFlags(holder.taskName.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
             // disable clicks on completed tasks
             holder.itemView.setOnClickListener(null); // Disable clicks
-        } else {
+        } else if(!isEditing){
             holder.taskName.setPaintFlags(holder.taskName.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
-            // Set the click listener only if the task is NOT complete
+            // Set the click listener only if the task is NOT complete and if routine has not ended
             holder.itemView.setOnClickListener(v -> {
-                // Mark the task as complete
-                task.setComplete(true);
+                if (!isRoutineEnded) {
+                    // Mark the task as complete
+                    task.setComplete(true);
 
-                // Apply strikethrough
-                holder.taskName.setPaintFlags(holder.taskName.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+                    // Apply strikethrough
+                    holder.taskName.setPaintFlags(holder.taskName.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
 
-                // Disable clicks on the task
-                holder.itemView.setOnClickListener(null);
+                    // Disable clicks on the task
+                    holder.itemView.setOnClickListener(null);
 
+                    clickListener.onTaskClick(task); // Notify the fragment
+                    notifyItemChanged(position); // Update the view
+                }
+            });
+        }
+        else if (!isRoutineEnded){
+            holder.itemView.setOnClickListener(v -> {
                 clickListener.onTaskClick(task); // Notify the fragment
-                notifyItemChanged(position); // Update the view
             });
         }
 
@@ -83,4 +93,16 @@ public class TaskViewAdapter extends RecyclerView.Adapter<TaskViewAdapter.TaskVi
             taskDuration = itemView.findViewById(R.id.taskDuration);
         }
     }
+
+    public void endRoutine() {
+        isRoutineEnded = true;
+        notifyDataSetChanged(); // Update the entire adapter if needed
+    }
+
+    // Setter for editing mode
+    public void setEditingMode(boolean isEditing) {
+        this.isEditing = isEditing;
+        notifyDataSetChanged(); // Refresh the list if editing mode changes
+    }
+
 }

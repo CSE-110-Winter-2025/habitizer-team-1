@@ -36,11 +36,14 @@ public class TaskFragment extends Fragment {
 
     private TotalTimer totalTimer;
 
+    private boolean isEditing;
 
     public TaskFragment(Routine routine) {
         this.routine = routine;
         this.totalTimer = new TotalTimer(routine);
     }
+
+
 
     public static TaskFragment newInstance(Routine routine) {
         TaskFragment fragment = new TaskFragment(routine);
@@ -49,6 +52,8 @@ public class TaskFragment extends Fragment {
         fragment.setArguments(args);
         return fragment;
     }
+
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -60,6 +65,8 @@ public class TaskFragment extends Fragment {
         if (getArguments() != null) {
             Routine passed = (Routine) getArguments().getSerializable("routine");
             routine = repository.getRoutineById(passed.id());
+            isEditing = getArguments().getBoolean("isEditing", false);
+
         }
 
         TextView routineName = view.findViewById(R.id.routineName);
@@ -97,12 +104,15 @@ public class TaskFragment extends Fragment {
 
         totalTimer.start(); // Start the timer when the fragment loads
 
-        // Stop the timer when the routine ends
+        // Stop the timer when the routine ends and mark routine as ended
         endRoutineButton.setOnClickListener(v -> {
+            routine.setEnded(true);
+            taskAdapter.endRoutine();
             totalTimer.stop();
         });
 
         // text changes
+        taskAdapter.setEditingMode(false); // ensures that it can strikethrough
 
         return view;
     }
@@ -130,20 +140,28 @@ public class TaskFragment extends Fragment {
         totalTimer.stop(); // Stop the timer, avoid memory leaks
     }
 
-private void markTaskComplete(Task task) {
-    task.setComplete(true);
-    if (routine != null) { //Null check for safety
-        routine.checkTasksCompleted();
-        if (routine.allTasksCompleted()) {
-            // Stop the timer if all tasks are complete
-            totalTimer.stop();
-            requireActivity().runOnUiThread(() -> {
-                TextView timeRemaining = requireActivity().findViewById(R.id.timeRemaining);
-                timeRemaining.setText("Completed in:\n " + formatTime(totalTimer.getSecondsElapsed()));
-            });
+    private void markTaskComplete(Task task) {
+        if(routine != null && routine.getEnded()) {
+            return; // ensure that tasks can't be marked complete after the routine ends
+        }else{
+            task.setComplete(true);
+            if (routine != null) { //Null check for safety
+
+                routine.checkTasksCompleted();
+                if (routine.allTasksCompleted()) {
+                    // Stop the timer if all tasks are complete
+                    routine.setEnded(true);
+                    totalTimer.stop();
+                    requireActivity().runOnUiThread(() -> {
+                        TextView timeRemaining = requireActivity().findViewById(R.id.timeRemaining);
+                        timeRemaining.setText("Completed in:\n " + formatTime(totalTimer.getSecondsElapsed()));
+                    });
+                }
+            }
+            taskAdapter.notifyDataSetChanged();
         }
     }
-    taskAdapter.notifyDataSetChanged();
-}
+
+
 
 }

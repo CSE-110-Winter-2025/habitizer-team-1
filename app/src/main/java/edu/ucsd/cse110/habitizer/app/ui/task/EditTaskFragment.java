@@ -68,6 +68,8 @@ public class EditTaskFragment extends Fragment {
         backButton.setOnClickListener(v -> requireActivity().getSupportFragmentManager().popBackStack());
 
         addTaskButton.setOnClickListener(v -> addTask());
+
+        taskAdapter.setEditingMode(true); // ensure that it can't strikethrough
         return view;
     }
 
