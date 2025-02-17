@@ -192,4 +192,23 @@ public class TotalTimerTest {
         totalTimer.stop();
     }
 
+
+    @Test
+    public void testLapTimer() throws InterruptedException {
+        totalTimer.start();
+
+        // Wait for 2 seconds
+        Thread.sleep(2000);
+
+        long lap1Duration = totalTimer.recordLap();
+        assertTrue("Lap duration should be 2 seconds", lap1Duration >= 1 && lap1Duration <= 3);
+
+        // Wait for 3 seconds
+        Thread.sleep(3000);
+        long lap2Duration = totalTimer.recordLap();
+        assertTrue("Lap duration should be 3 seconds", lap2Duration >= 2 && lap2Duration <= 4);
+
+        totalTimer.stop();
+    }
+
 }
