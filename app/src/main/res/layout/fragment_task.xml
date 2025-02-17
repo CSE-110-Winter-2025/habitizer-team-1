@@ -12,8 +12,8 @@
         android:layout_marginStart="308dp"
         android:layout_marginTop="72dp"
         android:paddingStart="16dp"
-        android:text="0 minutes"
-        android:textColor="#777"
+        android:text="@string/_0_minutes"
+        android:textColor="#616161"
         android:textSize="16sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -26,7 +26,7 @@
         android:layout_marginTop="44dp"
         android:fontFamily="sans-serif"
         android:paddingStart="16dp"
-        android:text="Morning"
+        android:text="@string/morning"
         android:textColor="#000"
         android:textSize="36sp"
         app:layout_constraintStart_toStartOf="parent"
@@ -50,11 +50,12 @@
         android:id="@+id/lapTimeText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:text="Lap Time: 00:00"
+        android:text="@string/lap_time_00_00"
         android:textColor="#000"
         android:textSize="20sp"
-        android:visibility="gone" />  <!-- Initially hidden -->
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />  <!-- Initially hidden -->
 
 
     <androidx.recyclerview.widget.RecyclerView
@@ -70,6 +71,7 @@
 
     <LinearLayout
         android:id="@+id/buttonContainer"
+        style="?android:attr/buttonBarStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="32dp"
@@ -80,16 +82,18 @@
 
         <Button
             android:id="@+id/backButton"
+            style="?android:attr/buttonBarButtonStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="16dp"
-            android:text="Back" />
+            android:text="@string/back" />
 
         <Button
             android:id="@+id/endRoutineButton"
+            style="?android:attr/buttonBarButtonStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="End Routine" />
+            android:text="@string/end_routine" />
     </LinearLayout>
 
     <ImageButton
