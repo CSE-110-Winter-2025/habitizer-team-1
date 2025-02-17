@@ -13,8 +13,6 @@
         android:paddingStart="16dp"
         android:text="@string/_0_minutes"
         android:textColor="#616161"
-        android:text="0 m"
-        android:textColor="#777"
         android:textSize="16sp"
         app:layout_constraintStart_toEndOf="@+id/routineName"
         app:layout_constraintTop_toTopOf="parent" />
