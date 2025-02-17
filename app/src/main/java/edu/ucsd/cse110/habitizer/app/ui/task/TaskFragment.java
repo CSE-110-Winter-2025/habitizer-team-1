@@ -91,6 +91,7 @@ public class TaskFragment extends Fragment {
             // Reset task states to incomplete before going back
             repository.resetRoutine(routine.id());
             requireActivity().getSupportFragmentManager().popBackStack();
+            this.onDestroyView();
         });
         // Initialize and start the TotalTimer when the fragment loads
         totalTimer = new TotalTimer(routine);
@@ -103,6 +104,8 @@ public class TaskFragment extends Fragment {
             @Override
             public void onRoutineCompleted(int totalTime, String formattedTime) {
                 requireActivity().runOnUiThread(() -> timeRemaining.setText("Completed in: " + formattedTime));
+                endRoutineButton.setText("Routine Ended"); // change the text for once end routined
+                endRoutineButton.setEnabled(false);
             }
 
             @Override
@@ -120,6 +123,10 @@ public class TaskFragment extends Fragment {
             routine.setEnded(true);
             taskAdapter.endRoutine();
             totalTimer.stop();
+
+            // Set the button text to "Routine Ended" and disable it
+            endRoutineButton.setText("Routine Ended");
+            endRoutineButton.setEnabled(false);
         });
 
         // text changes
@@ -148,8 +155,8 @@ public class TaskFragment extends Fragment {
 
     @Override
     public void onDestroyView() {
-        super.onDestroyView();
         repository.resetRoutine(routine.id()); //ensure that all tasks statuses are reset
+        super.onDestroyView();
         totalTimer.stop(); // Stop the timer, avoid memory leaks
     }
 
@@ -160,11 +167,11 @@ public class TaskFragment extends Fragment {
             task.setComplete(true);
             if (routine != null) { //Null check for safety
 
-                routine.checkTasksCompleted();
                 if (routine.allTasksCompleted()) {
                     // Stop the timer if all tasks are complete
                     routine.setEnded(true);
                     totalTimer.stop();
+
                     Activity activity = getActivity();
                     if (activity != null) {
                         activity.runOnUiThread(() -> {
@@ -174,7 +181,6 @@ public class TaskFragment extends Fragment {
                             }
                         });
                     }
-
                 }
             }
             taskAdapter.notifyDataSetChanged();

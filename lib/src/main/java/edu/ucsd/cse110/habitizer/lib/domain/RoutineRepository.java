@@ -46,6 +46,7 @@ public class RoutineRepository {
             }
 
         }
+        routine.setEnded(false); // ensure that routine is not ended
     }
 
 }
