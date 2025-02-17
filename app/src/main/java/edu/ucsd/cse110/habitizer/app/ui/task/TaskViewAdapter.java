@@ -1,5 +1,10 @@
 package edu.ucsd.cse110.habitizer.app.ui.task;
 
+
+import static edu.ucsd.cse110.habitizer.lib.domain.TotalTimer.formatTime;
+import static edu.ucsd.cse110.habitizer.lib.domain.TotalTimer.lapformatTime;
+
+
 import android.graphics.Paint;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,6 +14,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import edu.ucsd.cse110.habitizer.lib.domain.Task;
+import edu.ucsd.cse110.habitizer.lib.domain.TotalTimer;
 
 import edu.ucsd.cse110.habitizer.app.R;
 
@@ -40,6 +46,7 @@ public class TaskViewAdapter extends RecyclerView.Adapter<TaskViewAdapter.TaskVi
         Task task = tasks.get(position);
         holder.taskName.setText(task.title());
 
+
         if(isRoutineEnded && !task.complete()) {
             holder.taskDuration.setText("-");
         }else{
@@ -53,6 +60,11 @@ public class TaskViewAdapter extends RecyclerView.Adapter<TaskViewAdapter.TaskVi
             holder.taskName.setPaintFlags(holder.taskName.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
             // disable clicks on completed tasks
             holder.itemView.setOnClickListener(null); // Disable clicks
+          
+            holder.taskDuration.setVisibility(View.VISIBLE);
+
+            holder.taskDuration.setText(lapformatTime(task.getLapTime()));
+
         } else if(!isEditing){
             holder.taskName.setPaintFlags(holder.taskName.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
             // Set the click listener only if the task is NOT complete and if routine has not ended
@@ -76,6 +88,9 @@ public class TaskViewAdapter extends RecyclerView.Adapter<TaskViewAdapter.TaskVi
             holder.itemView.setOnClickListener(v -> {
                 clickListener.onTaskClick(task); // Notify the fragment
             });
+        holder.taskDuration.setVisibility(View.GONE);
+
+
         }
 
     }
@@ -91,14 +106,17 @@ public class TaskViewAdapter extends RecyclerView.Adapter<TaskViewAdapter.TaskVi
     }
 
     public static class TaskViewHolder extends RecyclerView.ViewHolder {
-        TextView taskName, taskDuration;
+        TextView taskName, taskDuration, lapTime;
 
         public TaskViewHolder(View itemView) {
             super(itemView);
             taskName = itemView.findViewById(R.id.taskName);
             taskDuration = itemView.findViewById(R.id.taskDuration);
+            lapTime = itemView.findViewById(R.id.lapTime);
         }
     }
+
+
 
     public void endRoutine() {
         isRoutineEnded = true;

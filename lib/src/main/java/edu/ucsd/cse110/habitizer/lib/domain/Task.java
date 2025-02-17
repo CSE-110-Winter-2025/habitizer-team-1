@@ -12,6 +12,25 @@ public class Task implements Serializable {
 
     private @NonNull Boolean complete;
 
+    private long lapTime;
+    private long lastLapTime = 0; //last recorded laptime
+
+    public int getLapTime() {
+        return (int)lapTime;
+    }
+
+    public void setLapTime(long lapTime) {
+        this.lapTime = lapTime;
+    }
+
+    public void setLastLapTime(long lastLapTime) {
+        this.lastLapTime = lastLapTime;
+    }
+
+    public long getLastLapTime() {
+        return lastLapTime;
+    }
+
     public Task(@NonNull Integer id, @NonNull String title){
         this.id = id;
         this.title = title;
@@ -41,6 +60,7 @@ public class Task implements Serializable {
         return Objects.hash(id, title, complete);
     }
 
+
     public void setTitle(@NonNull String title) {
         this.title = title;
     }
@@ -51,6 +71,9 @@ public class Task implements Serializable {
     }
 
     public Task withId(int id) {
+        //Task newTask = new Task(id, this.title);
+        //newTask.setComplete(this.complete); // Preserve the complete status
+        //return newTask;
         return new Task(id, this.title);
     }
 }
