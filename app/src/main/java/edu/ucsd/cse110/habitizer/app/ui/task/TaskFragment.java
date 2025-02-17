@@ -178,37 +178,31 @@ public class TaskFragment extends Fragment {
         totalTimer.stop(); // Stop the timer, avoid memory leaks
     }
 
-private void markTaskComplete(Task task) {
-    task.setComplete(true);
+    private void markTaskComplete(Task task) {
+        task.setComplete(true);
 
-    long currentTime = totalTimer.getSecondsElapsed();
-    long lastLapTime = routine.getLastLapTime(); // Retrieve the last lap time
-    long lapTime = currentTime - lastLapTime; // Calculate the time since last task completion
-    task.setLapTime(lapTime);
-    routine.setLastLapTime(currentTime);
+        // Use `recordLap()` from TotalTimer to get the lap duration
+        long lapTime = totalTimer.recordLap();
+        task.setLapTime(lapTime); // Store the lap time for the task
+        routine.setLastLapTime(totalTimer.getSecondsElapsed()); // Update routine tracking
 
-    //requireActivity().runOnUiThread(() -> updateTaskLapTimeUI(task));
+        // Ensure UI updates to reflect lap times
+        requireActivity().runOnUiThread(() -> taskAdapter.notifyDataSetChanged());
 
+        // Handle routine completion
+        if (routine != null) { // Null check for safety
+            routine.checkTasksCompleted();
 
-    // Save the lap time for the task
-    //int taskLapTime = totalTimer.getSecondsElapsed(); // Assuming `totalTimer` tracks elapsed time for the current task
-    //task.setLapTime(taskLapTime);
-
-    if (routine != null) { //Null check for safety
-
-        routine.checkTasksCompleted();
-
-        if (routine.allTasksCompleted()) {
-            // Stop the timer if all tasks are complete
-            totalTimer.stop();
-            requireActivity().runOnUiThread(() -> {
-                TextView timeRemaining = requireActivity().findViewById(R.id.timeRemaining);
-                timeRemaining.setText("Completed in:\n " + formatTime(totalTimer.getSecondsElapsed()));
-            });
+            if (routine.allTasksCompleted()) {
+                totalTimer.stop();
+                requireActivity().runOnUiThread(() -> {
+                    TextView timeRemaining = requireActivity().findViewById(R.id.timeRemaining);
+                    timeRemaining.setText("Completed in:\n " + formatTime(totalTimer.getSecondsElapsed()));
+                });
+            }
         }
     }
-    taskAdapter.notifyDataSetChanged();
-}
+
 
 
 

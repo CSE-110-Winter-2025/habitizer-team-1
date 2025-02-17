@@ -11,6 +11,8 @@ public class TotalTimer {
     private final Routine routine; // Routine associated with the timer
     private volatile TimerListener listener; // Listener for UI updates (volatile ensures visibility across threads)
 
+    private long lastLapTime = 0; // Keeps track of the last lap timestamp
+
     /**
      * Constructor that initializes the TotalTimer with a given routine.
      * Throws an exception if the routine is null.
@@ -31,6 +33,8 @@ public class TotalTimer {
 
         running = true;
         secondsElapsed = 0;
+        lastLapTime = System.currentTimeMillis(); // Record the start time
+
         timer = new Timer();
 
         timer.schedule(new TimerTask() {
@@ -50,6 +54,14 @@ public class TotalTimer {
                 }
             }
         }, 1000, 1000); // Start after 1 second, repeat every 1 second
+    }
+
+    public synchronized long recordLap() {
+        long currentTime = System.currentTimeMillis();
+        long lapDuration = (currentTime - lastLapTime) / 1000; // Convert to seconds
+        lastLapTime = currentTime; // Update last lap time
+
+        return lapDuration; // Return lap duration for tracking
     }
 
     /**
