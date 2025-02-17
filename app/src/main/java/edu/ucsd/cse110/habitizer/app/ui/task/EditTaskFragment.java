@@ -71,6 +71,8 @@ public class EditTaskFragment extends Fragment {
 
         addTaskButton.setOnClickListener(v -> addTask());
 
+        taskAdapter.setEditingMode(true); // ensure that it can't strikethrough
+
         TextView timeEstimateView = view.findViewById(R.id.timeEstimate);
         updateTimeEstimateText(timeEstimateView); // set initial text
 

@@ -1,7 +1,9 @@
 package edu.ucsd.cse110.habitizer.app.ui.task;
 
+
 import static edu.ucsd.cse110.habitizer.lib.domain.TotalTimer.formatTime;
 import static edu.ucsd.cse110.habitizer.lib.domain.TotalTimer.lapformatTime;
+
 
 import android.graphics.Paint;
 import android.view.LayoutInflater;
@@ -23,6 +25,9 @@ public class TaskViewAdapter extends RecyclerView.Adapter<TaskViewAdapter.TaskVi
     private List<Task> tasks;
     private final TaskClickListener clickListener;
 
+    private boolean isRoutineEnded = false;
+    private boolean isEditing = false;
+
     public TaskViewAdapter(List<Task> tasks, TaskClickListener clickListener) {
         this.tasks = tasks;
         this.clickListener = clickListener;
@@ -40,37 +45,52 @@ public class TaskViewAdapter extends RecyclerView.Adapter<TaskViewAdapter.TaskVi
     public void onBindViewHolder(TaskViewHolder holder, int position) {
         Task task = tasks.get(position);
         holder.taskName.setText(task.title());
-        holder.taskDuration.setText("0 min"); // placeholder
+
+
+        if(isRoutineEnded && !task.complete()) {
+            holder.taskDuration.setText("-");
+        }else{
+            holder.taskDuration.setText("0 min"); // placeholder
+        }
+
 //        holder.itemView.setOnClickListener(v -> clickListener.onTaskClick(task));
 
         // Apply strikethrough based on completion status
-        if (task.complete()) {
+        if (!isEditing && task.complete()) {
             holder.taskName.setPaintFlags(holder.taskName.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
             // disable clicks on completed tasks
             holder.itemView.setOnClickListener(null); // Disable clicks
-
+          
             holder.taskDuration.setVisibility(View.VISIBLE);
 
             holder.taskDuration.setText(lapformatTime(task.getLapTime()));
 
-        } else {
+        } else if(!isEditing){
             holder.taskName.setPaintFlags(holder.taskName.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
-            // Set the click listener only if the task is NOT complete
+            // Set the click listener only if the task is NOT complete and if routine has not ended
             holder.itemView.setOnClickListener(v -> {
-                // Mark the task as complete
-                task.setComplete(true);
+                if (!isRoutineEnded) {
+                    // Mark the task as complete
+                    task.setComplete(true);
 
+                    // Apply strikethrough
+                    holder.taskName.setPaintFlags(holder.taskName.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
 
-                // Apply strikethrough
-                holder.taskName.setPaintFlags(holder.taskName.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+                    // Disable clicks on the task
+                    holder.itemView.setOnClickListener(null);
 
-                // Disable clicks on the task
-                holder.itemView.setOnClickListener(null);
-
-                clickListener.onTaskClick(task); // Notify the fragment
-                notifyItemChanged(position); // Update the view
+                    clickListener.onTaskClick(task); // Notify the fragment
+                    notifyItemChanged(position); // Update the view
+                }
             });
-            holder.taskDuration.setVisibility(View.GONE);
+        }
+        else if (!isRoutineEnded){
+            holder.itemView.setOnClickListener(v -> {
+                clickListener.onTaskClick(task); // Notify the fragment
+            });
+        holder.taskDuration.setVisibility(View.GONE);
+
+
         }
 
     }
@@ -94,6 +114,19 @@ public class TaskViewAdapter extends RecyclerView.Adapter<TaskViewAdapter.TaskVi
             taskDuration = itemView.findViewById(R.id.taskDuration);
             lapTime = itemView.findViewById(R.id.lapTime);
         }
+    }
+
+
+
+    public void endRoutine() {
+        isRoutineEnded = true;
+        notifyDataSetChanged(); // Update the entire adapter if needed
+    }
+
+    // Setter for editing mode
+    public void setEditingMode(boolean isEditing) {
+        this.isEditing = isEditing;
+        notifyDataSetChanged(); // Refresh the list if editing mode changes
     }
 
 }

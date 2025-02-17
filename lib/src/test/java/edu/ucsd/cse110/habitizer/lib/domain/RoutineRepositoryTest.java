@@ -1,6 +1,7 @@
 package edu.ucsd.cse110.habitizer.lib.domain;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
@@ -10,6 +11,11 @@ import org.junit.Test;
 import java.util.List;
 public class RoutineRepositoryTest {
     private RoutineRepository repository;
+
+    private Routine morningRoutine;
+    private Routine eveningRoutine;
+    private Task task1;
+    private Task task2;
 
     @Before
     public void setUp() {
@@ -67,5 +73,22 @@ public class RoutineRepositoryTest {
         assertNotNull(routine);
         assertTrue(routine.getTasks().contains(newTask));
         assertEquals(7, routine.getTasks().size()); // Ensure task count increased
+    }
+
+    @Test
+    public void testResetRoutineWithTasks() {
+        Routine currRoutine = repository.getRoutineById(0); // get morning routine
+        assertNotNull(currRoutine);
+
+        for(Task task : currRoutine.getTasks()) {
+            task.setComplete(true); // set all tasks as complete
+            assertTrue(task.complete());
+        }
+
+        repository.resetRoutine(0);
+
+        for(Task task : currRoutine.getTasks()) {
+            assertFalse(task.complete());
+        }
     }
 }
