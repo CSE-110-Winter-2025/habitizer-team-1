@@ -32,7 +32,8 @@ public class RoutineRepository {
     public void addTaskToRoutine(int routineId, Task task) {
         dataSource.addTask(task);
         Routine routine = getRoutineById(routineId);
-        if (routine != null) {
+        // check for redundant tasks
+        if (routine != null && !routine.getTasks().contains(task)) {
             routine.addTask(task);
         }
     }
@@ -51,5 +52,6 @@ public class RoutineRepository {
 
         }
     }
+
 }
 

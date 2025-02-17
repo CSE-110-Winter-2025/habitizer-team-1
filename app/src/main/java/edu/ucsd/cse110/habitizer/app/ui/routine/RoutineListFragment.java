@@ -10,6 +10,7 @@ import android.widget.LinearLayout;
 import androidx.fragment.app.Fragment;
 
 import edu.ucsd.cse110.habitizer.app.R;
+import edu.ucsd.cse110.habitizer.app.ui.HabitizerApplication;
 import edu.ucsd.cse110.habitizer.app.ui.task.TaskFragment;
 import edu.ucsd.cse110.habitizer.app.ui.task.EditTaskFragment;
 import edu.ucsd.cse110.habitizer.lib.domain.Routine;
@@ -32,7 +33,7 @@ public class RoutineListFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_routine, container, false);
         
-        repository = new RoutineRepository();
+        repository = ((HabitizerApplication) requireActivity().getApplication()).getRoutineRepository();
         buttonContainer = view.findViewById(R.id.routineButtonContainer);
         editButton = view.findViewById(R.id.editButton);
 
@@ -52,14 +53,29 @@ public class RoutineListFragment extends Fragment {
             params.gravity = android.view.Gravity.CENTER;  
             
             button.setLayoutParams(params);
-            
+
             button.setOnClickListener(v -> {
+<<<<<<< HEAD
                TaskFragment taskFragment = new TaskFragment(routine);
 
                 requireActivity().getSupportFragmentManager().beginTransaction()
                     .replace(R.id.fragment_container, taskFragment)
                     .addToBackStack(null)
                     .commit();
+=======
+                // Create a unique tag based on the routine ID.
+                String fragmentTag = "TaskFragment_" + routine.id();
+                // See if there is existing fragment with the tag
+                Fragment currentFragment = requireActivity().getSupportFragmentManager().findFragmentByTag(fragmentTag);
+                // Only replace if the desired fragment is not already displayed to reduce redundant UI updates
+                if (currentFragment == null) {
+                    TaskFragment taskFragment = TaskFragment.newInstance(routine);
+                    requireActivity().getSupportFragmentManager().beginTransaction()
+                            .replace(R.id.fragment_container, taskFragment, fragmentTag)
+                            .addToBackStack(null)
+                            .commit();
+                }
+>>>>>>> e7b94d1d55a56b879054191a1bc10c3e899923b5
             });
             
             buttonContainer.addView(button);
@@ -115,30 +131,6 @@ public class RoutineListFragment extends Fragment {
             buttonContainer.addView(button);
         }
     }
-
-    /*
-
-    Code that can be used to rename a routine
-
-    private void showRenameDialog(Routine routine, Button button) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
-        EditText input = new EditText(requireContext());
-        input.setText(routine.getName());
-        
-        builder.setTitle("Rename Routine")
-               .setView(input)
-               .setPositiveButton("OK", (dialog, which) -> {
-                   String newName = input.getText().toString().trim();
-                   if (!newName.isEmpty()) {
-                       routine.setName(newName);
-                       button.setText(newName);
-                   }
-               })
-               .setNegativeButton("Cancel", null)
-               .show();
-    }
-
-     */
 }
     
 
