@@ -125,4 +125,11 @@ public class TotalTimer {
         void onRoutineCompleted(int totalTime, String formattedTime); // Called when all tasks are completed
     }
 
+    public static String lapformatTime(int totalSeconds) {
+        int minutes = (totalSeconds + 59) / 60;
+
+        return minutes + (minutes == 1 ? " minute" : " minutes");
+
+    }
+
 }

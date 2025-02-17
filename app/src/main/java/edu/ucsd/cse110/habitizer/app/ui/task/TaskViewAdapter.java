@@ -1,6 +1,7 @@
 package edu.ucsd.cse110.habitizer.app.ui.task;
 
 import static edu.ucsd.cse110.habitizer.lib.domain.TotalTimer.formatTime;
+import static edu.ucsd.cse110.habitizer.lib.domain.TotalTimer.lapformatTime;
 
 import android.graphics.Paint;
 import android.view.LayoutInflater;
@@ -49,7 +50,8 @@ public class TaskViewAdapter extends RecyclerView.Adapter<TaskViewAdapter.TaskVi
             holder.itemView.setOnClickListener(null); // Disable clicks
 
             holder.taskDuration.setVisibility(View.VISIBLE);
-            holder.taskDuration.setText("Lap Time: " + formatTime(task.getLapTime()));
+
+            holder.taskDuration.setText("Lap Time: " + lapformatTime(task.getLapTime()));
 
         } else {
             holder.taskName.setPaintFlags(holder.taskName.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
