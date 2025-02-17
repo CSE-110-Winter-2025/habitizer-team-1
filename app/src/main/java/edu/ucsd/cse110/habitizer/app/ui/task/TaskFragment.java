@@ -3,15 +3,12 @@ package edu.ucsd.cse110.habitizer.app.ui.task;
 import static edu.ucsd.cse110.habitizer.lib.domain.TotalTimer.formatTime;
 
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.graphics.Paint;
 import android.os.Bundle;
-import android.text.InputType;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
@@ -126,12 +123,22 @@ public class TaskFragment extends Fragment {
             taskAdapter.endRoutine();
             totalTimer.stop();
 
+
+            // for every incomplete task, set the time next to it to '-'
+//            for (Task task : routine.getTasks()) {
+//                if (!task.complete()) {
+//
+//                }
+//            }
+
             // Set the button text to "Routine Ended" and disable it
             endRoutineButton.setText("Routine Ended");
             endRoutineButton.setEnabled(false);
 
             // enable back button
             backButton.setEnabled(true);
+
+
         });
 
         // text changes

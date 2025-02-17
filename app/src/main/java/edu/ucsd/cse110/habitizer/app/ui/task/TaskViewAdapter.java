@@ -39,7 +39,13 @@ public class TaskViewAdapter extends RecyclerView.Adapter<TaskViewAdapter.TaskVi
     public void onBindViewHolder(TaskViewHolder holder, int position) {
         Task task = tasks.get(position);
         holder.taskName.setText(task.title());
-        holder.taskDuration.setText("0 min"); // placeholder
+
+        if(isRoutineEnded && !task.complete()) {
+            holder.taskDuration.setText("-");
+        }else{
+            holder.taskDuration.setText("0 min"); // placeholder
+        }
+
 //        holder.itemView.setOnClickListener(v -> clickListener.onTaskClick(task));
 
         // Apply strikethrough based on completion status
