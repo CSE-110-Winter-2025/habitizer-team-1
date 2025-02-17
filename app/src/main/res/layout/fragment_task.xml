@@ -53,7 +53,7 @@
         android:text="@string/lap_time_00_00"
         android:textColor="#000"
         android:textSize="20sp"
-        android:visibility="gone"
+        android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />  <!-- Initially hidden -->
 
@@ -82,7 +82,7 @@
 
         <Button
             android:id="@+id/backButton"
-            style="?android:attr/buttonBarButtonStyle"
+            style="@style/Widget.AppCompat.Button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="16dp"
@@ -90,7 +90,7 @@
 
         <Button
             android:id="@+id/endRoutineButton"
-            style="?android:attr/buttonBarButtonStyle"
+            style="@style/Widget.AppCompat.Button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/end_routine" />
