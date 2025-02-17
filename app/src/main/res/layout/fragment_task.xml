@@ -11,7 +11,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="55dp"
         android:paddingStart="16dp"
-        android:text="@string/_0_minutes"
+        android:text="0 m"
         android:textColor="#616161"
         android:textSize="16sp"
         app:layout_constraintStart_toEndOf="@+id/routineName"
