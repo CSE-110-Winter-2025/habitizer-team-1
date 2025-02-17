@@ -178,7 +178,7 @@ public class TaskFragment extends Fragment {
         totalTimer.stop(); // Stop the timer, avoid memory leaks
     }
 
-    private void markTaskComplete(Task task) {
+    public void markTaskComplete(Task task) {
         task.setComplete(true);
 
         // Use `recordLap()` from TotalTimer to get the lap duration
