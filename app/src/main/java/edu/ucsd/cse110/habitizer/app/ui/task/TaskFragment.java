@@ -87,12 +87,14 @@ public class TaskFragment extends Fragment {
         tasks.setLayoutManager(new LinearLayoutManager(getActivity()));
         tasks.setAdapter(taskAdapter);
 
+        backButton.setEnabled(false);
         backButton.setOnClickListener(v -> {
             // Reset task states to incomplete before going back
             repository.resetRoutine(routine.id());
             requireActivity().getSupportFragmentManager().popBackStack();
             this.onDestroyView();
         });
+
         // Initialize and start the TotalTimer when the fragment loads
         totalTimer = new TotalTimer(routine);
         totalTimer.setListener(new TotalTimer.TimerListener() {
@@ -127,6 +129,9 @@ public class TaskFragment extends Fragment {
             // Set the button text to "Routine Ended" and disable it
             endRoutineButton.setText("Routine Ended");
             endRoutineButton.setEnabled(false);
+
+            // enable back button
+            backButton.setEnabled(true);
         });
 
         // text changes
@@ -177,6 +182,7 @@ public class TaskFragment extends Fragment {
                         activity.runOnUiThread(() -> {
                             TextView timeRemaining = activity.findViewById(R.id.timeRemaining);
                             Button endRoutineButton = activity.findViewById(R.id.endRoutineButton); // find endroutine button
+                            Button backButton = activity.findViewById(R.id.backButton);
 
                             if (timeRemaining != null) {
                                 timeRemaining.setText("Completed in:\n " + formatTime(totalTimer.getSecondsElapsed()));
@@ -186,6 +192,11 @@ public class TaskFragment extends Fragment {
                             if (endRoutineButton != null) {
                                 endRoutineButton.setText("Routine Ended");
                                 endRoutineButton.setEnabled(false); // Disable the button
+                            }
+
+                            // enable back button
+                            if(backButton != null) {
+                                backButton.setEnabled(true);
                             }
                         });
                     }
