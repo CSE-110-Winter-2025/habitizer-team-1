@@ -1,5 +1,6 @@
 package edu.ucsd.cse110.habitizer.app.ui.task;
 
+import android.graphics.Paint;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +19,9 @@ public class TaskViewAdapter extends RecyclerView.Adapter<TaskViewAdapter.TaskVi
     private List<Task> tasks;
     private final TaskClickListener clickListener;
 
+    private boolean isRoutineEnded = false;
+    private boolean isEditing = false;
+
     public TaskViewAdapter(List<Task> tasks, TaskClickListener clickListener) {
         this.tasks = tasks;
         this.clickListener = clickListener;
@@ -35,8 +39,45 @@ public class TaskViewAdapter extends RecyclerView.Adapter<TaskViewAdapter.TaskVi
     public void onBindViewHolder(TaskViewHolder holder, int position) {
         Task task = tasks.get(position);
         holder.taskName.setText(task.title());
-        holder.taskDuration.setText("0 min"); // placeholder
-        holder.itemView.setOnClickListener(v -> clickListener.onTaskClick(task));
+
+        if(isRoutineEnded && !task.complete()) {
+            holder.taskDuration.setText("-");
+        }else{
+            holder.taskDuration.setText("0 min"); // placeholder
+        }
+
+//        holder.itemView.setOnClickListener(v -> clickListener.onTaskClick(task));
+
+        // Apply strikethrough based on completion status
+        if (!isEditing && task.complete()) {
+            holder.taskName.setPaintFlags(holder.taskName.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+            // disable clicks on completed tasks
+            holder.itemView.setOnClickListener(null); // Disable clicks
+        } else if(!isEditing){
+            holder.taskName.setPaintFlags(holder.taskName.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
+            // Set the click listener only if the task is NOT complete and if routine has not ended
+            holder.itemView.setOnClickListener(v -> {
+                if (!isRoutineEnded) {
+                    // Mark the task as complete
+                    task.setComplete(true);
+
+                    // Apply strikethrough
+                    holder.taskName.setPaintFlags(holder.taskName.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+
+                    // Disable clicks on the task
+                    holder.itemView.setOnClickListener(null);
+
+                    clickListener.onTaskClick(task); // Notify the fragment
+                    notifyItemChanged(position); // Update the view
+                }
+            });
+        }
+        else if (!isRoutineEnded){
+            holder.itemView.setOnClickListener(v -> {
+                clickListener.onTaskClick(task); // Notify the fragment
+            });
+        }
+
     }
 
     @Override
@@ -46,6 +87,7 @@ public class TaskViewAdapter extends RecyclerView.Adapter<TaskViewAdapter.TaskVi
 
     public void setTasks(List<Task> tasks) {
         this.tasks = tasks;
+        notifyDataSetChanged();
     }
 
     public static class TaskViewHolder extends RecyclerView.ViewHolder {
@@ -57,4 +99,16 @@ public class TaskViewAdapter extends RecyclerView.Adapter<TaskViewAdapter.TaskVi
             taskDuration = itemView.findViewById(R.id.taskDuration);
         }
     }
+
+    public void endRoutine() {
+        isRoutineEnded = true;
+        notifyDataSetChanged(); // Update the entire adapter if needed
+    }
+
+    // Setter for editing mode
+    public void setEditingMode(boolean isEditing) {
+        this.isEditing = isEditing;
+        notifyDataSetChanged(); // Refresh the list if editing mode changes
+    }
+
 }

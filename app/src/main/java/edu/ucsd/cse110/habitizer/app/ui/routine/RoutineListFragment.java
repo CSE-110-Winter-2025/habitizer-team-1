@@ -110,7 +110,8 @@ public class RoutineListFragment extends Fragment {
                             .commit();
                 } else {
                     // Otherwise open TaskFragment to start running the routine
-                    TaskFragment taskFragment = TaskFragment.newInstance(routine);
+                   TaskFragment taskFragment = TaskFragment.newInstance(routine);
+
                     requireActivity().getSupportFragmentManager().beginTransaction()
                             .replace(R.id.fragment_container, taskFragment)
                             .addToBackStack(null)
