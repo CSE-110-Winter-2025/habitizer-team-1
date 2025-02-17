@@ -52,7 +52,18 @@ public class TotalTimer {
         }, 1000, 1000); // Start after 1 second, repeat every 1 second
     }
 
+    /**
+     * Manually advances the elapsed time by 30 seconds.
+     * Notifies the listener with the updated time.
+     */
+    public synchronized void advanceTime() {
+        secondsElapsed += 30;
 
+        // Notify the listener with updated time
+        if (listener != null) {
+            listener.onTick(secondsElapsed, formatTime(secondsElapsed));
+        }
+    }
 
     /**
      * Stops the timer if it is currently running.
@@ -65,6 +76,46 @@ public class TotalTimer {
         }
         running = false;
     }
+
+    /**
+     * Toggles the timer between pause and resume.
+     */
+    public synchronized void togglePause() {
+        if (!running) { // Resume the timer if it was paused
+            running = true;
+            timer = new Timer();
+
+            timer.schedule(new TimerTask() {
+                @Override
+                public void run() {
+                    synchronized (TotalTimer.this) {
+                        if (!running) return;
+
+                        secondsElapsed++;
+
+                        if (listener != null) {
+                            listener.onTick(secondsElapsed, formatTime(secondsElapsed));
+                        }
+
+                        routine.checkTasksCompleted();
+                    }
+                }
+            }, 1000, 1000); // Resume from the same time
+
+        } else { // Pause the timer
+            if (timer != null) {
+                timer.cancel();
+                timer = null;
+            }
+            running = false;
+        }
+
+        // Notify the listener about pause state change
+        if (listener != null) {
+            listener.onPauseToggled(!running);
+        }
+    }
+
 
     /**
      * Resets the timer by stopping it and setting elapsed time to zero.
@@ -123,6 +174,7 @@ public class TotalTimer {
     public interface TimerListener {
         void onTick(int secondsElapsed, String formattedTime); // Called every second with updated elapsed time
         void onRoutineCompleted(int totalTime, String formattedTime); // Called when all tasks are completed
+        void onPauseToggled(boolean isPaused); // Notify when paused/unpaused
     }
 
     public static String lapformatTime(int totalSeconds) {
