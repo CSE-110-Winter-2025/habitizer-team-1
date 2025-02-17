@@ -14,6 +14,7 @@ public class Routine implements Serializable {
     private List<Task> tasks = new ArrayList<>(); // Ensure it's never null
     private TotalTimer totalTimer; // Reference to TotalTimer
 
+
     public Routine(int id, @NonNull String name) {
         this.id = id;
         this.name = name;

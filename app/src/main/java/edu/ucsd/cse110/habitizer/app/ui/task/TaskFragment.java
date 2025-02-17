@@ -178,8 +178,13 @@ public class TaskFragment extends Fragment {
         totalTimer.stop(); // Stop the timer, avoid memory leaks
     }
 
+<<<<<<< Updated upstream
     private void markTaskComplete(Task task) {
         task.setComplete(true);
+=======
+public void markTaskComplete(Task task) {
+    task.setComplete(true);
+>>>>>>> Stashed changes
 
         // Use `recordLap()` from TotalTimer to get the lap duration
         long lapTime = totalTimer.recordLap();
@@ -193,6 +198,7 @@ public class TaskFragment extends Fragment {
         if (routine != null) { // Null check for safety
             routine.checkTasksCompleted();
 
+<<<<<<< Updated upstream
             if (routine.allTasksCompleted()) {
                 totalTimer.stop();
                 requireActivity().runOnUiThread(() -> {
@@ -200,6 +206,25 @@ public class TaskFragment extends Fragment {
                     timeRemaining.setText("Completed in:\n " + formatTime(totalTimer.getSecondsElapsed()));
                 });
             }
+=======
+    // Save the lap time for the task
+    //int taskLapTime = totalTimer.getSecondsElapsed(); // Assuming `totalTimer` tracks elapsed time for the current task
+    //task.setLapTime(taskLapTime);
+
+
+
+    if (routine != null) { //Null check for safety
+
+        routine.checkTasksCompleted();
+
+        if (routine.allTasksCompleted()) {
+            // Stop the timer if all tasks are complete
+            totalTimer.stop();
+            requireActivity().runOnUiThread(() -> {
+                TextView timeRemaining = requireActivity().findViewById(R.id.timeRemaining);
+                timeRemaining.setText("Completed in:\n " + formatTime(totalTimer.getSecondsElapsed()));
+            });
+>>>>>>> Stashed changes
         }
     }
 
