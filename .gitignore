@@ -1,3 +1,4 @@
+# Ignore all .iml files
 *.iml
 .gradle
 /local.properties
