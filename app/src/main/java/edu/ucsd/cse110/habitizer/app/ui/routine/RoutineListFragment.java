@@ -55,14 +55,7 @@ public class RoutineListFragment extends Fragment {
             button.setLayoutParams(params);
 
             button.setOnClickListener(v -> {
-<<<<<<< HEAD
-               TaskFragment taskFragment = new TaskFragment(routine);
 
-                requireActivity().getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.fragment_container, taskFragment)
-                    .addToBackStack(null)
-                    .commit();
-=======
                 // Create a unique tag based on the routine ID.
                 String fragmentTag = "TaskFragment_" + routine.id();
                 // See if there is existing fragment with the tag
@@ -75,7 +68,6 @@ public class RoutineListFragment extends Fragment {
                             .addToBackStack(null)
                             .commit();
                 }
->>>>>>> e7b94d1d55a56b879054191a1bc10c3e899923b5
             });
             
             buttonContainer.addView(button);
