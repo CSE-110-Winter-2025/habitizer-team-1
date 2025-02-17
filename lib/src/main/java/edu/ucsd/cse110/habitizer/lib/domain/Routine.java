@@ -14,6 +14,12 @@ public class Routine implements Serializable {
     private List<Task> tasks = new ArrayList<>(); // Ensure it's never null
     private TotalTimer totalTimer; // Reference to TotalTimer
 
+
+    // stores timeEstimate for Routine, null is the default to represent no time inputted so Integer is used
+    private Integer timeEstimate = null;
+
+
+
     public Routine(int id, @NonNull String name) {
         this.id = id;
         this.name = name;
@@ -64,7 +70,6 @@ public class Routine implements Serializable {
      * Checks whether all tasks in the routine are completed.
      * If all tasks are done, the timer is stopped, and the listener is notified.
      */
-
     public void checkTasksCompleted() {
         System.out.println("Checking if all tasks are complete...");
 
@@ -98,6 +103,16 @@ public class Routine implements Serializable {
         this.lastLapTime = lastLapTime;
     }
 
+
+    // returns stored timeEstimate
+    public Integer getTimeEstimate() {
+        return this.timeEstimate;
+    }
+
+    // changes timeEstimated
+    public void setTimeEstimate(Integer timeEstimate) {
+        this.timeEstimate = timeEstimate;
+    }
 
 }
 

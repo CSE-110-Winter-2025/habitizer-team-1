@@ -28,6 +28,8 @@ public class EditTaskFragment extends Fragment {
 
     private RoutineRepository repository;
 
+    private static final int MAX_TIME_ESTIMATE = 10000;
+
     public EditTaskFragment(Routine routine) {
         this.routine = routine;
     }
@@ -68,9 +70,49 @@ public class EditTaskFragment extends Fragment {
         backButton.setOnClickListener(v -> requireActivity().getSupportFragmentManager().popBackStack());
 
         addTaskButton.setOnClickListener(v -> addTask());
+
+        TextView timeEstimateView = view.findViewById(R.id.timeEstimate);
+        updateTimeEstimateText(timeEstimateView); // set initial text
+
+        // Set an onClick listener so that tapping timeEstimate opens a dialog
+        timeEstimateView.setOnClickListener(v -> {
+            final EditText input = new EditText(getActivity());
+            input.setHint("Enter time estimate in minutes");
+            input.setInputType(InputType.TYPE_CLASS_NUMBER);
+
+            new AlertDialog.Builder(getActivity())
+                    .setTitle("Set Time Estimate")
+                    .setView(input)
+                    .setPositiveButton("OK", (dialog, which) -> {
+                        // get input
+                        String text = input.getText().toString().trim();
+
+                        // if text is not empty
+                        if (!text.isEmpty()) {
+                            try {
+                                // try to read input text
+                                Integer newEstimate = Integer.parseInt(text);
+
+                                // input was read successfully and is in between our set max and 0
+                                if (newEstimate < MAX_TIME_ESTIMATE && newEstimate >= 0) {
+                                    // valid time estimated is updated
+                                    routine.setTimeEstimate(newEstimate);
+                                    updateTimeEstimateText(timeEstimateView);
+                                }
+                            } catch (NumberFormatException e) {
+                                // input is too big to process, so return to avoid crashing
+                                return;
+                            }
+                        }
+                    })
+                    .setNegativeButton("Cancel", null)
+                    .show();
+        });
+
         return view;
     }
 
+    // when user taps a task and can rename it
     private void renameTask(Task task) {
         final EditText input = new EditText(getActivity());
         input.setText(task.title());
@@ -92,6 +134,7 @@ public class EditTaskFragment extends Fragment {
                 .show();
     }
 
+    // when user presses the add task button
     private void addTask() {
         final EditText input = new EditText(getActivity());
         input.setHint("Add task");
@@ -112,4 +155,18 @@ public class EditTaskFragment extends Fragment {
                 .setNegativeButton("Cancel", null)
                 .show();
     }
+
+    // updates timeEstimate
+    private void updateTimeEstimateText(TextView view) {
+        Integer estimate = routine.getTimeEstimate();
+
+        // null means no change and default is -
+        if (estimate == null) {
+            view.setText("- minutes");
+        } else {
+            view.setText(String.format("%d minutes", estimate));
+        }
+    }
+
+
 }
