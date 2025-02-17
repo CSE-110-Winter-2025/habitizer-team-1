@@ -171,13 +171,21 @@ public class TaskFragment extends Fragment {
                     // Stop the timer if all tasks are complete
                     routine.setEnded(true);
                     totalTimer.stop();
-
                     Activity activity = getActivity();
+
                     if (activity != null) {
                         activity.runOnUiThread(() -> {
                             TextView timeRemaining = activity.findViewById(R.id.timeRemaining);
+                            Button endRoutineButton = activity.findViewById(R.id.endRoutineButton); // find endroutine button
+
                             if (timeRemaining != null) {
                                 timeRemaining.setText("Completed in:\n " + formatTime(totalTimer.getSecondsElapsed()));
+                            }
+
+                            // Set "Routine Ended" text and disable the end routine button
+                            if (endRoutineButton != null) {
+                                endRoutineButton.setText("Routine Ended");
+                                endRoutineButton.setEnabled(false); // Disable the button
                             }
                         });
                     }
