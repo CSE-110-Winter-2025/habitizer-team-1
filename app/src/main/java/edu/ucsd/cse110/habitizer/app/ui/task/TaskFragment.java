@@ -142,6 +142,11 @@ public class TaskFragment extends Fragment {
                     timeRemaining.setText("Completed in:\n" + formattedTime);
                 });
             }
+
+            @Override
+            public void onPauseToggled(boolean isPaused) {
+
+            }
         });
 
         stopButton.setOnClickListener(v -> totalTimer.togglePause());
