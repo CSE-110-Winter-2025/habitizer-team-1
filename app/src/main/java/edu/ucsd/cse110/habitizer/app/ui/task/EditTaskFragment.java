@@ -28,6 +28,8 @@ public class EditTaskFragment extends Fragment {
 
     private RoutineRepository repository;
 
+    private static final int MAX_TIME_ESTIMATE = 10000;
+
     public EditTaskFragment(Routine routine) {
         this.routine = routine;
     }
@@ -82,14 +84,25 @@ public class EditTaskFragment extends Fragment {
                     .setTitle("Set Time Estimate")
                     .setView(input)
                     .setPositiveButton("OK", (dialog, which) -> {
+                        // get input
                         String text = input.getText().toString().trim();
-                        // Use null if empty
-                        Integer newEstimate = text.isEmpty() ? null : Integer.parseInt(text);
 
-                        // If user inputs a value less than 10000, then update the time estimate
-                        if (newEstimate != null && newEstimate < 10000) {
-                            routine.setTimeEstimate(newEstimate);
-                            updateTimeEstimateText(timeEstimateView);
+                        // if text is not empty
+                        if (!text.isEmpty()) {
+                            try {
+                                // try to read input text
+                                Integer newEstimate = Integer.parseInt(text);
+
+                                // input was read successfully and is in between our set max and 0
+                                if (newEstimate < MAX_TIME_ESTIMATE && newEstimate >= 0) {
+                                    // valid time estimated is updated
+                                    routine.setTimeEstimate(newEstimate);
+                                    updateTimeEstimateText(timeEstimateView);
+                                }
+                            } catch (NumberFormatException e) {
+                                // input is too big to process, so return to avoid crashing
+                                return;
+                            }
                         }
                     })
                     .setNegativeButton("Cancel", null)
@@ -151,7 +164,7 @@ public class EditTaskFragment extends Fragment {
         if (estimate == null) {
             view.setText("- minutes");
         } else {
-            view.setText(estimate + " minutes");
+            view.setText(String.format("%d minutes", estimate));
         }
     }
 
