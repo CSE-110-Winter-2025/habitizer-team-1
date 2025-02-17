@@ -38,5 +38,16 @@ public class RoutineRepository {
         }
     }
 
+    public void resetRoutine(int routineId) {
+        Routine routine = getRoutineById(routineId);
+        if (routine != null && routine.getTasks() != null) {
+            for(Task task : routine.getTasks()){
+                task.setComplete(false);
+            }
+
+        }
+        routine.setEnded(false); // ensure that routine is not ended
+    }
+
 }
 
