@@ -56,20 +56,25 @@ public class TaskFragment extends Fragment {
         // Retrieve the routine passed in, get the repository's routine instance
         if (getArguments() != null) {
             Routine passed = (Routine) getArguments().getSerializable("routine");
-            routine = repository.getRoutineById(passed.id());
+            if (passed != null && passed.id() != null) {
+                routine = repository.getRoutineById(passed.id());
+            }
         }
 
         TextView routineName = view.findViewById(R.id.routineName);
-        //TextView elapsedTimeView = view.findViewById(R.id.elapsedTime);
         RecyclerView tasks = view.findViewById(R.id.taskRecyclerView);
         Button backButton = view.findViewById(R.id.backButton);
+        TextView timeEstimateView = view.findViewById(R.id.timeEstimate);
         Button endRoutineButton = view.findViewById(R.id.endRoutineButton);
+        TextView timeRemaining = view.findViewById(R.id.timeRemaining);
         ImageButton stopButton = view.findViewById(R.id.button_stop);
         ImageButton advanceButton = view.findViewById(R.id.button_advance);
-        TextView timeRemaining = view.findViewById(R.id.timeRemaining);
-
 
         routineName.setText(routine.getName());
+
+        // if the estimated time has changes, it is updated
+        updateTimeEstimate(timeEstimateView);
+
 
         taskAdapter = new TaskViewAdapter(routine.getTasks(), task -> markTaskComplete(task));
         tasks.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -82,12 +87,20 @@ public class TaskFragment extends Fragment {
         totalTimer.setListener(new TotalTimer.TimerListener() {
             @Override
             public void onTick(int secondsElapsed, String formattedTime) {
-                requireActivity().runOnUiThread(() -> timeRemaining.setText(formattedTime));
+                // round down to minutes during running time
+                int minutes = secondsElapsed / 60;
+                requireActivity().runOnUiThread(() ->
+                        timeRemaining.setText(minutes + " m")
+                );
             }
 
             @Override
             public void onRoutineCompleted(int totalTime, String formattedTime) {
-                requireActivity().runOnUiThread(() -> timeRemaining.setText("Completed in: " + formattedTime));
+                // round up when completed
+                int minutes = (totalTime + 59) / 60;
+                requireActivity().runOnUiThread(() ->
+                        timeRemaining.setText(minutes + " m")
+                );
             }
 
             @Override
@@ -103,6 +116,15 @@ public class TaskFragment extends Fragment {
         // Stop the timer when the routine ends
         endRoutineButton.setOnClickListener(v -> {
             totalTimer.stop();
+
+            // Get final elapsed time in seconds from the timer
+            int finalTime = totalTimer.getTotalTime();
+
+            // Round up to minutes when end routine button is pressed
+            int minutes = (finalTime + 59) / 60;
+            requireActivity().runOnUiThread(() ->
+                    timeRemaining.setText(minutes + " m")
+            );
         });
 
         stopButton.setOnClickListener(v -> totalTimer.togglePause());
@@ -137,5 +159,18 @@ public class TaskFragment extends Fragment {
     private void markTaskComplete(Task task) {
         task.setComplete(true);
         taskAdapter.notifyDataSetChanged();
+    }
+
+    // Updates the time estimate TextView
+    private void updateTimeEstimate(TextView timeEstimateView) {
+        Integer estimate = routine.getTimeEstimate();
+
+        // default if no inputted estimated time is null
+        if (estimate == null) {
+            timeEstimateView.setText("/ - minutes");
+        } else {
+            // use user input
+            timeEstimateView.setText("/ " + estimate + " minutes");
+        }
     }
 }
