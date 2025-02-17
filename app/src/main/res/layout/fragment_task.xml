@@ -45,17 +45,6 @@
         app:layout_constraintTop_toTopOf="parent" />
 
 
-    <TextView
-        android:id="@+id/lapTimeText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/lap_time_00_00"
-        android:textColor="#000"
-        android:textSize="20sp"
-        android:visibility="visible"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />  <!-- Initially hidden -->
-
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/taskRecyclerView"

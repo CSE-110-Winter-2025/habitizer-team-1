@@ -176,7 +176,6 @@ public class TaskFragment extends Fragment {
 
 
 
-
         lapTimer.setListener(new TimerListener() {
             @Override
             public void onTick(int secondsElapsed, String formattedTime) {
@@ -200,6 +199,7 @@ public class TaskFragment extends Fragment {
             public void onPauseToggled(boolean isPaused) {
 
             }
+
         });
 
 
@@ -207,7 +207,10 @@ public class TaskFragment extends Fragment {
         taskAdapter.setEditingMode(false); // ensures that it can strikethrough
 
         stopButton.setOnClickListener(v -> totalTimer.togglePause());
-        advanceButton.setOnClickListener(v -> totalTimer.advanceTime());
+
+        advanceButton.setOnClickListener(v -> {
+            totalTimer.advanceTime(); // This should internally reset the lap timer (i.e. set lapStartTime = secondsElapsed
+        });
 
         return view;
     }
@@ -265,7 +268,8 @@ public class TaskFragment extends Fragment {
                             Button backButton = activity.findViewById(R.id.backButton);
 
                             if (timeRemaining != null) {
-                                timeRemaining.setText("Completed in:\n " + formatTime(totalTimer.getSecondsElapsed()));
+                                int time = (totalTimer.getSecondsElapsed() + 59)/60;
+                                timeRemaining.setText(time + " m");
                             }
 
                             // Set "Routine Ended" text and disable the end routine button

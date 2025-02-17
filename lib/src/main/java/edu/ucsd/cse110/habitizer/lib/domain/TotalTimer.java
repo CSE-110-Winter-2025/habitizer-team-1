@@ -11,6 +11,8 @@ public class TotalTimer {
     private final Routine routine; // Routine associated with the timer
     private volatile TimerListener listener; // Listener for UI updates (volatile ensures visibility across threads)
 
+    private int lastLap = 0;
+
     private long lastLapTime = 0; // Keeps track of the last lap timestamp
 
     /**
@@ -57,11 +59,9 @@ public class TotalTimer {
     }
 
     public synchronized long recordLap() {
-        long currentTime = System.currentTimeMillis();
-        long lapDuration = (currentTime - lastLapTime) / 1000; // Convert to seconds
-        lastLapTime = currentTime; // Update last lap time
-
-        return lapDuration; // Return lap duration for tracking
+        int lapTime = secondsElapsed - lastLap;
+        lastLap = secondsElapsed;
+        return lapTime;
     }
 
     /**
