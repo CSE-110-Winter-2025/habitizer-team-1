@@ -2,7 +2,12 @@ package edu.ucsd.cse110.habitizer.app.ui.task;
 
 import static edu.ucsd.cse110.habitizer.lib.domain.TotalTimer.formatTime;
 
+
+import android.app.AlertDialog;
+import android.graphics.Paint;
+
 import android.app.Activity;
+
 import android.os.Bundle;
 
 import android.view.LayoutInflater;
@@ -16,7 +21,12 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
+import java.util.Locale;
 
 import edu.ucsd.cse110.habitizer.app.R;
 import edu.ucsd.cse110.habitizer.lib.domain.Routine;
@@ -42,8 +52,6 @@ public class TaskFragment extends Fragment {
         this.totalTimer = new TotalTimer(routine);
     }
 
-
-
     public static TaskFragment newInstance(Routine routine) {
         TaskFragment fragment = new TaskFragment(routine);
         Bundle args = new Bundle();
@@ -51,8 +59,6 @@ public class TaskFragment extends Fragment {
         fragment.setArguments(args);
         return fragment;
     }
-
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -89,6 +95,7 @@ public class TaskFragment extends Fragment {
         tasks.setLayoutManager(new LinearLayoutManager(getActivity()));
         tasks.setAdapter(taskAdapter);
 
+
         backButton.setEnabled(false);
         backButton.setOnClickListener(v -> {
             // Reset task states to incomplete before going back
@@ -97,6 +104,11 @@ public class TaskFragment extends Fragment {
             this.onDestroyView();
         });
 
+        backButton.setOnClickListener(v -> {
+            // Reset task states to incomplete before going back
+            repository.resetRoutine(routine.id());
+            requireActivity().getSupportFragmentManager().popBackStack();
+        });
         // Initialize and start the TotalTimer when the fragment loads
         totalTimer = new TotalTimer(routine);
         totalTimer.setListener(new TotalTimer.TimerListener() {
@@ -153,10 +165,16 @@ public class TaskFragment extends Fragment {
             );
         });
 
+
+
         // text changes
         taskAdapter.setEditingMode(false); // ensures that it can strikethrough
+
         stopButton.setOnClickListener(v -> totalTimer.togglePause());
-        advanceButton.setOnClickListener(v -> totalTimer.advanceTime());
+
+        advanceButton.setOnClickListener(v -> {
+            totalTimer.advanceTime(); // This should internally reset the lap timer (i.e. set lapStartTime = secondsElapsed
+        });
 
         return view;
     }
@@ -181,16 +199,26 @@ public class TaskFragment extends Fragment {
     public void onDestroyView() {
         repository.resetRoutine(routine.id()); //ensure that all tasks statuses are reset
         super.onDestroyView();
+        repository.resetRoutine(routine.id()); //ensure that all tasks statuses are reset
         totalTimer.stop(); // Stop the timer, avoid memory leaks
     }
 
-    private void markTaskComplete(Task task) {
+
+    public void markTaskComplete(Task task) {
         if(routine != null && routine.getEnded()) {
             return; // ensure that tasks can't be marked complete after the routine ends
         }else{
             task.setComplete(true);
-            if (routine != null) { //Null check for safety
+          
+          // Use `recordLap()` from TotalTimer to get the lap duration
+          long lapTime = totalTimer.recordLap();
+          task.setLapTime(lapTime); // Store the lap time for the task
+          routine.setLastLapTime(totalTimer.getSecondsElapsed()); // Update routine tracking
+          
+          // Ensure UI updates to reflect lap times
+          requireActivity().runOnUiThread(() -> taskAdapter.notifyDataSetChanged());
 
+            if (routine != null) { //Null check for safety
                 if (routine.allTasksCompleted()) {
                     // Stop the timer if all tasks are complete
                     routine.setEnded(true);
@@ -204,7 +232,8 @@ public class TaskFragment extends Fragment {
                             Button backButton = activity.findViewById(R.id.backButton);
 
                             if (timeRemaining != null) {
-                                timeRemaining.setText("Completed in:\n " + formatTime(totalTimer.getSecondsElapsed()));
+                                int time = (totalTimer.getSecondsElapsed() + 59)/60;
+                                timeRemaining.setText(time + " m");
                             }
 
                             // Set "Routine Ended" text and disable the end routine button

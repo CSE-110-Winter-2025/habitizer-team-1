@@ -2,4 +2,9 @@
     <string name="app_name">Habitizer</string>
     <string name="advancetime">AdvanceTime</string>
     <string name="stoptimer">StopTimer</string>
+    <string name="back">Back</string>
+    <string name="end_routine">End Routine</string>
+    <string name="lap_time_00_00">Lap Time: 00:00</string>
+    <string name="morning">Morning</string>
+    <string name="_0_minutes">0 minutes</string>
 </resources>

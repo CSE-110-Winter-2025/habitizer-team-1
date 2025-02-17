@@ -93,14 +93,28 @@ public class Routine implements Serializable {
         }
     }
 
-    public boolean allTasksCompleted() {
-        for (Task task : this.getTasks()) {
-            if (!task.complete()) {
-                return false;
+
+    public boolean allTasksCompleted(){
+        boolean allDone = true;
+        for(Task task : this.getTasks()) {
+            if(!task.complete()) {
+                allDone = false;
+                return allDone;
             }
         }
-        return true;
+        return allDone;
     }
+
+    private long lastLapTime = 0; // Keeps track of the last recorded lap time
+
+    public long getLastLapTime() {
+        return lastLapTime;
+    }
+
+    public void setLastLapTime(long lastLapTime) {
+        this.lastLapTime = lastLapTime;
+    }
+
 
     // returns stored timeEstimate
     public Integer getTimeEstimate() {
