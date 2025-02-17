@@ -44,6 +44,21 @@ public class RoutineRepositoryTest {
     }
 
     @Test
+    public void testAddTaskToRoutineDuplicate() {
+        Task newTask = new Task(13, "Read a book");
+        repository.addTaskToRoutine(0, newTask);
+
+        // try to add a duplicate task, not allowed
+        repository.addTaskToRoutine(0, newTask);
+
+        List<Task> tasks = repository.getRoutineTasks(0);
+        assertTrue(tasks.contains(newTask));
+
+        // the task list size should still be 8
+        assertEquals(8, tasks.size());
+    }
+
+    @Test
     public void testRetrieveUpdatedRoutineTasks() {
         Task newTask = new Task(13, "Stretch");
         repository.addTaskToRoutine(1, newTask); // Add to Evening Routine

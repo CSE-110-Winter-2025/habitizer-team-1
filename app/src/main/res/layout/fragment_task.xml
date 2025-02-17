@@ -6,24 +6,25 @@
     android:layout_height="match_parent">
 
     <TextView
-        android:id="@+id/timeRemaining2"
+        android:id="@+id/timeRemaining"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="308dp"
-        android:layout_marginTop="72dp"
+        android:layout_marginTop="55dp"
         android:paddingStart="16dp"
         android:text="@string/_0_minutes"
         android:textColor="#616161"
+        android:text="0 m"
+        android:textColor="#777"
         android:textSize="16sp"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/routineName"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/routineName"
-        android:layout_width="187dp"
+        android:layout_width="wrap_content"
         android:layout_height="64dp"
-        android:layout_marginStart="36dp"
-        android:layout_marginTop="44dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="36dp"
         android:fontFamily="sans-serif"
         android:paddingStart="16dp"
         android:text="@string/morning"
@@ -32,17 +33,17 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-
     <TextView
-        android:id="@+id/timeRemaining"
-        android:layout_width="wrap_content"
+        android:id="@+id/timeEstimate"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="236dp"
-        android:layout_marginTop="60dp"
+        android:layout_marginTop="55dp"
         android:paddingStart="16dp"
+        android:text="/ - minutes"
         android:textColor="#777"
-        android:textSize="24sp"
-        app:layout_constraintStart_toStartOf="parent"
+        android:textSize="16sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/timeRemaining"
         app:layout_constraintTop_toTopOf="parent" />
 
 
@@ -66,7 +67,7 @@
         app:layout_constraintBottom_toTopOf="@id/buttonContainer"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/timeRemaining"
+        app:layout_constraintTop_toBottomOf="@id/timeEstimate"
         tools:listitem="@layout/recycler_view_item" />
 
     <LinearLayout
@@ -96,6 +97,7 @@
             android:text="@string/end_routine" />
     </LinearLayout>
 
+
     <ImageButton
         android:id="@+id/button_stop"
         android:layout_width="48dp"
@@ -105,7 +107,7 @@
         android:background="?attr/selectableItemBackgroundBorderless"
         android:contentDescription="@string/stoptimer"
         android:src="@drawable/pause"
-        app:layout_constraintEnd_toStartOf="@+id/button_advance"
+        app:layout_constraintEnd_toStartOf="@id/button_advance"
         app:layout_constraintTop_toTopOf="parent" />
 
     <ImageButton
@@ -119,5 +121,6 @@
         android:src="@drawable/advance"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

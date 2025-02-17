@@ -179,6 +179,11 @@ public class TotalTimer {
         return String.format("%02d:%02d", minutes, seconds);
     }
 
+    // returns total time
+    public int getTotalTime() {
+        return secondsElapsed;
+    }
+
 
     /**
      * Callback interface for UI or other listeners to receive updates.

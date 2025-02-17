@@ -2,6 +2,7 @@ package edu.ucsd.cse110.habitizer.lib.domain;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import org.junit.Before;
@@ -64,6 +65,19 @@ public class RoutineTest {
         task2.setComplete(true);
 
         assertEquals(0, routine.getTotalTimer().getSecondsElapsed());  // Should stop automatically
+    }
+
+    @Test
+    public void testDefaultTimeEstimateIsNull() {
+        // Time estimate starts off as null with no user input
+        assertNull("Default time estimate is null", routine.getTimeEstimate());
+    }
+
+    @Test
+    public void testSetAndGetTimeEstimate() {
+        // Set a time estimate and verify it's returned correctly.
+        routine.setTimeEstimate(5);
+        assertEquals(Integer.valueOf(5), routine.getTimeEstimate());
     }
 }
 
