@@ -51,7 +51,7 @@ public class TaskViewAdapter extends RecyclerView.Adapter<TaskViewAdapter.TaskVi
 
             holder.taskDuration.setVisibility(View.VISIBLE);
 
-            holder.taskDuration.setText("Lap Time: " + lapformatTime(task.getLapTime()));
+            holder.taskDuration.setText(lapformatTime(task.getLapTime()));
 
         } else {
             holder.taskName.setPaintFlags(holder.taskName.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
