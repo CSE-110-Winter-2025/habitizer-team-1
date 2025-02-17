@@ -2,6 +2,7 @@ package edu.ucsd.cse110.habitizer.app.ui.task;
 
 import static edu.ucsd.cse110.habitizer.lib.domain.TotalTimer.formatTime;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.graphics.Paint;
 import android.os.Bundle;
@@ -152,10 +153,16 @@ public class TaskFragment extends Fragment {
                     // Stop the timer if all tasks are complete
                     routine.setEnded(true);
                     totalTimer.stop();
-                    requireActivity().runOnUiThread(() -> {
-                        TextView timeRemaining = requireActivity().findViewById(R.id.timeRemaining);
-                        timeRemaining.setText("Completed in:\n " + formatTime(totalTimer.getSecondsElapsed()));
-                    });
+                    Activity activity = getActivity();
+                    if (activity != null) {
+                        activity.runOnUiThread(() -> {
+                            TextView timeRemaining = activity.findViewById(R.id.timeRemaining);
+                            if (timeRemaining != null) {
+                                timeRemaining.setText("Completed in:\n " + formatTime(totalTimer.getSecondsElapsed()));
+                            }
+                        });
+                    }
+
                 }
             }
             taskAdapter.notifyDataSetChanged();
