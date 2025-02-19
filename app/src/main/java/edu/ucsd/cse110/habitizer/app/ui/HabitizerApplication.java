@@ -4,16 +4,16 @@ import android.app.Application;
 import edu.ucsd.cse110.habitizer.lib.domain.RoutineRepository;
 
 public class HabitizerApplication extends Application {
-    private RoutineRepository routineRepository;
+    private MainViewModel.Factory viewModelFactory;
 
     @Override
     public void onCreate() {
         super.onCreate();
-        // Use one repository for the duration of running the app
-        routineRepository = new RoutineRepository();
+        RoutineRepository repository = new RoutineRepository();
+        viewModelFactory = new MainViewModel.Factory(repository);
     }
 
-    public RoutineRepository getRoutineRepository() {
-        return routineRepository;
+    public MainViewModel.Factory getViewModelFactory() {
+        return viewModelFactory;
     }
 }
