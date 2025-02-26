@@ -14,13 +14,14 @@ import edu.ucsd.cse110.habitizer.app.ui.HabitizerApplication;
 import edu.ucsd.cse110.habitizer.app.ui.task.TaskFragment;
 import edu.ucsd.cse110.habitizer.app.ui.task.EditTaskFragment;
 import edu.ucsd.cse110.habitizer.lib.domain.Routine;
-import edu.ucsd.cse110.habitizer.lib.domain.RoutineRepository;
 import android.app.AlertDialog;
 import android.widget.EditText;
+import edu.ucsd.cse110.habitizer.app.ui.MainViewModel;
+import androidx.lifecycle.ViewModelProvider;
 
 public class RoutineListFragment extends Fragment {
-    // Data
-    private RoutineRepository repository;
+    // ViewModel
+    private MainViewModel viewModel;
 
     // UI objects
     private LinearLayout buttonContainer;
@@ -33,7 +34,9 @@ public class RoutineListFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_routine, container, false);
         
-        repository = ((HabitizerApplication) requireActivity().getApplication()).getRoutineRepository();
+        var factory = ((HabitizerApplication) requireActivity().getApplication()).getViewModelFactory();
+        viewModel = new ViewModelProvider(this, factory).get(MainViewModel.class);
+
         buttonContainer = view.findViewById(R.id.routineButtonContainer);
         editButton = view.findViewById(R.id.editButton);
 
@@ -41,7 +44,7 @@ public class RoutineListFragment extends Fragment {
             toggleEditState();
         });
 
-        for (Routine routine : repository.getRoutines()) {
+        for (Routine routine : viewModel.getRoutines()) {
             Button button = new Button(getContext());
             button.setText(routine.getName());
             
@@ -86,7 +89,7 @@ public class RoutineListFragment extends Fragment {
     private void renderRoutineButtons() {
         buttonContainer.removeAllViews(); 
         
-        for (Routine routine : repository.getRoutines()) {
+        for (Routine routine : viewModel.getRoutines()) {
             Button button = new Button(getContext());
             button.setText(routine.getName());
             

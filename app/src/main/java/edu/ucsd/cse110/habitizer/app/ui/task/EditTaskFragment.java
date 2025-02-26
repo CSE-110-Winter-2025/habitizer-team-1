@@ -18,15 +18,17 @@ import java.util.List;
 
 import edu.ucsd.cse110.habitizer.app.R;
 import edu.ucsd.cse110.habitizer.lib.domain.Routine;
-import edu.ucsd.cse110.habitizer.lib.domain.RoutineRepository;
 import edu.ucsd.cse110.habitizer.lib.domain.Task;
 import edu.ucsd.cse110.habitizer.app.ui.HabitizerApplication;
+import edu.ucsd.cse110.habitizer.app.ui.MainViewModel;
+import androidx.lifecycle.ViewModelProvider;
 
 public class EditTaskFragment extends Fragment {
     private Routine routine;
     private TaskViewAdapter taskAdapter;
 
-    private RoutineRepository repository;
+    // ViewModel
+    private MainViewModel viewModel;
 
     private static final int MAX_TIME_ESTIMATE = 10000;
 
@@ -46,14 +48,12 @@ public class EditTaskFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_task_edit, container, false);
 
-        // use one shared repository
-        repository = ((HabitizerApplication) requireActivity().getApplication()).getRoutineRepository();
+        var factory = ((HabitizerApplication) requireActivity().getApplication()).getViewModelFactory();
+        viewModel = new ViewModelProvider(requireActivity(), factory).get(MainViewModel.class);
 
-        // Retrieve the routine passed via arguments, and then get the repository instance.
         if (getArguments() != null) {
             Routine passed = (Routine) getArguments().getSerializable("routine");
-            // Work on same routine instance stored in the repository
-            routine = repository.getRoutineById(passed.id());
+            routine = viewModel.getRoutineById(passed.id());
         }
 
         TextView routineName = view.findViewById(R.id.routineName);
@@ -150,7 +150,7 @@ public class EditTaskFragment extends Fragment {
                     // Do not allow empty tasks
                     if (!newTaskName.isEmpty()) {
                         Task newTask = new Task(null, newTaskName);
-                        repository.addTaskToRoutine(routine.id(), newTask);
+                        viewModel.addTaskToRoutine(routine.id(), newTask);
                         taskAdapter.notifyDataSetChanged();
                     }
                 })

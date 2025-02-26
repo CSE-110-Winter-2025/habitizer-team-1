@@ -30,18 +30,18 @@ import java.util.Locale;
 
 import edu.ucsd.cse110.habitizer.app.R;
 import edu.ucsd.cse110.habitizer.lib.domain.Routine;
-import edu.ucsd.cse110.habitizer.lib.domain.RoutineRepository;
 import edu.ucsd.cse110.habitizer.lib.domain.Task;
 import edu.ucsd.cse110.habitizer.lib.domain.TotalTimer;
-import edu.ucsd.cse110.habitizer.lib.domain.TotalTimer.TimerListener;
 import edu.ucsd.cse110.habitizer.app.ui.HabitizerApplication;
+import edu.ucsd.cse110.habitizer.app.ui.MainViewModel;
+import androidx.lifecycle.ViewModelProvider;
 
 public class TaskFragment extends Fragment {
     private Routine routine;
     private TaskViewAdapter taskAdapter;
 
-    // shared repository throughout app
-    private RoutineRepository repository;
+    // ViewModel
+    private MainViewModel viewModel;
 
     private TotalTimer totalTimer;
 
@@ -64,13 +64,13 @@ public class TaskFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_task, container, false);
 
-        repository = ((HabitizerApplication) requireActivity().getApplication()).getRoutineRepository();
+        var factory = ((HabitizerApplication) requireActivity().getApplication()).getViewModelFactory();
+        viewModel = new ViewModelProvider(requireActivity(), factory).get(MainViewModel.class);
 
-        // Retrieve the routine passed in, get the repository's routine instance
         if (getArguments() != null) {
             Routine passed = (Routine) getArguments().getSerializable("routine");
             if (passed != null && passed.id() != null) {
-                routine = repository.getRoutineById(passed.id());
+                routine = viewModel.getRoutineById(passed.id());
             }
             isEditing = getArguments().getBoolean("isEditing", false);
 
@@ -99,14 +99,14 @@ public class TaskFragment extends Fragment {
         backButton.setEnabled(false);
         backButton.setOnClickListener(v -> {
             // Reset task states to incomplete before going back
-            repository.resetRoutine(routine.id());
+            viewModel.resetRoutine(routine.id());
             requireActivity().getSupportFragmentManager().popBackStack();
             this.onDestroyView();
         });
 
         backButton.setOnClickListener(v -> {
             // Reset task states to incomplete before going back
-            repository.resetRoutine(routine.id());
+            viewModel.resetRoutine(routine.id());
             requireActivity().getSupportFragmentManager().popBackStack();
         });
         // Initialize and start the TotalTimer when the fragment loads
@@ -184,8 +184,7 @@ public class TaskFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        // Use the same repository throughout the app
-        Routine updated = repository.getRoutineById(routine.id());
+        Routine updated = viewModel.getRoutineById(routine.id());
         if (updated != null) {
             routine = updated;
             // Update the adapter's dataset and change the UI
@@ -197,9 +196,8 @@ public class TaskFragment extends Fragment {
 
     @Override
     public void onDestroyView() {
-        repository.resetRoutine(routine.id()); //ensure that all tasks statuses are reset
+        viewModel.resetRoutine(routine.id()); //ensure that all tasks statuses are reset
         super.onDestroyView();
-        repository.resetRoutine(routine.id()); //ensure that all tasks statuses are reset
         totalTimer.stop(); // Stop the timer, avoid memory leaks
     }
 
