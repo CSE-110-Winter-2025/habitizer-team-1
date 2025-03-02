@@ -198,7 +198,7 @@ public class TotalTimer {
         int time = totalSeconds;
 
         // if time is under a minute, then round by 5 second increments
-        if (time < 55) {
+        if (time <= 55) {
 
             // if divisible by 5, then no rounding is needed
             if ((time % 5) != 0) {

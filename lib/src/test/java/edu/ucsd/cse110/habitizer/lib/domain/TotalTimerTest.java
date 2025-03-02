@@ -123,8 +123,6 @@ public class TotalTimerTest {
     }
 
 
-
-
     @Test
     public void testTimerAccuracyWithSleep() throws InterruptedException {
         CountDownLatch latch = new CountDownLatch(3); // Expecting 3 ticks
@@ -209,6 +207,52 @@ public class TotalTimerTest {
         assertTrue("Lap duration should be 3 seconds", lap2Duration >= 2 && lap2Duration <= 4);
 
         totalTimer.stop();
+    }
+
+    /*
+        User Story 17 Tests - Updating Task time to go by 5 second increments when under a minute
+     */
+
+    // Under a minute, 5 second increment tests
+    @Test
+    public void testLapFormatTimeFiveSec() {
+        assertEquals("5 seconds", TotalTimer.lapformatTime(1));
+        assertEquals("5 seconds", TotalTimer.lapformatTime(2));
+        assertEquals("5 seconds", TotalTimer.lapformatTime(3));
+        assertEquals("5 seconds", TotalTimer.lapformatTime(4));
+        assertEquals("5 seconds", TotalTimer.lapformatTime(5));
+
+        assertEquals("10 seconds", TotalTimer.lapformatTime(6));
+        assertEquals("10 seconds", TotalTimer.lapformatTime(7));
+        assertEquals("10 seconds", TotalTimer.lapformatTime(9));
+        assertEquals("10 seconds", TotalTimer.lapformatTime(10));
+
+        assertEquals("15 seconds", TotalTimer.lapformatTime(11));
+        assertEquals("15 seconds", TotalTimer.lapformatTime(14));
+        assertEquals("15 seconds", TotalTimer.lapformatTime(15));
+
+        assertEquals("55 seconds", TotalTimer.lapformatTime(54));
+        assertEquals("55 seconds", TotalTimer.lapformatTime(55));
+    }
+
+    // Over a minute, rounds up nearest minute
+    @Test
+    public void testLapFormatTimeMinuteRound() {
+        assertEquals("1 minute", TotalTimer.lapformatTime(56));
+        assertEquals("1 minute", TotalTimer.lapformatTime(59));
+        assertEquals("1 minute", TotalTimer.lapformatTime(60));
+        assertEquals("2 minutes", TotalTimer.lapformatTime(61));
+        assertEquals("2 minutes", TotalTimer.lapformatTime(119));
+        assertEquals("2 minutes", TotalTimer.lapformatTime(120));
+        assertEquals("3 minutes", TotalTimer.lapformatTime(121));
+    }
+
+    // Exact minute, no rounding
+    @Test
+    public void testLapFormatTimeExactMinutes() {
+        assertEquals("1 minute", TotalTimer.lapformatTime(60));
+        assertEquals("2 minutes", TotalTimer.lapformatTime(120));
+        assertEquals("3 minutes", TotalTimer.lapformatTime(180));
     }
 
 }
