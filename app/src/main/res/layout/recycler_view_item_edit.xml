@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="8dp"
+    android:elevation="4dp">
+
+  <LinearLayout
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:orientation="horizontal"
+      android:padding="16dp">
+
+    <!-- Task Duration TextView -->
+    <TextView
+        android:id="@+id/taskName"
+        android:layout_width="281dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:text="Task Name"
+        android:textColor="#000"
+        android:textSize="20sp" />
+
+    <ImageButton
+        android:id="@+id/button_up"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_marginTop="0dp"
+        android:layout_marginEnd="0dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:contentDescription="@string/moveUP"
+        android:src="@drawable/arrow_upward"
+        app:layout_constraintEnd_toStartOf="@id/button_down"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageButton
+        android:id="@+id/button_down"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_marginTop="0dp"
+        android:layout_marginEnd="0dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:contentDescription="@string/moveDOWN"
+        android:src="@drawable/arrow_downward"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+  </LinearLayout>
+
+</androidx.cardview.widget.CardView>

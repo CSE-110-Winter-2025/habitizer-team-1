@@ -7,4 +7,6 @@
     <string name="lap_time_00_00">Lap Time: 00:00</string>
     <string name="morning">Morning</string>
     <string name="_0_minutes">0 minutes</string>
+    <string name="moveUP">Up</string>
+    <string name="moveDOWN">Down</string>
 </resources>
