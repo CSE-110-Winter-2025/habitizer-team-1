@@ -115,6 +115,7 @@ public class TaskFragment extends Fragment {
             if (!isEditing) viewModel.resetRoutine(routine.id());
             requireActivity().getSupportFragmentManager().popBackStack();
         });
+        backButton.setEnabled(false);
         
         // Setup task adapter with appropriate callback
         taskAdapter = new TaskViewAdapter(
@@ -157,6 +158,7 @@ public class TaskFragment extends Fragment {
             public void onRoutineCompleted(int totalTime, String formattedTime) {
                 endRoutineButton.setText("Routine Ended");
                 endRoutineButton.setEnabled(false);
+                backButton.setEnabled(true);
                 int minutes = (totalTime + 59) / 60;
                 requireActivity().runOnUiThread(() ->
                     timeRemaining.setText(minutes + " m")
@@ -271,9 +273,6 @@ public class TaskFragment extends Fragment {
                         endRoutineButton.setEnabled(false);
                     }
                     
-                    if (backButton != null) {
-                        backButton.setEnabled(true);
-                    }
                 }
             });
         }
