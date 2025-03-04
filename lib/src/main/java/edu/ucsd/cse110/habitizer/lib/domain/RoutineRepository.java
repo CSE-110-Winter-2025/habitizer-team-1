@@ -2,30 +2,33 @@ package edu.ucsd.cse110.habitizer.lib.domain;
 
 import edu.ucsd.cse110.habitizer.lib.data.InMemoryDataSource;
 import java.util.List;
-
-public class RoutineRepository {
+public class RoutineRepository implements SimpleRoutineRepository {
     private final InMemoryDataSource dataSource;
 
     public RoutineRepository() {
         this.dataSource = new InMemoryDataSource();
     }
 
+     @Override
     public List<Routine> getRoutines() {
         return dataSource.getRoutines();
     }
 
     // gets task objects from routine
+     @Override
     public List<Task> getRoutineTasks(int routineId) {
         Routine routine = getRoutineById(routineId);
         if (routine == null) return List.of();
         return routine.getTasks();
     }
 
+     @Override
     public Routine getRoutineById(int routineId) {
         return dataSource.getRoutineById(routineId);
     }
 
     // adds task objects to routine
+     @Override
     public void addTaskToRoutine(int routineId, Task task) {
         dataSource.addTask(task);
         Routine routine = getRoutineById(routineId);
@@ -35,12 +38,12 @@ public class RoutineRepository {
         }
     }
 
-
-
+     @Override
     public void markTaskComplete(Task task) {
         task.setComplete(true);
     }
 
+     @Override
     public void resetRoutine(int routineId) {
         Routine routine = getRoutineById(routineId);
         if (routine != null && routine.getTasks() != null) {

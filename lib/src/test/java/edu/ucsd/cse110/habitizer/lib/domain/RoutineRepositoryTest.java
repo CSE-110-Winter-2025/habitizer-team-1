@@ -10,7 +10,7 @@ import org.junit.Test;
 
 import java.util.List;
 public class RoutineRepositoryTest {
-    private RoutineRepository repository;
+    private SimpleRoutineRepository repository;
 
     private Routine morningRoutine;
     private Routine eveningRoutine;

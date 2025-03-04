@@ -14,7 +14,6 @@ dependencies {
     implementation(libs.filament.android)
     implementation(libs.impress)
     implementation(libs.firebase.database)
-
     testImplementation(libs.junit4)
     testImplementation(libs.hamcrest)
     testImplementation(libs.mockito.core)

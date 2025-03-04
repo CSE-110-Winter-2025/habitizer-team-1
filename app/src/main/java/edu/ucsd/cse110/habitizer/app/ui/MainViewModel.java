@@ -6,13 +6,13 @@ import androidx.lifecycle.ViewModelProvider;
 import java.util.List;
 
 import edu.ucsd.cse110.habitizer.lib.domain.Routine;
-import edu.ucsd.cse110.habitizer.lib.domain.RoutineRepository;
+import edu.ucsd.cse110.habitizer.lib.domain.SimpleRoutineRepository;
 import edu.ucsd.cse110.habitizer.lib.domain.Task;
 
 public class MainViewModel extends ViewModel {
-    private final RoutineRepository repository;
+    private final SimpleRoutineRepository repository;
 
-    public MainViewModel(RoutineRepository repository) {
+    public MainViewModel(SimpleRoutineRepository repository) {
         this.repository = repository;
     }
 
@@ -33,9 +33,9 @@ public class MainViewModel extends ViewModel {
     }
 
     public static class Factory implements ViewModelProvider.Factory {
-        private final RoutineRepository repository;
+        private final SimpleRoutineRepository repository;
 
-        public Factory(RoutineRepository repository) {
+        public Factory(SimpleRoutineRepository repository) {
             this.repository = repository;
         }
 

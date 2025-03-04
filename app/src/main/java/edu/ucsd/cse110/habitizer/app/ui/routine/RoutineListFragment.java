@@ -44,6 +44,7 @@ public class RoutineListFragment extends Fragment {
             toggleEditState();
         });
 
+
         for (Routine routine : viewModel.getRoutines()) {
             Button button = new Button(getContext());
             button.setText(routine.getName());
