@@ -17,6 +17,7 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -34,9 +35,15 @@ import edu.ucsd.cse110.habitizer.lib.domain.Task;
 import edu.ucsd.cse110.habitizer.lib.domain.TotalTimer;
 import edu.ucsd.cse110.habitizer.app.ui.HabitizerApplication;
 import edu.ucsd.cse110.habitizer.app.ui.MainViewModel;
+import edu.ucsd.cse110.observables.Observer;
+import edu.ucsd.cse110.observables.Subject;
+
 import androidx.lifecycle.ViewModelProvider;
 
 public class TaskFragment extends Fragment {
+
+    private TextView routineName;
+    private TextView timeEstimateView;
     private Routine routine;
     private TaskViewAdapter taskAdapter;
 
@@ -70,16 +77,25 @@ public class TaskFragment extends Fragment {
         if (getArguments() != null) {
             Routine passed = (Routine) getArguments().getSerializable("routine");
             if (passed != null && passed.id() != null) {
-                routine = viewModel.getRoutineById(passed.id());
+                Subject<Routine> routineSubject = viewModel.getRoutineByIdAsSubject(passed.id());
+                routineSubject.observe(new Observer<Routine>() {
+                    @Override
+                    public void onChanged(@Nullable Routine value) {
+                       if(value !=null) {
+                          routine = value;
+                          rerender();
+                       }
+                    }
+                });
             }
             isEditing = getArguments().getBoolean("isEditing", false);
 
         }
 
-        TextView routineName = view.findViewById(R.id.routineName);
+        routineName = view.findViewById(R.id.routineName);
         RecyclerView tasks = view.findViewById(R.id.taskRecyclerView);
         Button backButton = view.findViewById(R.id.backButton);
-        TextView timeEstimateView = view.findViewById(R.id.timeEstimate);
+        timeEstimateView = view.findViewById(R.id.timeEstimate);
         Button endRoutineButton = view.findViewById(R.id.endRoutineButton);
         TextView timeRemaining = view.findViewById(R.id.timeRemaining);
         ImageButton stopButton = view.findViewById(R.id.button_stop);
@@ -263,5 +279,12 @@ public class TaskFragment extends Fragment {
             // use user input
             timeEstimateView.setText("/ " + estimate + " minutes");
         }
+    }
+
+   private void rerender(){
+        routineName.setText(routine.getName());
+        taskAdapter.setTasks(routine.getTasks());
+        taskAdapter.notifyDataSetChanged();
+        updateTimeEstimate(timeEstimateView);
     }
 }

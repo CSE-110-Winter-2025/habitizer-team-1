@@ -1,12 +1,15 @@
 package edu.ucsd.cse110.habitizer.lib.domain;
 
 import java.util.List;
+import edu.ucsd.cse110.observables.Subject;
 
 public interface SimpleRoutineRepository {
     List<Routine> getRoutines();
 
     // gets task objects from routine
     List<Task> getRoutineTasks(int routineId);
+
+    Subject<Routine> getRoutineByIdAsSubject(int routineId);
 
     Routine getRoutineById(int routineId);
 

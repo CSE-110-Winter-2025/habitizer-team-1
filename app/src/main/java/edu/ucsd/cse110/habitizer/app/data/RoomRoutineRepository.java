@@ -1,19 +1,24 @@
 package edu.ucsd.cse110.habitizer.app.data;
 
-import androidx.lifecycle.LiveData;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.Map;
 
 import edu.ucsd.cse110.habitizer.lib.domain.Routine;
 import edu.ucsd.cse110.habitizer.lib.domain.Task;
-import edu.ucsd.cse110.habitizer.lib.domain.RoutineRepository;
 import edu.ucsd.cse110.habitizer.lib.domain.SimpleRoutineRepository;
+import edu.ucsd.cse110.observables.PlainMutableSubject;
+import edu.ucsd.cse110.observables.Subject;
+
+
 
 public class RoomRoutineRepository implements SimpleRoutineRepository {
 
     private final RoutineDao routineDao;
     private final TaskDao taskDao;
+    private final Map<Integer, PlainMutableSubject<Routine>> routineSubjects = new HashMap<>();
 
     public RoomRoutineRepository(RoutineDao routineDao, TaskDao taskDao){
         this.routineDao = routineDao;
@@ -33,7 +38,15 @@ public class RoomRoutineRepository implements SimpleRoutineRepository {
         List<TaskEntity> taskEntities = taskDao.getTasksForRoutine(routineId);
 
         return taskEntities.stream().map(TaskEntity::toTask).collect(Collectors.toList());
+    }
 
+    @Override 
+    public Subject<Routine> getRoutineByIdAsSubject(int routineId) {
+        if (!routineSubjects.containsKey(routineId)) {
+            var subject = new PlainMutableSubject<Routine>(getRoutineById(routineId));
+            routineSubjects.put(routineId, subject);
+        }
+        return routineSubjects.get(routineId);
     }
 
     @Override

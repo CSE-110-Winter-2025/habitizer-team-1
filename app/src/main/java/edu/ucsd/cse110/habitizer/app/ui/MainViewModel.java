@@ -8,6 +8,7 @@ import java.util.List;
 import edu.ucsd.cse110.habitizer.lib.domain.Routine;
 import edu.ucsd.cse110.habitizer.lib.domain.SimpleRoutineRepository;
 import edu.ucsd.cse110.habitizer.lib.domain.Task;
+import edu.ucsd.cse110.observables.Subject;
 
 public class MainViewModel extends ViewModel {
     private final SimpleRoutineRepository repository;
@@ -19,9 +20,12 @@ public class MainViewModel extends ViewModel {
     public List<Routine> getRoutines() {
         return repository.getRoutines();
     }
-
     public Routine getRoutineById(int id) {
         return repository.getRoutineById(id);
+    }
+
+    public Subject<Routine> getRoutineByIdAsSubject(int routineId){
+        return repository.getRoutineByIdAsSubject(routineId);
     }
 
     public void addTaskToRoutine(int routineId, Task task) {

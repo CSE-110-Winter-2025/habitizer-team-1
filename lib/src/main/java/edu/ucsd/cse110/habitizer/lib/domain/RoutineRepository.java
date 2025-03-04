@@ -1,6 +1,9 @@
 package edu.ucsd.cse110.habitizer.lib.domain;
 
 import edu.ucsd.cse110.habitizer.lib.data.InMemoryDataSource;
+import edu.ucsd.cse110.observables.PlainMutableSubject;
+import edu.ucsd.cse110.observables.Subject;
+
 import java.util.List;
 public class RoutineRepository implements SimpleRoutineRepository {
     private final InMemoryDataSource dataSource;
@@ -14,6 +17,7 @@ public class RoutineRepository implements SimpleRoutineRepository {
         return dataSource.getRoutines();
     }
 
+
     // gets task objects from routine
      @Override
     public List<Task> getRoutineTasks(int routineId) {
@@ -22,6 +26,10 @@ public class RoutineRepository implements SimpleRoutineRepository {
         return routine.getTasks();
     }
 
+    @Override
+    public Subject<Routine> getRoutineByIdAsSubject(int routineId){
+        return new PlainMutableSubject<>(dataSource.getRoutineById(routineId));
+    }
      @Override
     public Routine getRoutineById(int routineId) {
         return dataSource.getRoutineById(routineId);
