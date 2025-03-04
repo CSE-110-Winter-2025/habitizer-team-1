@@ -37,18 +37,29 @@ public class RoutineListFragment extends Fragment {
         buttonContainer = view.findViewById(R.id.routineButtonContainer);
         editButton = view.findViewById(R.id.editButton);
 
-        editButton.setOnClickListener(v -> toggleEditState());
+        updateEditButtonText();
+        
+        editButton.setOnClickListener(v -> {
+            viewModel.toggleEditingState();
+            updateEditButtonText();
+            renderRoutineButtons();
+        });
+
+        // Observe editing state changes
+        viewModel.getIsEditingSubject().observe(isEditing -> {
+            updateEditButtonText();
+            renderRoutineButtons();
+        });
 
         renderRoutineButtons();
         
         return view;
     }
 
-    private void toggleEditState() {
-        this.isEditing = !this.isEditing;
-        editButton.setText(this.isEditing ? "Edit" : "Start");
-        renderRoutineButtons();
+    private void updateEditButtonText() {
+        editButton.setText(viewModel.isEditing() ? "Edit" : "Start");
     }
+    
     
     private void renderRoutineButtons() {
         buttonContainer.removeAllViews(); 
@@ -66,6 +77,7 @@ public class RoutineListFragment extends Fragment {
             button.setLayoutParams(params);
 
             button.setOnClickListener(v -> {
+                Boolean isEditing = viewModel.isEditing();
                 // Use the unified TaskFragment with the appropriate mode
                 String fragmentTag = "TaskFragment_" + routine.id() + "_" + isEditing;
                 Fragment currentFragment = requireActivity().getSupportFragmentManager()

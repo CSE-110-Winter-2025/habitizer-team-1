@@ -9,9 +9,11 @@ import edu.ucsd.cse110.habitizer.lib.domain.Routine;
 import edu.ucsd.cse110.habitizer.lib.domain.SimpleRoutineRepository;
 import edu.ucsd.cse110.habitizer.lib.domain.Task;
 import edu.ucsd.cse110.observables.Subject;
-
+import edu.ucsd.cse110.observables.PlainMutableSubject;
 public class MainViewModel extends ViewModel {
     private final SimpleRoutineRepository repository;
+
+    private final PlainMutableSubject<Boolean> isEditingSubject = new PlainMutableSubject<>(false);
 
     public MainViewModel(SimpleRoutineRepository repository) {
         this.repository = repository;
@@ -38,6 +40,26 @@ public class MainViewModel extends ViewModel {
 
     public void resetRoutine(int routineId) {
         repository.resetRoutine(routineId);
+    }
+
+    // manage isEditing state for routines
+    public Subject<Boolean> getIsEditingSubject() {
+        return isEditingSubject;
+    }
+    
+    // Get current editing state
+    public boolean isEditing() {
+        return isEditingSubject.getValue() != null ? isEditingSubject.getValue() : false;
+    }
+    
+    // Set editing state
+    public void setEditing(boolean isEditing) {
+        isEditingSubject.setValue(isEditing);
+    }
+    
+    // Toggle editing state
+    public void toggleEditingState() {
+        setEditing(!isEditing());
     }
 
     public static class Factory implements ViewModelProvider.Factory {
