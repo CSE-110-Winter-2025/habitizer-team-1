@@ -11,6 +11,8 @@ public interface SimpleRoutineRepository {
 
     Subject<Routine> getRoutineByIdAsSubject(int routineId);
 
+    void renameTask(int routineId, Task task, String newName);
+
     Routine getRoutineById(int routineId);
 
     // adds task objects to routine

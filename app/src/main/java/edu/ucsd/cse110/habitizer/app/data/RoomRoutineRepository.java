@@ -56,6 +56,16 @@ public class RoomRoutineRepository implements SimpleRoutineRepository {
     }
 
     @Override
+    public void renameTask(int routineId, Task task, String newName) {
+    taskDao.updateTitle(task.id(), newName);
+    
+    if (routineSubjects.containsKey(routineId)) {
+        Routine updatedRoutine = getRoutineById(routineId);
+            routineSubjects.get(routineId).setValue(updatedRoutine);
+        }
+    }
+
+    @Override
     public void addTaskToRoutine(int routineId, Task task){
        taskDao.insert(TaskEntity.fromTask(task, routineId));
     }

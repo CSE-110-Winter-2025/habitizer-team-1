@@ -25,4 +25,7 @@ public interface TaskDao {
     @Query("UPDATE tasks SET isComplete = :isComplete WHERE id = :id")
     void updateCompletedState(int id, boolean isComplete);
 
+    @Query("UPDATE tasks SET title = :newTitle WHERE id = :id")
+    void updateTitle(int id, String newTitle);
 }
+

@@ -32,6 +32,10 @@ public class MainViewModel extends ViewModel {
         repository.addTaskToRoutine(routineId, task);
     }
 
+    public void renameTask(int routineId, Task task, String newName) {
+        repository.renameTask(routineId, task, newName);
+    }
+
     public void resetRoutine(int routineId) {
         repository.resetRoutine(routineId);
     }
