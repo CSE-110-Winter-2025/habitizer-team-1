@@ -28,6 +28,8 @@ public class TaskViewAdapter extends RecyclerView.Adapter<TaskViewAdapter.TaskVi
     private boolean isRoutineEnded;
     private boolean isEditing;
 
+    private int currPosition;
+
     public TaskViewAdapter(List<Task> tasks, TaskClickListener clickListener) {
         this.tasks = tasks;
         this.clickListener = clickListener;
@@ -48,6 +50,8 @@ public class TaskViewAdapter extends RecyclerView.Adapter<TaskViewAdapter.TaskVi
     public void onBindViewHolder(TaskViewHolder holder, int position) {
         Task task = tasks.get(position);
         holder.taskName.setText(task.title());
+
+        this.currPosition = position;
 
         if(isRoutineEnded && !task.complete()) {
             holder.taskDuration.setText("-");
@@ -95,6 +99,53 @@ public class TaskViewAdapter extends RecyclerView.Adapter<TaskViewAdapter.TaskVi
                 clickListener.onTaskClick(task); // Notify the fragment
             });
             holder.taskDuration.setVisibility(View.GONE);
+
+            // Up button click event
+            // Up button click event
+            holder.upButton.setOnClickListener(v -> {
+                int currPos = holder.getAdapterPosition();
+
+                // Ensure the current position is not the first item
+                if (currPos > 0) {
+                    // Swap the tasks
+                    Task taskToMove = tasks.get(currPos);
+                    Task taskAbove = tasks.get(currPos - 1);
+
+                    // Update sort orders
+                    taskToMove.setSortOrder(currPos - 1);
+                    taskAbove.setSortOrder(currPos);
+
+                    tasks.set(currPos, taskAbove);
+                    tasks.set(currPos - 1, taskToMove);
+
+                    // Notify the adapter
+                    notifyItemMoved(currPos, currPos - 1);
+
+                }
+            });
+
+// Down button click event
+            holder.downButton.setOnClickListener(v -> {
+                int currPos = holder.getAdapterPosition();
+
+                // Ensure the current position is not the last item
+                if (currPos < tasks.size() - 1) {
+                    // Swap the tasks
+                    Task taskToMove = tasks.get(currPos);
+                    Task taskBelow = tasks.get(currPos + 1);
+
+                    // Update sort orders
+                    taskToMove.setSortOrder(currPos + 1);
+                    taskBelow.setSortOrder(currPos);
+
+                    tasks.set(currPos, taskBelow);
+                    tasks.set(currPos + 1, taskToMove);
+
+                    // Notify the adapter
+                    notifyItemMoved(currPos, currPos + 1);
+                }
+            });
+
         }
 
     }
