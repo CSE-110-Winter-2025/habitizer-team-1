@@ -65,7 +65,10 @@ public class TaskViewAdapter extends RecyclerView.Adapter<TaskViewAdapter.TaskVi
 
             holder.taskDuration.setText(lapformatTime(task.getLapTime()));
 
+            holder.downButton.setVisibility(View.GONE); // make sure can't move tasks on time run
+            holder.upButton.setVisibility(View.GONE);
         } else if(!isEditing){
+
             holder.taskName.setPaintFlags(holder.taskName.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
             // Set the click listener only if the task is NOT complete and if routine has not ended
             holder.itemView.setOnClickListener(v -> {
@@ -83,6 +86,9 @@ public class TaskViewAdapter extends RecyclerView.Adapter<TaskViewAdapter.TaskVi
                     notifyItemChanged(position); // Update the view
                 }
             });
+
+            holder.downButton.setVisibility(View.GONE); // make sure can't move tasks on time run
+            holder.upButton.setVisibility(View.GONE);
         }
         else if (!isRoutineEnded){
             holder.itemView.setOnClickListener(v -> {
@@ -112,8 +118,8 @@ public class TaskViewAdapter extends RecyclerView.Adapter<TaskViewAdapter.TaskVi
             taskName = itemView.findViewById(R.id.taskName);
             taskDuration = itemView.findViewById(R.id.taskDuration);
             lapTime = itemView.findViewById(R.id.lapTime);
-//            upButton =  itemView.findViewById(R.id.button_up);
-//            downButton =  itemView.findViewById(R.id.button_down);
+            upButton =  itemView.findViewById(R.id.moveTaskUp);
+            downButton =  itemView.findViewById(R.id.moveTaskDown);
         }
     }
 

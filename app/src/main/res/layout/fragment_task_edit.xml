@@ -45,7 +45,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/routineName"
         app:layout_constraintVertical_bias="0.0"
-        tools:listitem="@layout/recycler_view_item_edit" />
+        tools:listitem="@layout/fragment_task_edit" />
 
     <LinearLayout
         android:id="@+id/buttonContainer"

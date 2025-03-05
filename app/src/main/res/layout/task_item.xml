@@ -28,6 +28,23 @@
             android:text="[10 min]"
             android:textSize="16sp"/>
 
+        <ImageButton
+            android:id="@+id/moveTaskUp"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:src="@drawable/arrow_upward"
+            android:contentDescription="@string/move_up"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:padding="8dp" />
+
+        <ImageButton
+            android:id="@+id/moveTaskDown"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:src="@drawable/arrow_downward"
+            android:contentDescription="@string/move_down"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:padding="8dp" />
 
 
     </LinearLayout>
