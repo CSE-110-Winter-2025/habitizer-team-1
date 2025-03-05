@@ -21,7 +21,7 @@ public class RoutineEntity {
     public Integer timeEstimate;
 
 
-    RoutineEntity(@NonNull String name, Integer timeEstimate){
+    public RoutineEntity(@NonNull String name, Integer timeEstimate){
         this.name=name;
         this.timeEstimate=timeEstimate;
     }
