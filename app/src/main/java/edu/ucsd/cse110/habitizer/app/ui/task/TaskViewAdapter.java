@@ -9,12 +9,12 @@ import android.graphics.Paint;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import edu.ucsd.cse110.habitizer.lib.domain.Task;
-import edu.ucsd.cse110.habitizer.lib.domain.TotalTimer;
 
 import edu.ucsd.cse110.habitizer.app.R;
 
@@ -25,12 +25,14 @@ public class TaskViewAdapter extends RecyclerView.Adapter<TaskViewAdapter.TaskVi
     private List<Task> tasks;
     private final TaskClickListener clickListener;
 
-    private boolean isRoutineEnded = false;
-    private boolean isEditing = false;
+    private boolean isRoutineEnded;
+    private boolean isEditing;
 
     public TaskViewAdapter(List<Task> tasks, TaskClickListener clickListener) {
         this.tasks = tasks;
         this.clickListener = clickListener;
+        this.isRoutineEnded = false;
+        this.isEditing = false;
     }
 
     @NonNull
@@ -42,18 +44,16 @@ public class TaskViewAdapter extends RecyclerView.Adapter<TaskViewAdapter.TaskVi
     }
 
     @Override
+
     public void onBindViewHolder(TaskViewHolder holder, int position) {
         Task task = tasks.get(position);
         holder.taskName.setText(task.title());
-
 
         if(isRoutineEnded && !task.complete()) {
             holder.taskDuration.setText("-");
         }else{
             holder.taskDuration.setText("0 min"); // placeholder
         }
-
-//        holder.itemView.setOnClickListener(v -> clickListener.onTaskClick(task));
 
         // Apply strikethrough based on completion status
         if (!isEditing && task.complete()) {
@@ -88,9 +88,7 @@ public class TaskViewAdapter extends RecyclerView.Adapter<TaskViewAdapter.TaskVi
             holder.itemView.setOnClickListener(v -> {
                 clickListener.onTaskClick(task); // Notify the fragment
             });
-        holder.taskDuration.setVisibility(View.GONE);
-
-
+            holder.taskDuration.setVisibility(View.GONE);
         }
 
     }
@@ -107,12 +105,15 @@ public class TaskViewAdapter extends RecyclerView.Adapter<TaskViewAdapter.TaskVi
 
     public static class TaskViewHolder extends RecyclerView.ViewHolder {
         TextView taskName, taskDuration, lapTime;
+        ImageButton upButton, downButton;
 
         public TaskViewHolder(View itemView) {
             super(itemView);
             taskName = itemView.findViewById(R.id.taskName);
             taskDuration = itemView.findViewById(R.id.taskDuration);
             lapTime = itemView.findViewById(R.id.lapTime);
+//            upButton =  itemView.findViewById(R.id.button_up);
+//            downButton =  itemView.findViewById(R.id.button_down);
         }
     }
 
@@ -128,5 +129,6 @@ public class TaskViewAdapter extends RecyclerView.Adapter<TaskViewAdapter.TaskVi
         this.isEditing = isEditing;
         notifyDataSetChanged(); // Refresh the list if editing mode changes
     }
+
 
 }

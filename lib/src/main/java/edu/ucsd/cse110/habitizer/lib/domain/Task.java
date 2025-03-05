@@ -12,6 +12,8 @@ public class Task implements Serializable {
 
     private @NonNull Boolean complete;
 
+    private @NonNull Integer sortOrder;
+
     private long lapTime;
     private long lastLapTime = 0; //last recorded laptime
 
@@ -47,6 +49,11 @@ public class Task implements Serializable {
 
     public  @NonNull Boolean complete() {return complete; }
 
+    public @NonNull Integer getSortOrder() {
+        return sortOrder;
+    };
+
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -60,7 +67,6 @@ public class Task implements Serializable {
         return Objects.hash(id, title, complete);
     }
 
-
     public void setTitle(@NonNull String title) {
         this.title = title;
     }
@@ -70,10 +76,16 @@ public class Task implements Serializable {
         this.complete = complete;
     }
 
+    public void setSortOrder(@NonNull Integer sortOrder) {
+        this.sortOrder = sortOrder;
+    }
+
     public Task withId(int id) {
         //Task newTask = new Task(id, this.title);
         //newTask.setComplete(this.complete); // Preserve the complete status
         //return newTask;
         return new Task(id, this.title);
     }
+
+
 }
