@@ -115,7 +115,6 @@ public class TaskFragment extends Fragment {
             if (!isEditing) viewModel.resetRoutine(routine.id());
             requireActivity().getSupportFragmentManager().popBackStack();
         });
-        backButton.setEnabled(false);
         
         // Setup task adapter with appropriate callback
         taskAdapter = new TaskViewAdapter(
@@ -138,6 +137,7 @@ public class TaskFragment extends Fragment {
     
 
     private void setupRunMode(View view) {
+        backButton.setEnabled(false);
         TextView timeRemaining = view.findViewById(R.id.timeRemaining);
         ImageButton stopButton = view.findViewById(R.id.button_stop);
         ImageButton advanceButton = view.findViewById(R.id.button_advance);
