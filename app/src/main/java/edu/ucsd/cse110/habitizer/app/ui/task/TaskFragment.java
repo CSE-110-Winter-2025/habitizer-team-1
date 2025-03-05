@@ -101,7 +101,7 @@ public class TaskFragment extends Fragment {
         ImageButton stopButton = view.findViewById(R.id.button_stop);
         ImageButton advanceButton = view.findViewById(R.id.button_advance);
 
-        routineName.setText(routine.getName() + routine.getTasks().size());
+        routineName.setText(routine.getName());
 
         // if the estimated time has changes, it is updated
         updateTimeEstimate(timeEstimateView);
