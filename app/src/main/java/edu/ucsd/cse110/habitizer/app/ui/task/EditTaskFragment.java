@@ -10,6 +10,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -21,10 +22,14 @@ import edu.ucsd.cse110.habitizer.lib.domain.Routine;
 import edu.ucsd.cse110.habitizer.lib.domain.Task;
 import edu.ucsd.cse110.habitizer.app.ui.HabitizerApplication;
 import edu.ucsd.cse110.habitizer.app.ui.MainViewModel;
+import edu.ucsd.cse110.observables.Observer;
+import edu.ucsd.cse110.observables.Subject;
+
 import androidx.lifecycle.ViewModelProvider;
 
 public class EditTaskFragment extends Fragment {
     private Routine routine;
+    private TextView routineName;
     private TaskViewAdapter taskAdapter;
 
     // ViewModel
@@ -53,10 +58,21 @@ public class EditTaskFragment extends Fragment {
 
         if (getArguments() != null) {
             Routine passed = (Routine) getArguments().getSerializable("routine");
-            routine = viewModel.getRoutineById(passed.id());
+            if (passed != null && passed.id() != null) {
+                Subject<Routine> routineSubject = viewModel.getRoutineByIdAsSubject(passed.id());
+                routineSubject.observe(new Observer<Routine>() {
+                    @Override
+                    public void onChanged(@Nullable Routine value) {
+                        if(value !=null) {
+                            routine = value;
+                            rerender();
+                        }
+                    }
+                });
+            }
         }
 
-        TextView routineName = view.findViewById(R.id.routineName);
+        routineName = view.findViewById(R.id.routineName);
         RecyclerView tasks = view.findViewById(R.id.taskRecyclerView);
         Button backButton = view.findViewById(R.id.backButton);
         Button addTaskButton =  view.findViewById(R.id.addTaskButton);
@@ -128,6 +144,7 @@ public class EditTaskFragment extends Fragment {
                     String newTaskName = input.getText().toString().trim();
                     // no empty task names
                     if (!newTaskName.isEmpty()) {
+                        viewModel.renameTask(routine.id(), task, newTaskName);
                         task.setTitle(input.getText().toString().trim());
                         taskAdapter.notifyDataSetChanged();
                     }
@@ -168,6 +185,12 @@ public class EditTaskFragment extends Fragment {
         } else {
             view.setText(String.format("%d minutes", estimate));
         }
+    }
+
+    private void rerender(){
+        routineName.setText(routine.getName());
+        taskAdapter.setTasks(routine.getTasks());
+        taskAdapter.notifyDataSetChanged();
     }
 
 

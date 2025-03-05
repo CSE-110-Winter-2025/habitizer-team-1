@@ -86,6 +86,7 @@ public class Routine implements Serializable {
         if (!tasks.isEmpty() && tasks.stream().allMatch(Task::complete)) {
             this.ended = true; // set isComplete to true
             totalTimer.stop(); // Ensure this is executed
+
             TotalTimer.TimerListener listener = totalTimer.getListener();
             if (listener != null) {
                 listener.onRoutineCompleted(totalTimer.getSecondsElapsed(), TotalTimer.formatTime(totalTimer.getSecondsElapsed()));

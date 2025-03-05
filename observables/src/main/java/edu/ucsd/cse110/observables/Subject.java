@@ -6,7 +6,6 @@ import androidx.annotation.Nullable;
 import androidx.annotation.VisibleForTesting;
 
 import java.util.List;
-
 /**
  * A subject that can be observed by observers. Analogous to LiveData.
  *

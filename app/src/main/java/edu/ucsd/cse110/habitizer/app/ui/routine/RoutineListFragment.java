@@ -8,16 +8,14 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 
 import edu.ucsd.cse110.habitizer.app.R;
 import edu.ucsd.cse110.habitizer.app.ui.HabitizerApplication;
+import edu.ucsd.cse110.habitizer.app.ui.MainViewModel;
 import edu.ucsd.cse110.habitizer.app.ui.task.TaskFragment;
 import edu.ucsd.cse110.habitizer.app.ui.task.EditTaskFragment;
 import edu.ucsd.cse110.habitizer.lib.domain.Routine;
-import android.app.AlertDialog;
-import android.widget.EditText;
-import edu.ucsd.cse110.habitizer.app.ui.MainViewModel;
-import androidx.lifecycle.ViewModelProvider;
 
 public class RoutineListFragment extends Fragment {
     // ViewModel
@@ -35,7 +33,7 @@ public class RoutineListFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_routine, container, false);
         
         var factory = ((HabitizerApplication) requireActivity().getApplication()).getViewModelFactory();
-        viewModel = new ViewModelProvider(this, factory).get(MainViewModel.class);
+        viewModel = new ViewModelProvider(requireActivity(), factory).get(MainViewModel.class);
 
         buttonContainer = view.findViewById(R.id.routineButtonContainer);
         editButton = view.findViewById(R.id.editButton);
@@ -43,6 +41,7 @@ public class RoutineListFragment extends Fragment {
         editButton.setOnClickListener(v -> {
             toggleEditState();
         });
+
 
         for (Routine routine : viewModel.getRoutines()) {
             Button button = new Button(getContext());
@@ -126,5 +125,3 @@ public class RoutineListFragment extends Fragment {
         }
     }
 }
-    
-
