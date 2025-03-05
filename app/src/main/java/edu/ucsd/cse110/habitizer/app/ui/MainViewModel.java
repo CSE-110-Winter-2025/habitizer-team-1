@@ -42,25 +42,6 @@ public class MainViewModel extends ViewModel {
         repository.resetRoutine(routineId);
     }
 
-    // manage isEditing state for routines
-    public Subject<Boolean> getIsEditingSubject() {
-        return isEditingSubject;
-    }
-    
-    // Get current editing state
-    public boolean isEditing() {
-        return isEditingSubject.getValue() != null ? isEditingSubject.getValue() : false;
-    }
-    
-    // Set editing state
-    public void setEditing(boolean isEditing) {
-        isEditingSubject.setValue(isEditing);
-    }
-    
-    // Toggle editing state
-    public void toggleEditingState() {
-        setEditing(!isEditing());
-    }
 
     public static class Factory implements ViewModelProvider.Factory {
         private final SimpleRoutineRepository repository;
