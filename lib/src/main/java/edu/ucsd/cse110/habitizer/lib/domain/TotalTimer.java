@@ -195,9 +195,23 @@ public class TotalTimer {
     }
 
     public static String lapformatTime(int totalSeconds) {
-        int minutes = (totalSeconds + 59) / 60;
+        int time = totalSeconds;
 
-        return minutes + (minutes == 1 ? " minute" : " minutes");
+        // if time is under a minute, then round by 5 second increments
+        if (time <= 55) {
+
+            // if divisible by 5, then no rounding is needed
+            if ((time % 5) != 0) {
+                time += 5 - (time % 5);
+            }
+
+            return time + (time == 1 ? " seconds" : " seconds");
+        } else {
+            // minute rounding
+            time = (time + 59) / 60;
+        }
+
+        return time + (time == 1 ? " minute" : " minutes");
 
     }
 
