@@ -69,7 +69,7 @@
         tools:layout_editor_absoluteX="0dp">
 
         <Button
-            android:id="@+id/backButton"
+            android:id="@+id/addRoutineButton"
             style="@style/Widget.AppCompat.Button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

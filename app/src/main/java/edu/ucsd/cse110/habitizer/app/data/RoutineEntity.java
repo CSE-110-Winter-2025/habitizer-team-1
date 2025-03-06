@@ -27,14 +27,17 @@ public class RoutineEntity {
     }
 
     public static RoutineEntity fromRoutine(@NonNull Routine routine){
-        var newRoutine = new RoutineEntity(routine.getName(), routine.getTimeEstimate());
+        RoutineEntity newRoutine = new RoutineEntity(routine.getName(), routine.getTimeEstimate());
         newRoutine.id = routine.id();
         return newRoutine;
     }
 
     public @NonNull Routine toRoutine(){
        var routine = new Routine(id, name);
-       routine.setLastLapTime(timeEstimate);
+        // Ensure timeEstimate is not null before using it
+        if (timeEstimate != null) {
+            routine.setLastLapTime(timeEstimate);
+        }
        return routine;
     }
 }

@@ -72,5 +72,11 @@
 
      }
 
+     @Override
+     public int addRoutine(Routine routineId) {
+         this.dataSource.addRoutine(routineId);
+         return routineId.id();
+     }
+
  }
 

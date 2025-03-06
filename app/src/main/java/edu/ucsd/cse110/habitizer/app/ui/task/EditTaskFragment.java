@@ -15,8 +15,6 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.util.List;
-
 import edu.ucsd.cse110.habitizer.app.R;
 import edu.ucsd.cse110.habitizer.lib.domain.Routine;
 import edu.ucsd.cse110.habitizer.lib.domain.Task;
@@ -74,7 +72,7 @@ public class EditTaskFragment extends Fragment {
 
         routineName = view.findViewById(R.id.routineName);
         RecyclerView tasks = view.findViewById(R.id.taskRecyclerView);
-        Button backButton = view.findViewById(R.id.backButton);
+        Button backButton = view.findViewById(R.id.addRoutineButton);
         Button addTaskButton =  view.findViewById(R.id.addTaskButton);
 
         routineName.setText(routine.getName());
