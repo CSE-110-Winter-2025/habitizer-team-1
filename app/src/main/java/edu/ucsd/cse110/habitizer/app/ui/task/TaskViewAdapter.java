@@ -74,9 +74,11 @@ public class TaskViewAdapter extends RecyclerView.Adapter<TaskViewAdapter.TaskVi
         holder.itemView.setOnClickListener(null); // Disable clicks
         holder.taskDuration.setVisibility(View.VISIBLE);
         holder.taskDuration.setText(lapformatTime(task.getLapTime()));
+        holder.deleteButton.setVisibility(View.GONE);
     } else if (!isEditing) {
         // Incomplete task in non-editing mode
         holder.taskDuration.setVisibility(View.GONE);
+        holder.deleteButton.setVisibility(View.GONE);
         
         // Set click listener only if routine has not ended
         if (!isRoutineEnded) {

@@ -1,8 +1,6 @@
 package edu.ucsd.cse110.habitizer.app.ui.task;
 
 import static edu.ucsd.cse110.habitizer.lib.domain.TotalTimer.formatTime;
-
-
 import android.app.AlertDialog;
 import android.graphics.Paint;
 
