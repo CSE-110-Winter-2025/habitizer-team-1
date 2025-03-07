@@ -34,10 +34,9 @@ public class RoutineEntity {
 
     public @NonNull Routine toRoutine(){
        var routine = new Routine(id, name);
-        // Ensure timeEstimate is not null before using it
-        if (timeEstimate != null) {
-            routine.setLastLapTime(timeEstimate);
-        }
+       if (timeEstimate != null) {
+           routine.setTimeEstimate(timeEstimate);
+       }
        return routine;
     }
 }

@@ -47,6 +47,14 @@ public class MainViewModel extends ViewModel {
         return repository.addRoutine(routine);
     }
 
+    public void updateRoutineTimeEstimate(int routineId, Integer newTimeEstimate) {
+        repository.updateRoutineTimeEstimate(routineId, newTimeEstimate);
+    }
+
+    public void updateRoutineName(Integer id, String newRoutineName) {
+        repository.updateRoutineName(id, newRoutineName);
+    }
+
     public static class Factory implements ViewModelProvider.Factory {
         private final SimpleRoutineRepository repository;
 

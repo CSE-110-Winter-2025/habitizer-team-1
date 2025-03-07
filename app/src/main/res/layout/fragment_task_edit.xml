@@ -7,10 +7,10 @@
 
     <TextView
         android:id="@+id/routineName"
-        android:layout_width="187dp"
+        android:layout_width="wrap_content"
         android:layout_height="64dp"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="32dp"
+        android:layout_marginTop="36dp"
         android:fontFamily="sans-serif"
         android:paddingStart="16dp"
         android:text="Morning"
@@ -22,8 +22,11 @@
         android:autoSizeMinTextSize="12sp"
         android:autoSizeMaxTextSize="36sp"
         android:autoSizeStepGranularity="2sp"
+        android:clickable="true"
+        android:focusable="true"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
 
 
 

@@ -85,6 +85,8 @@ public class EditTaskFragment extends Fragment {
 
         addTaskButton.setOnClickListener(v -> addTask());
 
+        routineName.setOnClickListener(v -> showRenameRoutineDialog());
+
         taskAdapter.setEditingMode(true); // ensure that it can't strikethrough
 
         TextView timeEstimateView = view.findViewById(R.id.timeEstimate);
@@ -113,6 +115,8 @@ public class EditTaskFragment extends Fragment {
                                 if (newEstimate < MAX_TIME_ESTIMATE && newEstimate >= 0) {
                                     // valid time estimated is updated
                                     routine.setTimeEstimate(newEstimate);
+                                    viewModel.updateRoutineTimeEstimate(routine.id(), newEstimate);
+
                                     updateTimeEstimateText(timeEstimateView);
                                 }
                             } catch (NumberFormatException e) {
@@ -190,6 +194,29 @@ public class EditTaskFragment extends Fragment {
         taskAdapter.setTasks(routine.getTasks());
         taskAdapter.notifyDataSetChanged();
     }
+
+    private void showRenameRoutineDialog() {
+        final EditText input = new EditText(getActivity());
+        input.setText(routine.getName());
+        input.setInputType(InputType.TYPE_CLASS_TEXT);
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setTitle("Rename Routine")
+                .setMessage("Enter a new name for the routine")
+                .setView(input)
+                .setPositiveButton("Rename", (dialog, id) -> {
+                    String newRoutineName = input.getText().toString().trim();
+                    // Don't allow empty names
+                    if (!newRoutineName.isEmpty()) {
+                        routine.setName(newRoutineName);
+                        viewModel.updateRoutineName(routine.id(), newRoutineName);
+                        routineName.setText(newRoutineName);
+                    }
+                })
+                .setNegativeButton("Cancel", null)
+                .show();
+    }
+
 
 
 }

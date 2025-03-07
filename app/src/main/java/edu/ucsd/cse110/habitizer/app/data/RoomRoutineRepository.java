@@ -91,12 +91,21 @@ public class RoomRoutineRepository implements SimpleRoutineRepository {
         return;
     }
 
+    @Override
+    public void updateRoutineTimeEstimate(int routineId, Integer newTimeEstimate) {
+        routineDao.updateTimeEstimate(routineId, newTimeEstimate);
+    }
+
+    @Override
+    public void updateRoutineName(int routineId, String newName) {
+        routineDao.updateRoutineName(routineId, newName);
+    }
 
     private void loadDefaultData() {
         if (routineDao.count() > 0) return;
 
-        var morningRoutine = new RoutineEntity("Morning", 0);
-        var eveningRoutine = new RoutineEntity("Evening", 0);
+        var morningRoutine = new RoutineEntity("Morning", null);
+        var eveningRoutine = new RoutineEntity("Evening", null);
 
         int morningId = Math.toIntExact(routineDao.insert(morningRoutine));
         int eveningId = Math.toIntExact(routineDao.insert(eveningRoutine));
