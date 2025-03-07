@@ -88,12 +88,6 @@ public class RoutineListFragment extends Fragment {
 
     private void addRoutineButtonState() {
         int newRoutineId = viewModel.addRoutine(new Routine(null, "New Routine"));
-
-        if (newRoutineId == -1) {
-            Log.e("RoutineListFragment", "Routine failed to insert!");
-            return;
-        }
-        //Routine newRoutine = viewModel.getRoutineById(newRoutineId);
         renderRoutineButtons();
     }
 
