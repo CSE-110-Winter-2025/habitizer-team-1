@@ -24,6 +24,7 @@ public class TaskViewAdapter extends RecyclerView.Adapter<TaskViewAdapter.TaskVi
 
     private List<Task> tasks;
     private final TaskClickListener clickListener;
+    private TaskClickListener deleteListener;
 
     private boolean isRoutineEnded = false;
     private boolean isEditing = false;
@@ -31,6 +32,12 @@ public class TaskViewAdapter extends RecyclerView.Adapter<TaskViewAdapter.TaskVi
     public TaskViewAdapter(List<Task> tasks, TaskClickListener clickListener) {
         this.tasks = tasks;
         this.clickListener = clickListener;
+    }
+
+    public TaskViewAdapter(List<Task> tasks, TaskClickListener clickListener, TaskClickListener deleteListener) {
+        this.tasks = tasks;
+        this.clickListener = clickListener;
+        this.deleteListener = deleteListener;
     }
 
     @NonNull
@@ -53,46 +60,51 @@ public class TaskViewAdapter extends RecyclerView.Adapter<TaskViewAdapter.TaskVi
             holder.taskDuration.setText("0 min"); // placeholder
         }
 
-//        holder.itemView.setOnClickListener(v -> clickListener.onTaskClick(task));
-
-        // Apply strikethrough based on completion status
-        if (!isEditing && task.complete()) {
-            holder.taskName.setPaintFlags(holder.taskName.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
-            // disable clicks on completed tasks
-            holder.itemView.setOnClickListener(null); // Disable clicks
-          
-            holder.taskDuration.setVisibility(View.VISIBLE);
-
-            holder.taskDuration.setText(lapformatTime(task.getLapTime()));
-
-        } else if(!isEditing){
-            holder.taskName.setPaintFlags(holder.taskName.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
-            // Set the click listener only if the task is NOT complete and if routine has not ended
-            holder.itemView.setOnClickListener(v -> {
-                if (!isRoutineEnded) {
-                    // Mark the task as complete
-                    task.setComplete(true);
-
-                    // Apply strikethrough
-                    holder.taskName.setPaintFlags(holder.taskName.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
-
-                    // Disable clicks on the task
-                    holder.itemView.setOnClickListener(null);
-
-                    clickListener.onTaskClick(task); // Notify the fragment
-                    notifyItemChanged(position); // Update the view
-                }
-            });
-        }
-        else if (!isRoutineEnded){
-            holder.itemView.setOnClickListener(v -> {
-                clickListener.onTaskClick(task); // Notify the fragment
-            });
+//      holder.taskName.setPaintFlags(holder.taskName.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
+    
+    if (isEditing) {
+        System.out.println("$#$$$$$$$#$#$#$#$#$");
+        holder.deleteButton.setVisibility(View.VISIBLE);
+        holder.deleteButton.setOnClickListener(v -> deleteListener.onTaskClick(task));
+    } 
+    // Now handle the different states for task appearance and click behavior
+    if (!isEditing && task.complete()) {
+        // Completed task in non-editing mode
+        holder.taskName.setPaintFlags(holder.taskName.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+        holder.itemView.setOnClickListener(null); // Disable clicks
+        holder.taskDuration.setVisibility(View.VISIBLE);
+        holder.taskDuration.setText(lapformatTime(task.getLapTime()));
+    } else if (!isEditing) {
+        // Incomplete task in non-editing mode
         holder.taskDuration.setVisibility(View.GONE);
-
-
+        
+        // Set click listener only if routine has not ended
+        if (!isRoutineEnded) {
+            holder.itemView.setOnClickListener(v -> {
+                // Mark the task as complete
+                task.setComplete(true);
+                
+                // Apply strikethrough
+                holder.taskName.setPaintFlags(holder.taskName.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+                
+                // Disable clicks on the task
+                holder.itemView.setOnClickListener(null);
+                
+                clickListener.onTaskClick(task); // Notify the fragment
+                notifyItemChanged(position); // Update the view
+            });
+        } else {
+            holder.itemView.setOnClickListener(null); // Disable clicks if routine ended
         }
-
+    } else {
+        // In editing mode
+        holder.taskDuration.setVisibility(View.GONE);
+        
+        // Set click listener for renaming
+        holder.itemView.setOnClickListener(v -> {
+            clickListener.onTaskClick(task); // Notify the fragment for renaming
+        });
+    }
     }
 
     @Override
@@ -107,12 +119,14 @@ public class TaskViewAdapter extends RecyclerView.Adapter<TaskViewAdapter.TaskVi
 
     public static class TaskViewHolder extends RecyclerView.ViewHolder {
         TextView taskName, taskDuration, lapTime;
+        View deleteButton;
 
         public TaskViewHolder(View itemView) {
             super(itemView);
             taskName = itemView.findViewById(R.id.taskName);
             taskDuration = itemView.findViewById(R.id.taskDuration);
             lapTime = itemView.findViewById(R.id.lapTime);
+            deleteButton = itemView.findViewById(R.id.deleteButton);
         }
     }
 

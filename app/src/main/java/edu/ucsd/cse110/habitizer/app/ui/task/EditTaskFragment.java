@@ -76,16 +76,20 @@ public class EditTaskFragment extends Fragment {
         RecyclerView tasks = view.findViewById(R.id.taskRecyclerView);
         Button backButton = view.findViewById(R.id.backButton);
         Button addTaskButton =  view.findViewById(R.id.addTaskButton);
+        Button deleteRoutineButton = view.findViewById(R.id.deleteRoutineButton);
 
         routineName.setText(routine.getName());
 
-        taskAdapter = new TaskViewAdapter(routine.getTasks(), task -> renameTask(task));
+        taskAdapter = new TaskViewAdapter(routine.getTasks(),
+         task -> renameTask(task),
+         task -> confirmDeleteTask(task));
         tasks.setLayoutManager(new LinearLayoutManager(getActivity()));
         tasks.setAdapter(taskAdapter);
 
         backButton.setOnClickListener(v -> requireActivity().getSupportFragmentManager().popBackStack());
 
         addTaskButton.setOnClickListener(v -> addTask());
+        deleteRoutineButton.setOnClickListener(v -> confirmDeleteRoutine());
 
         taskAdapter.setEditingMode(true); // ensure that it can't strikethrough
 
@@ -185,6 +189,30 @@ public class EditTaskFragment extends Fragment {
         } else {
             view.setText(String.format("%d minutes", estimate));
         }
+    }
+
+    private void confirmDeleteTask(Task task) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setTitle("Delete Task")
+                .setMessage("Are you sure you want to delete this task?")
+                .setPositiveButton("Delete", (dialog, which) -> {
+                    viewModel.removeTaskFromRoutine(routine.id(), task);
+                    taskAdapter.notifyDataSetChanged();
+                })
+                .setNegativeButton("Cancel", null)
+                .show();
+    }
+
+    private void confirmDeleteRoutine() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setTitle("Delete Routine")
+                .setMessage("Are you sure you want to delete this routine?")
+                .setPositiveButton("Delete", (dialog, which) -> {
+                    viewModel.deleteRoutine(routine.id());
+                    requireActivity().getSupportFragmentManager().popBackStack();
+                })
+                .setNegativeButton("Cancel", null)
+                .show();
     }
 
     private void rerender(){

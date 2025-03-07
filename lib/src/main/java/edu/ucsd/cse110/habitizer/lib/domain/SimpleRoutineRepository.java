@@ -21,4 +21,8 @@ public interface SimpleRoutineRepository {
     void markTaskComplete(Task task);
 
     void resetRoutine(int routineId);
+
+    void removeTaskFromRoutine(int routineId, Task task);
+
+    void deleteRoutine(int routineId);
 }

@@ -42,6 +42,14 @@ public class MainViewModel extends ViewModel {
         repository.resetRoutine(routineId);
     }
 
+    public void removeTaskFromRoutine(int routineId, Task task) {
+        repository.removeTaskFromRoutine(routineId, task);
+    }
+
+    public void deleteRoutine(int routineId) {
+        repository.deleteRoutine(routineId);
+    }
+
 
     public static class Factory implements ViewModelProvider.Factory {
         private final SimpleRoutineRepository repository;

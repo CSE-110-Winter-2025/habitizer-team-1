@@ -37,9 +37,11 @@
 
      // we're not going to use this so i got lazy
      @Override
-     public void renameTask(int routineId, Task task, String newName) {
-         return;
-     }
+     public void renameTask(int routineId, Task task, String newName) { return; }
+     @Override
+     public void removeTaskFromRoutine(int routineId, Task task){ return; }
+     @Override
+     public void deleteRoutine(int routineId) { return;}
 
      // adds task objects to routine
       @Override
@@ -71,6 +73,7 @@
          routine.setEnded(false); // ensure that routine is not ended
 
      }
+
 
  }
 
