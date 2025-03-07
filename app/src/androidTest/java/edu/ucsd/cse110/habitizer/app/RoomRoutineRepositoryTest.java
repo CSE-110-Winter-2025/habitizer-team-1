@@ -25,7 +25,7 @@ import edu.ucsd.cse110.habitizer.lib.domain.Task;
 
 
 /*
-    US 12 tests
+    US 12 (persistence) and 13 (add routine) tests
  */
 @RunWith(AndroidJUnit4.class)
 public class RoomRoutineRepositoryTest {
@@ -139,6 +139,43 @@ public class RoomRoutineRepositoryTest {
         assertEquals(4, routines.size());
     }
 
-    
+    /* US13 - add routine bdd*/
+    @Test
+    public void us13bddadd() {
+        // Given: Initial count of routines
+        List<Routine> initialRoutines = repository.getRoutines();
+        int initialSize = initialRoutines.size();
+
+        // When: Adding a new routine (default name is "New Routine")
+        Routine newRoutine = new Routine(null, "New Routine");
+        int newRoutineId = repository.addRoutine(newRoutine);
+        Routine savedRoutine = repository.getRoutineById(newRoutineId);
+
+        // Then: The routine should be saved and retrievable
+        assertNotNull(savedRoutine);
+        assertEquals("New Routine", savedRoutine.getName());
+
+        // And: The total number of routines should increase
+        List<Routine> updatedRoutines = repository.getRoutines();
+        assertEquals(initialSize + 1, updatedRoutines.size());
+    }
+
+    /* US13 - rename routine bdd*/
+    @Test
+    public void us13bddrename() {
+        // Given: A routine exists in the database
+        RoutineEntity routineEntity = new RoutineEntity("Old Routine Name", null);
+        int routineId = Math.toIntExact(routineDao.insert(routineEntity));
+
+        // When: The user renames the routine
+        Routine routine = repository.getRoutineById(routineId);
+        assertNotNull(routine);
+        repository.updateRoutineName(routineId, "Updated Routine Name");
+
+        // Then: The routine name should be updated in the database
+        Routine updatedRoutine = repository.getRoutineById(routineId);
+        assertNotNull(updatedRoutine);
+        assertEquals("Updated Routine Name", updatedRoutine.getName());
+    }
 
 }
