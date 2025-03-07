@@ -12,8 +12,6 @@ import edu.ucsd.cse110.habitizer.lib.domain.SimpleRoutineRepository;
 import edu.ucsd.cse110.observables.PlainMutableSubject;
 import edu.ucsd.cse110.observables.Subject;
 
-
-
 public class RoomRoutineRepository implements SimpleRoutineRepository {
 
     private final RoutineDao routineDao;
@@ -42,11 +40,9 @@ public class RoomRoutineRepository implements SimpleRoutineRepository {
 
     @Override 
     public Subject<Routine> getRoutineByIdAsSubject(int routineId) {
-        if (!routineSubjects.containsKey(routineId)) {
-            var subject = new PlainMutableSubject<Routine>(getRoutineById(routineId));
-            routineSubjects.put(routineId, subject);
-        }
-        return routineSubjects.get(routineId);
+        return routineSubjects.computeIfAbsent(routineId, id ->
+                new PlainMutableSubject<>(getRoutineById(id))
+        );
     }
 
     @Override
