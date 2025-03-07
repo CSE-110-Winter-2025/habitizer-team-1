@@ -171,4 +171,7 @@ public class EditTaskFragment extends Fragment {
     }
 
 
+    public TaskViewAdapter getTaskAdapter() {
+        return taskAdapter;
+    }
 }

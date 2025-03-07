@@ -2,15 +2,12 @@ package edu.ucsd.cse110.habitizer.app;
 
 import static org.junit.Assert.*;
 
-import org.junit.Before;
 import org.junit.Test;
 
-import edu.ucsd.cse110.habitizer.app.ui.task.TaskFragment;
-import edu.ucsd.cse110.habitizer.lib.domain.Routine;
 import edu.ucsd.cse110.habitizer.lib.domain.Task;
-import edu.ucsd.cse110.habitizer.lib.domain.TotalTimer;
 
-import java.util.Arrays;
+import java.util.ArrayList;
+import java.util.List;
 
 public class LapTimerTest {
     /*
@@ -65,6 +62,7 @@ public class LapTimerTest {
         assertFalse("Total timer should stop when all tasks are completed", totalTimer.isRunning());
     }
     */
+
 }
 
 

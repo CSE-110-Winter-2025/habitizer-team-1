@@ -39,8 +39,19 @@ dependencies {
     implementation(libs.androidx.constraintlayout)
     implementation(project(":lib"))
 
-    testImplementation(libs.junit4)
+    testImplementation("org.junit.jupiter:junit-jupiter:5.9.1")
+    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.9.1")
+
+    // Mockito for mocking
+    testImplementation("org.mockito:mockito-core:4.8.0")
+
+    // JUnit Platform runner (in case it's needed)
+    testImplementation("org.junit.platform:junit-platform-runner:1.9.1")
+    testImplementation(libs.junit.jupiter)
 
     androidTestImplementation(libs.androidx.test.ext.junit)
     androidTestImplementation(libs.androidx.test.ext.espresso.core)
+    tasks.withType<Test> {
+        useJUnitPlatform()
+    }
 }

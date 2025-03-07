@@ -1,3 +1,5 @@
+import com.android.tools.r8.internal.of
+
 plugins {
     id("java-library")
 }
@@ -15,7 +17,8 @@ dependencies {
     implementation(libs.impress)
     implementation(libs.firebase.database)
 
-    testImplementation(libs.junit4)
+//    testImplementation(libs.junit4)
     testImplementation(libs.hamcrest)
     testImplementation(libs.mockito.core)
+    //implementation(project(":app"))
 }

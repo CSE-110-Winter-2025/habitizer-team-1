@@ -64,7 +64,7 @@ public class TaskViewAdapter extends RecyclerView.Adapter<TaskViewAdapter.TaskVi
             holder.taskName.setPaintFlags(holder.taskName.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
             // disable clicks on completed tasks
             holder.itemView.setOnClickListener(null); // Disable clicks
-          
+
             holder.taskDuration.setVisibility(View.VISIBLE);
 
             holder.taskDuration.setText(lapformatTime(task.getLapTime()));
@@ -184,8 +184,17 @@ public class TaskViewAdapter extends RecyclerView.Adapter<TaskViewAdapter.TaskVi
     // Setter for editing mode
     public void setEditingMode(boolean isEditing) {
         this.isEditing = isEditing;
-        notifyDataSetChanged(); // Refresh the list if editing mode changes
+        if (this.hasObservers()) {  // ✅ Prevents null reference errors
+            notifyDataSetChanged();
+        } // Refresh the list if editing mode changes
+    }
+
+    public List<Task> getTasks() {
+        return tasks;
     }
 
 
+
 }
+
+

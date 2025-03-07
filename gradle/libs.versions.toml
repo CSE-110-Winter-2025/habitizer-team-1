@@ -19,6 +19,7 @@ mockitoCore = "4.5.1"
 filamentAndroid = "1.17.1"
 impress = "0.0.2"
 firebaseDatabase = "21.0.0"
+junitJupiter = "5.8.1"
 
 [libraries]
 androidx-activity = { group = "androidx.activity", name = "activity", version.ref = "androidxActivity" }
@@ -38,6 +39,7 @@ mockito-core = { module = "org.mockito:mockito-core", version.ref = "mockitoCore
 filament-android = { group = "com.google.ar.sceneform", name = "filament-android", version.ref = "filamentAndroid" }
 impress = { group = "com.google.ar", name = "impress", version.ref = "impress" }
 firebase-database = { group = "com.google.firebase", name = "firebase-database", version.ref = "firebaseDatabase" }
+junit-jupiter = { group = "org.junit.jupiter", name = "junit-jupiter", version.ref = "junitJupiter" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
