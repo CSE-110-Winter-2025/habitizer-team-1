@@ -1,10 +1,5 @@
 package edu.ucsd.cse110.habitizer.app.ui.task;
 
-import static edu.ucsd.cse110.habitizer.lib.domain.TotalTimer.formatTime;
-
-
-import android.app.AlertDialog;
-import android.graphics.Paint;
 
 import android.app.Activity;
 
@@ -21,13 +16,6 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.List;
-import java.util.Locale;
 
 import edu.ucsd.cse110.habitizer.app.R;
 import edu.ucsd.cse110.habitizer.lib.domain.Routine;
@@ -94,7 +82,7 @@ public class TaskFragment extends Fragment {
 
         routineName = view.findViewById(R.id.routineName);
         RecyclerView tasks = view.findViewById(R.id.taskRecyclerView);
-        Button backButton = view.findViewById(R.id.backButton);
+        Button backButton = view.findViewById(R.id.addRoutineButton);
         timeEstimateView = view.findViewById(R.id.timeEstimate);
         Button endRoutineButton = view.findViewById(R.id.endRoutineButton);
         TextView timeRemaining = view.findViewById(R.id.timeRemaining);
@@ -243,7 +231,7 @@ public class TaskFragment extends Fragment {
                         activity.runOnUiThread(() -> {
                             TextView timeRemaining = activity.findViewById(R.id.timeRemaining);
                             Button endRoutineButton = activity.findViewById(R.id.endRoutineButton); // find endroutine button
-                            Button backButton = activity.findViewById(R.id.backButton);
+                            Button backButton = activity.findViewById(R.id.addRoutineButton);
 
                             if (timeRemaining != null) {
                                 int time = (totalTimer.getSecondsElapsed() + 59)/60;

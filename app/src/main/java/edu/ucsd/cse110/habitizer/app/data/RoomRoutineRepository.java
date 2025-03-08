@@ -40,6 +40,12 @@ public class RoomRoutineRepository implements SimpleRoutineRepository {
         return taskEntities.stream().map(TaskEntity::toTask).collect(Collectors.toList());
     }
 
+    public int addRoutine(Routine routine) {
+        long id = routineDao.insert(new RoutineEntity(routine.getName(), null));
+        return Math.toIntExact(id);
+    }
+
+
     @Override 
     public Subject<Routine> getRoutineByIdAsSubject(int routineId) {
         if (!routineSubjects.containsKey(routineId)) {
@@ -70,9 +76,9 @@ public class RoomRoutineRepository implements SimpleRoutineRepository {
        taskDao.insert(TaskEntity.fromTask(task, routineId));
 
        if (routineSubjects.containsKey(routineId)) {
-        Routine updatedRoutine = getRoutineById(routineId);
-        routineSubjects.get(routineId).setValue(updatedRoutine);
-    }
+           Routine updatedRoutine = getRoutineById(routineId);
+           routineSubjects.get(routineId).setValue(updatedRoutine);
+       }
     }
 
     @Override
@@ -85,13 +91,21 @@ public class RoomRoutineRepository implements SimpleRoutineRepository {
         return;
     }
 
+    @Override
+    public void updateRoutineTimeEstimate(int routineId, Integer newTimeEstimate) {
+        routineDao.updateTimeEstimate(routineId, newTimeEstimate);
+    }
 
+    @Override
+    public void updateRoutineName(int routineId, String newName) {
+        routineDao.updateRoutineName(routineId, newName);
+    }
 
     private void loadDefaultData() {
         if (routineDao.count() > 0) return;
 
-        var morningRoutine = new RoutineEntity("Morning", 0);
-        var eveningRoutine = new RoutineEntity("Evening", 0);
+        var morningRoutine = new RoutineEntity("Morning", null);
+        var eveningRoutine = new RoutineEntity("Evening", null);
 
         int morningId = Math.toIntExact(routineDao.insert(morningRoutine));
         int eveningId = Math.toIntExact(routineDao.insert(eveningRoutine));

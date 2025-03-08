@@ -72,5 +72,21 @@
 
      }
 
+     @Override
+     public int addRoutine(Routine routineId) {
+         this.dataSource.addRoutine(routineId);
+         return routineId.id();
+     }
+
+     @Override
+     public void updateRoutineTimeEstimate(int routineId, Integer newTimeEstimate) {
+         this.dataSource.getRoutineById(routineId).setTimeEstimate(newTimeEstimate);
+     }
+
+     @Override
+     public void updateRoutineName(int routineId, String newRoutineName) {
+         this.dataSource.getRoutineById(routineId).setName(newRoutineName);
+     }
+
  }
 

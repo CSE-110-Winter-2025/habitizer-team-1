@@ -21,4 +21,10 @@ public interface SimpleRoutineRepository {
     void markTaskComplete(Task task);
 
     void resetRoutine(int routineId);
+
+    int addRoutine(Routine routine);
+
+    void updateRoutineTimeEstimate(int routineId, Integer newTimeEstimate);
+
+    public void updateRoutineName(int id, String newRoutineName);
 }

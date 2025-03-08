@@ -15,8 +15,6 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.util.List;
-
 import edu.ucsd.cse110.habitizer.app.R;
 import edu.ucsd.cse110.habitizer.lib.domain.Routine;
 import edu.ucsd.cse110.habitizer.lib.domain.Task;
@@ -74,7 +72,7 @@ public class EditTaskFragment extends Fragment {
 
         routineName = view.findViewById(R.id.routineName);
         RecyclerView tasks = view.findViewById(R.id.taskRecyclerView);
-        Button backButton = view.findViewById(R.id.backButton);
+        Button backButton = view.findViewById(R.id.addRoutineButton);
         Button addTaskButton =  view.findViewById(R.id.addTaskButton);
 
         routineName.setText(routine.getName());
@@ -86,6 +84,8 @@ public class EditTaskFragment extends Fragment {
         backButton.setOnClickListener(v -> requireActivity().getSupportFragmentManager().popBackStack());
 
         addTaskButton.setOnClickListener(v -> addTask());
+
+        routineName.setOnClickListener(v -> showRenameRoutineDialog());
 
         taskAdapter.setEditingMode(true); // ensure that it can't strikethrough
 
@@ -115,6 +115,8 @@ public class EditTaskFragment extends Fragment {
                                 if (newEstimate < MAX_TIME_ESTIMATE && newEstimate >= 0) {
                                     // valid time estimated is updated
                                     routine.setTimeEstimate(newEstimate);
+                                    viewModel.updateRoutineTimeEstimate(routine.id(), newEstimate);
+
                                     updateTimeEstimateText(timeEstimateView);
                                 }
                             } catch (NumberFormatException e) {
@@ -192,6 +194,29 @@ public class EditTaskFragment extends Fragment {
         taskAdapter.setTasks(routine.getTasks());
         taskAdapter.notifyDataSetChanged();
     }
+
+    private void showRenameRoutineDialog() {
+        final EditText input = new EditText(getActivity());
+        input.setText(routine.getName());
+        input.setInputType(InputType.TYPE_CLASS_TEXT);
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setTitle("Rename Routine")
+                .setMessage("Enter a new name for the routine")
+                .setView(input)
+                .setPositiveButton("Rename", (dialog, id) -> {
+                    String newRoutineName = input.getText().toString().trim();
+                    // Don't allow empty names
+                    if (!newRoutineName.isEmpty()) {
+                        routine.setName(newRoutineName);
+                        viewModel.updateRoutineName(routine.id(), newRoutineName);
+                        routineName.setText(newRoutineName);
+                    }
+                })
+                .setNegativeButton("Cancel", null)
+                .show();
+    }
+
 
 
 }

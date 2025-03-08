@@ -1,6 +1,7 @@
 package edu.ucsd.cse110.habitizer.app.ui.routine;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,6 +10,8 @@ import android.widget.LinearLayout;
 
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+
+import java.util.List;
 
 import edu.ucsd.cse110.habitizer.app.R;
 import edu.ucsd.cse110.habitizer.app.ui.HabitizerApplication;
@@ -24,6 +27,7 @@ public class RoutineListFragment extends Fragment {
     // UI objects
     private LinearLayout buttonContainer;
     private Button editButton;
+    private Button addRoutineButton;
 
     // State - tracks edit mode
     private boolean isEditing = false;
@@ -35,11 +39,16 @@ public class RoutineListFragment extends Fragment {
         var factory = ((HabitizerApplication) requireActivity().getApplication()).getViewModelFactory();
         viewModel = new ViewModelProvider(requireActivity(), factory).get(MainViewModel.class);
 
-        buttonContainer = view.findViewById(R.id.routineButtonContainer);
+        buttonContainer = view.findViewById(R.id.buttonContainer);
         editButton = view.findViewById(R.id.editButton);
+        addRoutineButton = view.findViewById(R.id.addRoutineButton);
 
         editButton.setOnClickListener(v -> {
             toggleEditState();
+        });
+
+        addRoutineButton.setOnClickListener(v -> {
+            addRoutineButtonState();
         });
 
 
@@ -77,51 +86,62 @@ public class RoutineListFragment extends Fragment {
         return view;
     }
 
+    private void addRoutineButtonState() {
+        int newRoutineId = viewModel.addRoutine(new Routine(null, "New Routine"));
+        renderRoutineButtons();
+    }
+
 
     private void toggleEditState(){
         this.isEditing = !this.isEditing;
         editButton.setText(this.isEditing ? "Edit" : "Start");
         renderRoutineButtons();
     }
-    
+
 
     private void renderRoutineButtons() {
-        buttonContainer.removeAllViews(); 
-        
-        for (Routine routine : viewModel.getRoutines()) {
-            Button button = new Button(getContext());
-            button.setText(routine.getName());
-            
-            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.WRAP_CONTENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT
-            );
-            params.setMargins(0, 0, 0, 16);
-            params.gravity = android.view.Gravity.CENTER;
-            button.setLayoutParams(params);
+        if (getContext() == null) return; // Ensure fragment is attached before updating UI
 
+        requireActivity().runOnUiThread(() -> {
+            buttonContainer.removeAllViews();
 
-            // Set OnClickListener so the fragment change occurs only when clicking the button
-            button.setOnClickListener(v -> {
-                if (isEditing) {
-                    // Open EditTaskFragment if in edit mode
-                    EditTaskFragment editTaskFragment = EditTaskFragment.newInstance(routine);
-                    requireActivity().getSupportFragmentManager().beginTransaction()
-                            .replace(R.id.fragment_container, editTaskFragment)
-                            .addToBackStack(null)
-                            .commit();
-                } else {
-                    // Otherwise open TaskFragment to start running the routine
-                   TaskFragment taskFragment = TaskFragment.newInstance(routine);
+            // Fetch updated routines from ViewModel
+            List<Routine> routines = viewModel.getRoutines();
 
-                    requireActivity().getSupportFragmentManager().beginTransaction()
-                            .replace(R.id.fragment_container, taskFragment)
-                            .addToBackStack(null)
-                            .commit();
-                }
-            });
-            
-            buttonContainer.addView(button);
-        }
+            for (Routine routine : routines) {
+                Button button = new Button(getContext());
+                button.setText(routine.getName());
+
+                LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+                        LinearLayout.LayoutParams.WRAP_CONTENT,
+                        LinearLayout.LayoutParams.WRAP_CONTENT
+                );
+                params.setMargins(0, 0, 0, 16);
+                params.gravity = android.view.Gravity.CENTER;
+                button.setLayoutParams(params);
+
+                button.setOnClickListener(v -> {
+                    if (isEditing) {
+                        // Open EditTaskFragment if in edit mode
+                        EditTaskFragment editTaskFragment = EditTaskFragment.newInstance(routine);
+                        requireActivity().getSupportFragmentManager().beginTransaction()
+                                .replace(R.id.fragment_container, editTaskFragment)
+                                .addToBackStack(null)
+                                .commit();
+                    } else {
+                        // Otherwise open TaskFragment to start running the routine
+                        TaskFragment taskFragment = TaskFragment.newInstance(routine);
+                        requireActivity().getSupportFragmentManager().beginTransaction()
+                                .replace(R.id.fragment_container, taskFragment)
+                                .addToBackStack(null)
+                                .commit();
+                    }
+                });
+
+                buttonContainer.addView(button);
+            }
+        });
     }
+
+
 }
