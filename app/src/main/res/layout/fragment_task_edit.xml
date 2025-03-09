@@ -16,6 +16,14 @@
         android:text="Morning"
         android:textColor="#000"
         android:textSize="36sp"
+        android:maxLines="1"
+        android:ellipsize="end"
+        android:autoSizeTextType="uniform"
+        android:autoSizeMinTextSize="12sp"
+        android:autoSizeMaxTextSize="36sp"
+        android:autoSizeStepGranularity="2sp"
+        android:clickable="true"
+        android:focusable="true"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
