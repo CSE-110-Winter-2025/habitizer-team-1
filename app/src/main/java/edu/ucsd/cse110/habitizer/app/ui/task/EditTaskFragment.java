@@ -72,7 +72,7 @@ public class EditTaskFragment extends Fragment {
 
         routineName = view.findViewById(R.id.routineName);
         RecyclerView tasks = view.findViewById(R.id.taskRecyclerView);
-        Button backButton = view.findViewById(R.id.addRoutineButton);
+        Button backButton = view.findViewById(R.id.backButton);
         Button addTaskButton =  view.findViewById(R.id.addTaskButton);
         Button deleteRoutineButton = view.findViewById(R.id.deleteRoutineButton);
 
