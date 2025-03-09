@@ -160,7 +160,7 @@ public class RoomRoutineRepositoryTest {
         assertEquals(initialSize + 1, updatedRoutines.size());
     }
 
-    /* US13 - rename routine bdd*/
+    /* US13 - rename routine bdd */
     @Test
     public void us13bddrename() {
         // Given: A routine exists in the database
@@ -176,6 +176,41 @@ public class RoomRoutineRepositoryTest {
         Routine updatedRoutine = repository.getRoutineById(routineId);
         assertNotNull(updatedRoutine);
         assertEquals("Updated Routine Name", updatedRoutine.getName());
+    }
+
+    @Test
+    public void deleteRoutineTest() {
+        RoutineEntity routineEntity = new RoutineEntity("New Routine", null);
+        int routineId = Math.toIntExact(routineDao.insert(routineEntity));
+
+        assertNotNull(repository.getRoutineById(routineId));
+        repository.deleteRoutine(routineId);
+
+        assertNull(routineDao.findWithTasks(routineId));
+        assertTrue(repository.getRoutineTasks(routineId).isEmpty());
+    }
+
+    /* US16 - delete routine bdd */
+    @Test
+    public void us16bdd() {
+        // Given: A routine with tasks is created
+        RoutineEntity routineEntity = new RoutineEntity("Sleep Routine", null);
+        int routineId = Math.toIntExact(routineDao.insert(routineEntity));
+
+        Task task1 = new Task(null, "Yawn");
+        Task task2 = new Task(null, "Go to bed");
+        repository.addTaskToRoutine(routineId, task1);
+        repository.addTaskToRoutine(routineId, task2);
+
+        assertNotNull(repository.getRoutineById(routineId));
+        assertEquals(2, repository.getRoutineTasks(routineId).size());
+
+        // When: The user deletes the routine
+        repository.deleteRoutine(routineId);
+
+        // Then: The routine and its tasks should no longer exist in the database
+        assertNull(routineDao.findWithTasks(routineId));
+        assertTrue(repository.getRoutineTasks(routineId).isEmpty());
     }
 
 }
