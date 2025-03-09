@@ -74,6 +74,7 @@ public class EditTaskFragment extends Fragment {
         RecyclerView tasks = view.findViewById(R.id.taskRecyclerView);
         Button backButton = view.findViewById(R.id.addRoutineButton);
         Button addTaskButton =  view.findViewById(R.id.addTaskButton);
+        Button deleteRoutineButton = view.findViewById(R.id.deleteRoutineButton);
 
         routineName.setText(routine.getName());
 
@@ -88,6 +89,7 @@ public class EditTaskFragment extends Fragment {
         routineName.setOnClickListener(v -> showRenameRoutineDialog());
 
         taskAdapter.setEditingMode(true); // ensure that it can't strikethrough
+        deleteRoutineButton.setOnClickListener(v -> confirmDeleteRoutine());
 
         TextView timeEstimateView = view.findViewById(R.id.timeEstimate);
         updateTimeEstimateText(timeEstimateView); // set initial text
@@ -217,6 +219,16 @@ public class EditTaskFragment extends Fragment {
                 .show();
     }
 
-
+    private void confirmDeleteRoutine() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setTitle("Delete Routine")
+                .setMessage("Are you sure you want to delete this routine?")
+                .setPositiveButton("Delete", (dialog, which) -> {
+                    viewModel.deleteRoutine(routine.id());
+                    requireActivity().getSupportFragmentManager().popBackStack();
+                })
+                .setNegativeButton("Cancel", null)
+                .show();
+    }
 
 }

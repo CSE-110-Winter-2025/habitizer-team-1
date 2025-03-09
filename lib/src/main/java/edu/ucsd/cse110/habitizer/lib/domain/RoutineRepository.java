@@ -79,6 +79,11 @@
      }
 
      @Override
+     public void deleteRoutine(int routineId) {
+
+     }
+
+     @Override
      public void updateRoutineTimeEstimate(int routineId, Integer newTimeEstimate) {
          this.dataSource.getRoutineById(routineId).setTimeEstimate(newTimeEstimate);
      }
