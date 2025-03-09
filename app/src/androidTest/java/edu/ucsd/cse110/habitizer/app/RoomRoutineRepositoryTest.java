@@ -25,7 +25,7 @@ import edu.ucsd.cse110.habitizer.lib.domain.Task;
 
 
 /*
-    US 12 (persistence) and 13 (add routine) tests
+    US 12, 13, 14, 16 tests
  */
 @RunWith(AndroidJUnit4.class)
 public class RoomRoutineRepositoryTest {
