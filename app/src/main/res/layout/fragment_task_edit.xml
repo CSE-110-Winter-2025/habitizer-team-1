@@ -7,27 +7,17 @@
 
     <TextView
         android:id="@+id/routineName"
-        android:layout_width="wrap_content"
+        android:layout_width="187dp"
         android:layout_height="64dp"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="36dp"
+        android:layout_marginTop="32dp"
         android:fontFamily="sans-serif"
         android:paddingStart="16dp"
         android:text="Morning"
         android:textColor="#000"
         android:textSize="36sp"
-        android:maxLines="1"
-        android:ellipsize="end"
-        android:autoSizeTextType="uniform"
-        android:autoSizeMinTextSize="12sp"
-        android:autoSizeMaxTextSize="36sp"
-        android:autoSizeStepGranularity="2sp"
-        android:clickable="true"
-        android:focusable="true"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
-
-
 
 
     <TextView
@@ -36,7 +26,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="50dp"
         android:layout_marginEnd="16dp"
-        android:text="- minutes"
+        android:text="Time Estimate: - minutes"
         android:textColor="#777"
         android:textSize="16sp"
         app:layout_constraintEnd_toEndOf="parent"
@@ -47,29 +37,28 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/taskRecyclerView"
         android:layout_width="340dp"
-        android:layout_height="508dp"
+        android:layout_height="0dp"
         android:layout_marginTop="25dp"
+        android:layout_marginBottom="16dp"
         app:layout_constraintBottom_toTopOf="@id/buttonContainer"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-
         app:layout_constraintTop_toBottomOf="@+id/routineName"
-
         tools:listitem="@layout/recycler_view_item" />
 
+    <!-- Top button container for Back and Add Task -->
     <LinearLayout
         android:id="@+id/buttonContainer"
         style="?android:attr/buttonBarButtonStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="32dp"
+        android:layout_marginBottom="16dp"
         android:gravity="center"
         android:orientation="horizontal"
-        app:layout_constraintBottom_toBottomOf="parent"
-        tools:layout_editor_absoluteX="0dp">
+        app:layout_constraintBottom_toTopOf="@+id/deleteRoutineButton">
 
         <Button
-            android:id="@+id/addRoutineButton"
+            android:id="@+id/backButton"
             style="?android:attr/buttonBarButtonStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -82,5 +71,18 @@
             android:layout_height="wrap_content"
             android:text="Add Task" />
     </LinearLayout>
+
+    <!-- Delete Routine button with proper spacing -->
+    <Button
+        android:id="@+id/deleteRoutineButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="24dp"
+        android:backgroundTint="#FFEEEE"
+        android:text="Delete Routine"
+        android:textColor="#FF0000"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

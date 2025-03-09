@@ -73,6 +73,16 @@
      }
 
      @Override
+     public void removeTaskFromRoutine(int routineId, Task task) {
+
+     }
+
+     @Override
+     public void deleteRoutine(int routineId) {
+
+     }
+
+     @Override
      public int addRoutine(Routine routineId) {
          this.dataSource.addRoutine(routineId);
          return routineId.id();

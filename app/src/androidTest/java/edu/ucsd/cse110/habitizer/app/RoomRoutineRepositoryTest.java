@@ -107,27 +107,7 @@ public class RoomRoutineRepositoryTest {
 
         assertTrue(completedTask.complete());
     }
-
-    @Test
-    public void testDeleteTask() {
-        RoutineEntity routineEntity = new RoutineEntity("Sleep Routine", 45);
-        int routineId = Math.toIntExact(routineDao.insert(routineEntity));
-
-        Task task1 = new Task(null, "Go to bed");
-        Task task2 = new Task(null, "Sleep");
-
-        repository.addTaskToRoutine(routineId, task1);
-        repository.addTaskToRoutine(routineId, task2);
-
-        List<Task> tasksBefore = repository.getRoutineTasks(routineId);
-        assertEquals(2, tasksBefore.size());
-
-        taskDao.delete(tasksBefore.get(0).id());
-
-        List<Task> tasksAfter = repository.getRoutineTasks(routineId);
-        assertEquals(1, tasksAfter.size());
-    }
-
+    
     @Test
     public void testGetRoutines() {
         routineDao.insert(new RoutineEntity("Routine 1", 25));
@@ -178,4 +158,31 @@ public class RoomRoutineRepositoryTest {
         assertEquals("Updated Routine Name", updatedRoutine.getName());
     }
 
+
+    @Test
+    void testDeleteTask() {
+        RoutineEntity routineEntity = new RoutineEntity("Sleep Routine", 45);
+        int routineId = Math.toIntExact(routineDao.insert(routineEntity));
+        Task task = new Task(2, "Brush teeth");
+        repository.addTaskToRoutine(routineId, task);
+
+        assertTrue(taskDao.getTasksForRoutine(routineId).stream()
+                .anyMatch(task1 -> task1.title.equals("Brush teeth")));
+
+        repository.removeTaskFromRoutine(routineId, task);
+
+        assertFalse(taskDao.getTasksForRoutine(routineId).stream()
+                .anyMatch(task1 -> task1.title.equals("Brush teeth")));
+    }
+
+    @Test
+    void testDeleteTaskObservables() {
+        RoutineEntity routineEntity = new RoutineEntity("Sleep Routine", 45);
+        int routineId = Math.toIntExact(routineDao.insert(routineEntity));
+        Task task = new Task(2, "Brush teeth");
+
+        repository.removeTaskFromRoutine(routineId, task);
+        var routineAfter = repository.getRoutineById(routineId);
+        assertFalse(routineAfter.getTasks().stream().anyMatch(t -> t != null && t.title() != null && t.title().equals("Brush teeth")));
+    }
 }

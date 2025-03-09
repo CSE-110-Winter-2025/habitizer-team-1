@@ -21,6 +21,8 @@ public interface TaskDao {
     @Query("DELETE FROM tasks WHERE id = :id")
     void delete(int id);
 
+    @Query("DELETE FROM tasks WHERE routineId = :routineId")
+    void deleteTasksForRoutine(int routineId);
 
     @Query("UPDATE tasks SET isComplete = :isComplete WHERE id = :id")
     void updateCompletedState(int id, boolean isComplete);
