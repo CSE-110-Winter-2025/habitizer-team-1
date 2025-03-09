@@ -160,7 +160,7 @@ public class RoomRoutineRepositoryTest {
 
 
     @Test
-    void testDeleteTask() {
+    public void testDeleteTask() {
         RoutineEntity routineEntity = new RoutineEntity("Sleep Routine", 45);
         int routineId = Math.toIntExact(routineDao.insert(routineEntity));
         Task task = new Task(2, "Brush teeth");
@@ -176,7 +176,7 @@ public class RoomRoutineRepositoryTest {
     }
 
     @Test
-    void testDeleteTaskObservables() {
+    public void testDeleteTaskObservables() {
         RoutineEntity routineEntity = new RoutineEntity("Sleep Routine", 45);
         int routineId = Math.toIntExact(routineDao.insert(routineEntity));
         Task task = new Task(2, "Brush teeth");
