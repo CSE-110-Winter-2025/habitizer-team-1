@@ -25,7 +25,7 @@ import edu.ucsd.cse110.habitizer.lib.domain.Task;
 
 
 /*
-    US 12 (persistence) and 13 (add routine) tests
+    US 12, 13, 14, 16 tests
  */
 @RunWith(AndroidJUnit4.class)
 public class RoomRoutineRepositoryTest {
@@ -109,26 +109,6 @@ public class RoomRoutineRepositoryTest {
     }
 
     @Test
-    public void testDeleteTask() {
-        RoutineEntity routineEntity = new RoutineEntity("Sleep Routine", 45);
-        int routineId = Math.toIntExact(routineDao.insert(routineEntity));
-
-        Task task1 = new Task(null, "Go to bed");
-        Task task2 = new Task(null, "Sleep");
-
-        repository.addTaskToRoutine(routineId, task1);
-        repository.addTaskToRoutine(routineId, task2);
-
-        List<Task> tasksBefore = repository.getRoutineTasks(routineId);
-        assertEquals(2, tasksBefore.size());
-
-        taskDao.delete(tasksBefore.get(0).id());
-
-        List<Task> tasksAfter = repository.getRoutineTasks(routineId);
-        assertEquals(1, tasksAfter.size());
-    }
-
-    @Test
     public void testGetRoutines() {
         routineDao.insert(new RoutineEntity("Routine 1", 25));
         routineDao.insert(new RoutineEntity("Routine 2", 35));
@@ -160,7 +140,7 @@ public class RoomRoutineRepositoryTest {
         assertEquals(initialSize + 1, updatedRoutines.size());
     }
 
-    /* US13 - rename routine bdd*/
+    /* US13 - rename routine bdd */
     @Test
     public void us13bddrename() {
         // Given: A routine exists in the database
@@ -176,6 +156,69 @@ public class RoomRoutineRepositoryTest {
         Routine updatedRoutine = repository.getRoutineById(routineId);
         assertNotNull(updatedRoutine);
         assertEquals("Updated Routine Name", updatedRoutine.getName());
+    }
+
+
+    /* us14 tests and bdd */
+    @Test
+    public void testDeleteTask() {
+        RoutineEntity routineEntity = new RoutineEntity("Sleep Routine", 45);
+        int routineId = Math.toIntExact(routineDao.insert(routineEntity));
+        Task task = new Task(2, "Brush teeth");
+        repository.addTaskToRoutine(routineId, task);
+
+        assertTrue(taskDao.getTasksForRoutine(routineId).stream()
+                .anyMatch(task1 -> task1.title.equals("Brush teeth")));
+
+        repository.removeTaskFromRoutine(routineId, task);
+
+        assertFalse(taskDao.getTasksForRoutine(routineId).stream()
+                .anyMatch(task1 -> task1.title.equals("Brush teeth")));
+    }
+
+    @Test
+    public void testDeleteTaskObservables() {
+        RoutineEntity routineEntity = new RoutineEntity("Sleep Routine", 45);
+        int routineId = Math.toIntExact(routineDao.insert(routineEntity));
+        Task task = new Task(2, "Brush teeth");
+
+        repository.removeTaskFromRoutine(routineId, task);
+        var routineAfter = repository.getRoutineById(routineId);
+        assertFalse(routineAfter.getTasks().stream().anyMatch(t -> t != null && t.title() != null && t.title().equals("Brush teeth")));
+    }
+    @Test
+    public void deleteRoutineTest() {
+        RoutineEntity routineEntity = new RoutineEntity("New Routine", null);
+        int routineId = Math.toIntExact(routineDao.insert(routineEntity));
+
+        assertNotNull(repository.getRoutineById(routineId));
+        repository.deleteRoutine(routineId);
+
+        assertNull(routineDao.findWithTasks(routineId));
+        assertTrue(repository.getRoutineTasks(routineId).isEmpty());
+    }
+
+    /* US16 - delete routine bdd */
+    @Test
+    public void us16bdd() {
+        // Given: A routine with tasks is created
+        RoutineEntity routineEntity = new RoutineEntity("Sleep Routine", null);
+        int routineId = Math.toIntExact(routineDao.insert(routineEntity));
+
+        Task task1 = new Task(null, "Yawn");
+        Task task2 = new Task(null, "Go to bed");
+        repository.addTaskToRoutine(routineId, task1);
+        repository.addTaskToRoutine(routineId, task2);
+
+        assertNotNull(repository.getRoutineById(routineId));
+        assertEquals(2, repository.getRoutineTasks(routineId).size());
+
+        // When: The user deletes the routine
+        repository.deleteRoutine(routineId);
+
+        // Then: The routine and its tasks should no longer exist in the database
+        assertNull(routineDao.findWithTasks(routineId));
+        assertTrue(repository.getRoutineTasks(routineId).isEmpty());
     }
 
 }
