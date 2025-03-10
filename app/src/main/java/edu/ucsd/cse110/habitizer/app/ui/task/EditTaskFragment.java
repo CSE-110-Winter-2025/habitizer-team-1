@@ -78,7 +78,9 @@ public class EditTaskFragment extends Fragment {
 
         routineName.setText(routine.getName());
 
-        taskAdapter = new TaskViewAdapter(routine.getTasks(), task -> renameTask(task));
+        taskAdapter = new TaskViewAdapter(routine.getTasks(),
+                task -> renameTask(task),
+                task -> confirmDeleteTask(task));
         tasks.setLayoutManager(new LinearLayoutManager(getActivity()));
         tasks.setAdapter(taskAdapter);
 
@@ -219,6 +221,18 @@ public class EditTaskFragment extends Fragment {
                 .show();
     }
 
+    private void confirmDeleteTask(Task task) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setTitle("Delete Task")
+                .setMessage("Are you sure you want to delete this task?")
+                .setPositiveButton("Delete", (dialog, which) -> {
+                    viewModel.removeTaskFromRoutine(routine.id(), task);
+                    taskAdapter.notifyDataSetChanged();
+                })
+                .setNegativeButton("Cancel", null)
+                .show();
+    }
+
     private void confirmDeleteRoutine() {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle("Delete Routine")
@@ -230,5 +244,4 @@ public class EditTaskFragment extends Fragment {
                 .setNegativeButton("Cancel", null)
                 .show();
     }
-
 }

@@ -55,6 +55,10 @@ public class MainViewModel extends ViewModel {
         repository.updateRoutineTimeEstimate(routineId, newTimeEstimate);
     }
 
+    public void removeTaskFromRoutine(int routineId, Task task) {
+        repository.removeTaskFromRoutine(routineId, task);
+    }
+
     public void updateRoutineName(Integer id, String newRoutineName) {
         repository.updateRoutineName(id, newRoutineName);
     }
