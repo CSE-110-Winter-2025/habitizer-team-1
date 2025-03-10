@@ -31,6 +31,4 @@ public interface SimpleRoutineRepository {
     void updateRoutineName(int id, String newRoutineName);
 
     void removeTaskFromRoutine(int routineId, Task task);
-
-    void deleteRoutine(int routineId);
 }
