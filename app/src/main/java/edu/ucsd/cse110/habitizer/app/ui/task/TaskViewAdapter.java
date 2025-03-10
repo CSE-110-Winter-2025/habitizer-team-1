@@ -9,6 +9,7 @@ import android.graphics.Paint;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -65,6 +66,9 @@ public class TaskViewAdapter extends RecyclerView.Adapter<TaskViewAdapter.TaskVi
 
             holder.taskDuration.setText(lapformatTime(task.getLapTime()));
 
+            holder.downButton.setVisibility(View.GONE); //hide up and down buttons if not editing
+            holder.upButton.setVisibility(View.GONE); //hide up and down buttons if not editing
+
         } else if(!isEditing){
             holder.taskName.setPaintFlags(holder.taskName.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
             // Set the click listener only if the task is NOT complete and if routine has not ended
@@ -83,14 +87,16 @@ public class TaskViewAdapter extends RecyclerView.Adapter<TaskViewAdapter.TaskVi
                     notifyItemChanged(position); // Update the view
                 }
             });
+
+            holder.downButton.setVisibility(View.GONE); //hide up and down buttons if not editing
+            holder.upButton.setVisibility(View.GONE); //hide up and down buttons if not editing
+
         }
         else if (!isRoutineEnded){
             holder.itemView.setOnClickListener(v -> {
                 clickListener.onTaskClick(task); // Notify the fragment
             });
-        holder.taskDuration.setVisibility(View.GONE);
-
-
+            holder.taskDuration.setVisibility(View.GONE);
         }
 
     }
@@ -107,12 +113,15 @@ public class TaskViewAdapter extends RecyclerView.Adapter<TaskViewAdapter.TaskVi
 
     public static class TaskViewHolder extends RecyclerView.ViewHolder {
         TextView taskName, taskDuration, lapTime;
+        ImageButton upButton, downButton;
 
         public TaskViewHolder(View itemView) {
             super(itemView);
             taskName = itemView.findViewById(R.id.taskName);
             taskDuration = itemView.findViewById(R.id.taskDuration);
             lapTime = itemView.findViewById(R.id.lapTime);
+            upButton = itemView.findViewById(R.id.move_up);
+            downButton = itemView.findViewById(R.id.move_down);
         }
     }
 
