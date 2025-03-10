@@ -47,16 +47,16 @@ public class MainViewModel extends ViewModel {
         return repository.addRoutine(routine);
     }
 
+    public void deleteRoutine(int routineId) {
+        repository.deleteRoutine(routineId);
+    }
+
     public void updateRoutineTimeEstimate(int routineId, Integer newTimeEstimate) {
         repository.updateRoutineTimeEstimate(routineId, newTimeEstimate);
     }
 
     public void removeTaskFromRoutine(int routineId, Task task) {
         repository.removeTaskFromRoutine(routineId, task);
-    }
-
-    public void deleteRoutine(int routineId) {
-        repository.deleteRoutine(routineId);
     }
 
     public void updateRoutineName(Integer id, String newRoutineName) {

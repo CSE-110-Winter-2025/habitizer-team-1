@@ -24,6 +24,8 @@ public interface SimpleRoutineRepository {
 
     int addRoutine(Routine routine);
 
+    void deleteRoutine(int routineId);
+
     void updateRoutineTimeEstimate(int routineId, Integer newTimeEstimate);
 
     void updateRoutineName(int id, String newRoutineName);

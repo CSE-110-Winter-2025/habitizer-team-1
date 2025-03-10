@@ -244,5 +244,4 @@ public class EditTaskFragment extends Fragment {
                 .setNegativeButton("Cancel", null)
                 .show();
     }
-
 }

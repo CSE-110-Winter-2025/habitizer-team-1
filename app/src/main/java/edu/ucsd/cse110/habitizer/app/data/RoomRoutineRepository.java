@@ -116,8 +116,6 @@ public class RoomRoutineRepository implements SimpleRoutineRepository {
         }
     }
 
-
-
     private void loadDefaultData() {
         if (routineDao.count() > 0) return;
 
