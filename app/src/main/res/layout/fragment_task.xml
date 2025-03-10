@@ -61,16 +61,21 @@
         app:layout_constraintTop_toBottomOf="@id/timeEstimate"
         tools:listitem="@layout/recycler_view_item" />
 
+
     <LinearLayout
         android:id="@+id/buttonContainer"
         style="?android:attr/buttonBarStyle"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="32dp"
+        android:layout_width="380dp"
+        android:layout_height="50dp"
+        android:layout_marginStart="5dp"
+        android:layout_marginEnd="5dp"
+        android:layout_marginBottom="20dp"
         android:gravity="center"
         android:orientation="horizontal"
         app:layout_constraintBottom_toBottomOf="parent"
-        tools:layout_editor_absoluteX="0dp">
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.523"
+        app:layout_constraintStart_toStartOf="parent">
 
         <Button
             android:id="@+id/addRoutineButton"
@@ -85,33 +90,41 @@
             style="@style/Widget.AppCompat.Button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginHorizontal="10dp"
             android:text="@string/end_routine" />
 
+        <ImageButton
+            android:id="@+id/button_stop"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginEnd="15dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="@string/stoptimer"
+            android:src="@drawable/pause" />
+
     </LinearLayout>
-
-
-    <ImageButton
-        android:id="@+id/button_stop"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginEnd="10dp"
-        android:background="?attr/selectableItemBackgroundBorderless"
-        android:contentDescription="@string/stoptimer"
-        android:src="@drawable/pause"
-        app:layout_constraintEnd_toStartOf="@id/button_advance"
-        app:layout_constraintTop_toTopOf="parent" />
 
     <ImageButton
         android:id="@+id/button_advance"
         android:layout_width="48dp"
         android:layout_height="48dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginEnd="10dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="16dp"
         android:background="?attr/selectableItemBackgroundBorderless"
         android:contentDescription="@string/advancetime"
         android:src="@drawable/advance"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/TestPause"
+        android:layout_width="116dp"
+        android:layout_height="48dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="6dp"
+        android:text="@string/testpause"
+        app:layout_constraintEnd_toStartOf="@+id/button_advance"
         app:layout_constraintTop_toTopOf="parent" />
 
 
