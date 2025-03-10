@@ -7,10 +7,10 @@
 
     <TextView
         android:id="@+id/routineName"
-        android:layout_width="wrap_content"
+        android:layout_width="187dp"
         android:layout_height="64dp"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="36dp"
+        android:layout_marginTop="32dp"
         android:fontFamily="sans-serif"
         android:paddingStart="16dp"
         android:text="Morning"
@@ -47,8 +47,9 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/taskRecyclerView"
         android:layout_width="340dp"
-        android:layout_height="508dp"
+        android:layout_height="0dp"
         android:layout_marginTop="25dp"
+        android:layout_marginBottom="16dp"
         app:layout_constraintBottom_toTopOf="@id/buttonContainer"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -62,14 +63,13 @@
         style="?android:attr/buttonBarButtonStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="32dp"
+        android:layout_marginBottom="16dp"
         android:gravity="center"
         android:orientation="horizontal"
-        app:layout_constraintBottom_toBottomOf="parent"
-        tools:layout_editor_absoluteX="0dp">
+        app:layout_constraintBottom_toTopOf="@+id/deleteRoutineButton">
 
         <Button
-            android:id="@+id/addRoutineButton"
+            android:id="@+id/backButton"
             style="?android:attr/buttonBarButtonStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -82,5 +82,18 @@
             android:layout_height="wrap_content"
             android:text="Add Task" />
     </LinearLayout>
+
+    <!-- Delete Routine button with proper spacing -->
+    <Button
+        android:id="@+id/deleteRoutineButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="24dp"
+        android:backgroundTint="#FFEEEE"
+        android:text="Delete Routine"
+        android:textColor="#FF0000"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -19,7 +19,7 @@
 
     <TextView
         android:id="@+id/routineName"
-        android:layout_width="wrap_content"
+        android:layout_width="187dp"
         android:layout_height="64dp"
         android:layout_marginTop="36dp"
         android:autoSizeMaxTextSize="36sp"
@@ -32,6 +32,7 @@
         android:text="@string/morning"
         android:textColor="#000"
         android:textSize="36sp"
+
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
