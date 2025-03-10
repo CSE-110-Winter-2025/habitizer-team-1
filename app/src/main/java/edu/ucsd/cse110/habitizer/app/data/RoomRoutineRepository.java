@@ -101,6 +101,15 @@ public class RoomRoutineRepository implements SimpleRoutineRepository {
         routineDao.updateRoutineName(routineId, newName);
     }
 
+    @Override
+    public void deleteRoutine(int routineId){
+        taskDao.deleteTasksForRoutine(routineId);
+        routineDao.delete(routineId);
+        if (routineSubjects.containsKey(routineId)) {
+            routineSubjects.remove(routineId);
+        }
+    }
+
     private void loadDefaultData() {
         if (routineDao.count() > 0) return;
 
