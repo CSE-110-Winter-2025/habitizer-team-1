@@ -40,6 +40,7 @@ public class TaskFragment extends Fragment {
 
     private TotalTimer totalTimer;
 
+
     private boolean isEditing;
 
     public TaskFragment(Routine routine) {
