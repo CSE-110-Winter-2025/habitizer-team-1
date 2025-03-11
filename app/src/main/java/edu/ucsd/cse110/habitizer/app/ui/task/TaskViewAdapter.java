@@ -64,7 +64,6 @@ public class TaskViewAdapter extends RecyclerView.Adapter<TaskViewAdapter.TaskVi
 //      holder.taskName.setPaintFlags(holder.taskName.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
 
         if (isEditing) {
-            System.out.println("$#$$$$$$$#$#$#$#$#$"); // Delete this 
             holder.deleteButton.setVisibility(View.VISIBLE);
             holder.deleteButton.setOnClickListener(v -> deleteListener.onTaskClick(task));
         }
@@ -76,10 +75,15 @@ public class TaskViewAdapter extends RecyclerView.Adapter<TaskViewAdapter.TaskVi
             holder.taskDuration.setVisibility(View.VISIBLE);
             holder.taskDuration.setText(lapformatTime(task.getLapTime()));
             holder.deleteButton.setVisibility(View.GONE);
+
+            holder.upButton.setVisibility(View.GONE); //make sure can't move during nonediting
+            holder.downButton.setVisibility(View.GONE);
         } else if (!isEditing) {
             // Incomplete task in non-editing mode
             holder.taskDuration.setVisibility(View.GONE);
             holder.deleteButton.setVisibility(View.GONE);
+            holder.upButton.setVisibility(View.GONE); //make sure can't move during nonediting
+            holder.downButton.setVisibility(View.GONE);
             
             // Set click listener only if routine has not ended
             if (!isRoutineEnded) {
