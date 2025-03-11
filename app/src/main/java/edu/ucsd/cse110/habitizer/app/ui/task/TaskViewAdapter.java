@@ -59,6 +59,12 @@ public class TaskViewAdapter extends RecyclerView.Adapter<TaskViewAdapter.TaskVi
         Task task = tasks.get(position);
         holder.taskName.setText(task.title());
 
+        // Reset the text style to prevent reuse bugs
+        holder.taskName.setPaintFlags(0); // Remove any existing strikethrough
+        // Set the correct strikethrough state based on completion
+        if (task.complete()) {
+            holder.taskName.setPaintFlags(holder.taskName.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+        }
 
         if(isRoutineEnded && !task.complete()) {
             holder.taskDuration.setText("-");
@@ -66,7 +72,7 @@ public class TaskViewAdapter extends RecyclerView.Adapter<TaskViewAdapter.TaskVi
             holder.taskDuration.setText("0 min"); // placeholder
         }
 
-//      holder.taskName.setPaintFlags(holder.taskName.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
+        //holder.taskName.setPaintFlags(holder.taskName.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
 
         if (isEditing) {
             holder.deleteButton.setVisibility(View.VISIBLE);
