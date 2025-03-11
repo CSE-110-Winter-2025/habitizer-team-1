@@ -26,7 +26,7 @@ public class TaskViewAdapter extends RecyclerView.Adapter<TaskViewAdapter.TaskVi
     private List<Task> tasks;
     private final TaskClickListener clickListener;
     private TaskClickListener deleteListener;
-    private TaskReorderListener reorderListener;
+    public TaskReorderListener reorderListener;
 
     private boolean isRoutineEnded = false;
     private boolean isEditing = false;
