@@ -15,12 +15,23 @@ public class Task implements Serializable {
     private long lapTime;
     private long lastLapTime = 0; //last recorded laptime
 
+    private int position;
+
+
     public int getLapTime() {
         return (int)lapTime;
     }
 
     public void setLapTime(long lapTime) {
         this.lapTime = lapTime;
+    }
+
+    public int getPosition() {
+        return position;
+    }
+
+    public void setPosition(int position) {
+        this.position = position;
     }
 
     public void setLastLapTime(long lastLapTime) {

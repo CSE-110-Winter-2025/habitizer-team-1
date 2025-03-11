@@ -20,12 +20,13 @@ import edu.ucsd.cse110.habitizer.lib.domain.TotalTimer;
 import edu.ucsd.cse110.habitizer.app.R;
 
 import java.util.List;
-
+import java.util.stream.Collectors;
 public class TaskViewAdapter extends RecyclerView.Adapter<TaskViewAdapter.TaskViewHolder> {
 
     private List<Task> tasks;
     private final TaskClickListener clickListener;
     private TaskClickListener deleteListener;
+    private TaskReorderListener reorderListener;
 
     private boolean isRoutineEnded = false;
     private boolean isEditing = false;
@@ -39,6 +40,10 @@ public class TaskViewAdapter extends RecyclerView.Adapter<TaskViewAdapter.TaskVi
         this.tasks = tasks;
         this.clickListener = clickListener;
         this.deleteListener = deleteListener;
+    }
+
+    public void setReorderListener(TaskReorderListener reorderListener) {
+        this.reorderListener = reorderListener;
     }
 
     @NonNull
@@ -115,6 +120,7 @@ public class TaskViewAdapter extends RecyclerView.Adapter<TaskViewAdapter.TaskVi
 
             // Up button click event
             holder.upButton.setOnClickListener(v -> {
+
                 int currPos = holder.getAdapterPosition();
 
                 // Ensure the current position is not the first item
@@ -128,6 +134,10 @@ public class TaskViewAdapter extends RecyclerView.Adapter<TaskViewAdapter.TaskVi
 
                     // Notify the adapter
                     notifyItemMoved(currPos, currPos - 1);
+
+                    if (reorderListener != null) {
+                        reorderListener.onTaskReordered(taskToMove, taskAbove);
+                    }
 
                 }
             });
@@ -147,6 +157,10 @@ public class TaskViewAdapter extends RecyclerView.Adapter<TaskViewAdapter.TaskVi
 
                     // Notify the adapter
                     notifyItemMoved(currPos, currPos + 1);
+
+                    if (reorderListener != null) {
+                        reorderListener.onTaskReordered(taskToMove, taskBelow);
+                    }
                 }
             });
 
@@ -159,8 +173,10 @@ public class TaskViewAdapter extends RecyclerView.Adapter<TaskViewAdapter.TaskVi
     }
 
     public void setTasks(List<Task> tasks) {
-        this.tasks = tasks;
-        notifyDataSetChanged();
+        this.tasks = tasks.stream()
+        .sorted((t1, t2) -> Integer.compare(t1.getPosition(), t2.getPosition()))
+        .collect(Collectors.toList());
+    notifyDataSetChanged();
     }
 
     public static class TaskViewHolder extends RecyclerView.ViewHolder {
