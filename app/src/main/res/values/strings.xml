@@ -10,4 +10,5 @@
     <string name="add_task">Add Task</string>
     <string name="move_up">move_up</string>
     <string name="move_down">move_down</string>
+    <string name="testpause">TestPause</string>
 </resources>
