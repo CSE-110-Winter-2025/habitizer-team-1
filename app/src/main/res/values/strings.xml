@@ -8,4 +8,5 @@
     <string name="morning">Morning</string>
     <string name="_0_minutes">0 minutes</string>
     <string name="add_task">Add Task</string>
+    <string name="testpause">TestPause</string>
 </resources>

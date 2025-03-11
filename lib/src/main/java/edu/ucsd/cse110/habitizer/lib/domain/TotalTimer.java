@@ -12,6 +12,8 @@ public class TotalTimer {
     private volatile TimerListener listener; // Listener for UI updates (volatile ensures visibility across threads)
 
     private int lastLap = 0;
+    private boolean pausedByStopButton = false; // Flag to track pause source
+
 
     private long lastLapTime = 0; // Keeps track of the last lap timestamp
 
@@ -65,11 +67,13 @@ public class TotalTimer {
     }
 
     /**
-     * Manually advances the elapsed time by 30 seconds.
+     * Manually advances the elapsed time by 15 seconds.
      * Notifies the listener with the updated time.
      */
     public synchronized void advanceTime() {
-        secondsElapsed += 30;
+        if (pausedByStopButton) return; // Block time advancement if paused by button_stop
+
+        secondsElapsed += 15;
 
         // Notify the listener with updated time
         if (listener != null) {
@@ -92,10 +96,14 @@ public class TotalTimer {
     /**
      * Toggles the timer between pause and resume.
      */
-    public synchronized void togglePause() {
+    public synchronized void togglePause(boolean isStopButton) {
         if (!running) { // Resume the timer if it was paused
+            if (!isStopButton) return; // Prevent TestPause from resuming
+
+            // Resume only if button_stop was used
             running = true;
             timer = new Timer();
+            pausedByStopButton = false; // Reset flag when resuming
 
             timer.schedule(new TimerTask() {
                 @Override
@@ -120,12 +128,18 @@ public class TotalTimer {
                 timer = null;
             }
             running = false;
+            pausedByStopButton = isStopButton; // Track if paused by button_stop
         }
 
         // Notify the listener about pause state change
         if (listener != null) {
             listener.onPauseToggled(!running);
         }
+    }
+
+    // Helper method to check if pause was caused by button_stop
+    public boolean isPausedByStopButton() {
+        return pausedByStopButton;
     }
 
 
