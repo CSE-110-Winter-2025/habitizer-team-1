@@ -27,6 +27,8 @@ import edu.ucsd.cse110.observables.Subject;
 
 import androidx.lifecycle.ViewModelProvider;
 
+import com.google.android.material.button.MaterialButton;
+
 public class TaskFragment extends Fragment {
 
     private TextView routineName;
@@ -91,6 +93,7 @@ public class TaskFragment extends Fragment {
         ImageButton stopButton = view.findViewById(R.id.button_stop);
         ImageButton advanceButton = view.findViewById(R.id.button_advance);
         taskTimer = view.findViewById(R.id.currentTaskTime);
+        MaterialButton testPauseButton = view.findViewById(R.id.TestPause);
 
         routineName.setText(routine.getName());
 
@@ -148,7 +151,7 @@ public class TaskFragment extends Fragment {
             @Override
             public void onPauseToggled(boolean isPaused) {
                 requireActivity().runOnUiThread(() -> {
-                    stopButton.setImageResource(isPaused ? R.drawable.pause : R.drawable.pause); //let them both be pause icon for now
+                    stopButton.setImageResource(isPaused ? R.drawable.play : R.drawable.pause); //let them both be pause icon for now
                 });
             }
         });
@@ -182,7 +185,13 @@ public class TaskFragment extends Fragment {
         // text changes
         taskAdapter.setEditingMode(false); // ensures that it can strikethrough
 
-        stopButton.setOnClickListener(v -> totalTimer.togglePause());
+        stopButton.setOnClickListener(v -> totalTimer.togglePause(true)); // Marks pause from button_stop
+
+        testPauseButton.setOnClickListener(v -> {
+            if (totalTimer.isRunning()) { // Only allow pause, no resume
+                totalTimer.togglePause(false); // Pause, but don't allow resuming
+            }
+        });
 
         advanceButton.setOnClickListener(v -> {
             totalTimer.advanceTime(); // This should internally reset the lap timer (i.e. set lapStartTime = secondsElapsed
