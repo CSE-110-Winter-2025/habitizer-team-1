@@ -59,119 +59,103 @@ public class TaskViewAdapter extends RecyclerView.Adapter<TaskViewAdapter.TaskVi
         Task task = tasks.get(position);
         holder.taskName.setText(task.title());
 
-        // Reset the text style to prevent reuse bugs
-        holder.taskName.setPaintFlags(0); // Remove any existing strikethrough
-        // Set the correct strikethrough state based on completion
+        // Reset styles before applying changes
+        holder.taskName.setPaintFlags(0);
+
+        // Apply strikethrough only if the task is complete
         if (task.complete()) {
             holder.taskName.setPaintFlags(holder.taskName.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
         }
 
-        if(isRoutineEnded && !task.complete()) {
-            holder.taskDuration.setText("-");
-        }else{
-            holder.taskDuration.setText("0 min"); // placeholder
-        }
+        // Set task duration text
+        holder.taskDuration.setText(task.complete() ? lapformatTime(task.getLapTime()) : (isRoutineEnded ? "-" : "0 min"));
+        holder.taskDuration.setVisibility(task.complete() ? View.VISIBLE : View.GONE);
 
-        //holder.taskName.setPaintFlags(holder.taskName.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
-
+        // determine which mode to set up
         if (isEditing) {
-            holder.deleteButton.setVisibility(View.VISIBLE);
-            holder.deleteButton.setOnClickListener(v -> deleteListener.onTaskClick(task));
-        }
-        // Now handle the different states for task appearance and click behavior
-        if (!isEditing && task.complete()) {
-            // Completed task in non-editing mode
-            holder.taskName.setPaintFlags(holder.taskName.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
-            holder.itemView.setOnClickListener(null); // Disable clicks
-            holder.taskDuration.setVisibility(View.VISIBLE);
-            holder.taskDuration.setText(lapformatTime(task.getLapTime()));
-            holder.deleteButton.setVisibility(View.GONE);
-
-            holder.upButton.setVisibility(View.GONE); //make sure can't move during nonediting
-            holder.downButton.setVisibility(View.GONE);
-        } else if (!isEditing) {
-            // Incomplete task in non-editing mode
-            holder.taskDuration.setVisibility(View.GONE);
-            holder.deleteButton.setVisibility(View.GONE);
-            holder.upButton.setVisibility(View.GONE); //make sure can't move during nonediting
-            holder.downButton.setVisibility(View.GONE);
-            
-            // Set click listener only if routine has not ended
-            if (!isRoutineEnded) {
-                holder.itemView.setOnClickListener(v -> {
-                    // Mark the task as complete
-                    task.setComplete(true);
-
-                    // Apply strikethrough
-                    holder.taskName.setPaintFlags(holder.taskName.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
-
-                    // Disable clicks on the task
-                    holder.itemView.setOnClickListener(null);
-
-                    clickListener.onTaskClick(task); // Notify the fragment
-                    notifyItemChanged(position); // Update the view
-
-                });
-            } else {
-                holder.itemView.setOnClickListener(null); // Disable clicks if routine ended
-            }
+            setupEditMode(holder, task);
         } else {
-            // In editing mode
-            holder.taskDuration.setVisibility(View.GONE);
-
-            // Set click listener for renaming
-            holder.itemView.setOnClickListener(v -> {
-                clickListener.onTaskClick(task); // Notify the fragment for renaming
-            });
-
-            // Up button click event
-            holder.upButton.setOnClickListener(v -> {
-
-                int currPos = holder.getAdapterPosition();
-
-                // Ensure the current position is not the first item
-                if (currPos > 0) {
-                    // Swap the tasks
-                    Task taskToMove = tasks.get(currPos);
-                    Task taskAbove = tasks.get(currPos - 1);
-
-                    tasks.set(currPos, taskAbove);
-                    tasks.set(currPos - 1, taskToMove);
-
-                    // Notify the adapter
-                    notifyItemMoved(currPos, currPos - 1);
-
-                    if (reorderListener != null) {
-                        reorderListener.onTaskReordered(taskToMove, taskAbove);
-                    }
-
-                }
-            });
-
-// Down button click event
-            holder.downButton.setOnClickListener(v -> {
-                int currPos = holder.getAdapterPosition();
-
-                // Ensure the current position is not the last item
-                if (currPos < tasks.size() - 1) {
-                    // Swap the tasks
-                    Task taskToMove = tasks.get(currPos);
-                    Task taskBelow = tasks.get(currPos + 1);
-
-                    tasks.set(currPos, taskBelow);
-                    tasks.set(currPos + 1, taskToMove);
-
-                    // Notify the adapter
-                    notifyItemMoved(currPos, currPos + 1);
-
-                    if (reorderListener != null) {
-                        reorderListener.onTaskReordered(taskToMove, taskBelow);
-                    }
-                }
-            });
-
+            setupStartMode(holder, task);
         }
     }
+
+    /*
+        Sets up editing mode
+    */
+    private void setupEditMode(TaskViewHolder holder, Task task) {
+        holder.deleteButton.setVisibility(View.VISIBLE);
+        holder.deleteButton.setOnClickListener(v -> deleteListener.onTaskClick(task));
+
+        holder.upButton.setVisibility(View.VISIBLE);
+        holder.downButton.setVisibility(View.VISIBLE);
+
+        holder.upButton.setOnClickListener(v -> moveTaskUp(holder.getAdapterPosition()));
+        holder.downButton.setOnClickListener(v -> moveTaskDown(holder.getAdapterPosition()));
+
+        holder.itemView.setOnClickListener(v -> clickListener.onTaskClick(task)); // Rename on click
+    }
+
+
+    /*
+        Sets up running a routine mode
+     */
+    private void setupStartMode(TaskViewHolder holder, Task task) {
+        holder.deleteButton.setVisibility(View.GONE);
+        holder.upButton.setVisibility(View.GONE);
+        holder.downButton.setVisibility(View.GONE);
+
+        if (!task.complete() && !isRoutineEnded) {
+            holder.itemView.setOnClickListener(v -> markTaskComplete(task, holder));
+        } else {
+            holder.itemView.setOnClickListener(null);
+        }
+    }
+
+    /*
+        Logic for marking a task as complete
+     */
+    private void markTaskComplete(Task task, TaskViewHolder holder) {
+        task.setComplete(true);
+        holder.taskName.setPaintFlags(holder.taskName.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+        holder.itemView.setOnClickListener(null); // Disable future clicks
+        clickListener.onTaskClick(task); // Notify fragment
+    }
+
+    /*
+        Logic for moving a task up when the up button is used
+     */
+    private void moveTaskUp(int position) {
+        if (position > 0) {
+            swapTasks(position, position - 1);
+        }
+    }
+
+    /*
+        Logic for moving a task down if the down button is used
+     */
+    private void moveTaskDown(int position) {
+        if (position < tasks.size() - 1) {
+            swapTasks(position, position + 1);
+        }
+    }
+
+    /*
+        Swaps tasks
+     */
+    private void swapTasks(int firstPos, int secondPos) {
+        Task firstTask = tasks.get(firstPos);
+        Task secondTask = tasks.get(secondPos);
+
+        tasks.set(firstPos, secondTask);
+        tasks.set(secondPos, firstTask);
+
+        notifyItemMoved(firstPos, secondPos);
+
+        if (reorderListener != null) {
+            reorderListener.onTaskReordered(firstTask, secondTask);
+        }
+    }
+
 
     @Override
     public int getItemCount() {
@@ -182,7 +166,7 @@ public class TaskViewAdapter extends RecyclerView.Adapter<TaskViewAdapter.TaskVi
         this.tasks = tasks.stream()
         .sorted((t1, t2) -> Integer.compare(t1.getPosition(), t2.getPosition()))
         .collect(Collectors.toList());
-    notifyDataSetChanged();
+        notifyDataSetChanged();
     }
 
     public static class TaskViewHolder extends RecyclerView.ViewHolder {
@@ -200,8 +184,6 @@ public class TaskViewAdapter extends RecyclerView.Adapter<TaskViewAdapter.TaskVi
             deleteButton = itemView.findViewById(R.id.deleteButton);
         }
     }
-
-
 
     public void endRoutine() {
         isRoutineEnded = true;
