@@ -149,6 +149,7 @@ public class TaskFragment extends Fragment {
             public void onPauseToggled(boolean isPaused) {
                 requireActivity().runOnUiThread(() -> {
                     stopButton.setImageResource(isPaused ? R.drawable.pause : R.drawable.pause); //let them both be pause icon for now
+
                 });
             }
         });
