@@ -112,6 +112,44 @@ public class TaskViewAdapter extends RecyclerView.Adapter<TaskViewAdapter.TaskVi
             holder.itemView.setOnClickListener(v -> {
                 clickListener.onTaskClick(task); // Notify the fragment for renaming
             });
+
+            // Up button click event
+            holder.upButton.setOnClickListener(v -> {
+                int currPos = holder.getAdapterPosition();
+
+                // Ensure the current position is not the first item
+                if (currPos > 0) {
+                    // Swap the tasks
+                    Task taskToMove = tasks.get(currPos);
+                    Task taskAbove = tasks.get(currPos - 1);
+
+                    tasks.set(currPos, taskAbove);
+                    tasks.set(currPos - 1, taskToMove);
+
+                    // Notify the adapter
+                    notifyItemMoved(currPos, currPos - 1);
+
+                }
+            });
+
+// Down button click event
+            holder.downButton.setOnClickListener(v -> {
+                int currPos = holder.getAdapterPosition();
+
+                // Ensure the current position is not the last item
+                if (currPos < tasks.size() - 1) {
+                    // Swap the tasks
+                    Task taskToMove = tasks.get(currPos);
+                    Task taskBelow = tasks.get(currPos + 1);
+
+                    tasks.set(currPos, taskBelow);
+                    tasks.set(currPos + 1, taskToMove);
+
+                    // Notify the adapter
+                    notifyItemMoved(currPos, currPos + 1);
+                }
+            });
+
         }
     }
 
