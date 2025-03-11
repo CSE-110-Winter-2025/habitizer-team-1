@@ -22,12 +22,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginBottom="16dp"
-        android:text="Current Task: "
+        android:layout_marginBottom="8dp"
+        android:text="Current Task: 0 m"
         app:layout_constraintBottom_toTopOf="@+id/taskRecyclerView"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintHorizontal_bias="0.015"
         app:layout_constraintStart_toEndOf="@+id/routineName"
         app:layout_constraintTop_toBottomOf="@+id/timeRemaining"
         app:layout_constraintVertical_bias="0.0" />
@@ -36,7 +35,7 @@
         android:id="@+id/routineName"
         android:layout_width="187dp"
         android:layout_height="64dp"
-        android:layout_marginTop="36dp"
+        android:layout_marginTop="32dp"
         android:autoSizeMaxTextSize="36sp"
         android:autoSizeMinTextSize="12sp"
         android:autoSizeStepGranularity="2sp"
@@ -46,8 +45,8 @@
         android:paddingStart="16dp"
         android:text="@string/morning"
         android:textColor="#000"
-        android:textSize="36sp"
 
+        android:textSize="36sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -69,7 +68,7 @@
         android:id="@+id/taskRecyclerView"
         android:layout_width="340dp"
         android:layout_height="508dp"
-        android:layout_marginTop="43dp"
+        android:layout_marginTop="32dp"
         app:layout_constraintBottom_toTopOf="@id/buttonContainer"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -131,3 +130,4 @@
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
+
