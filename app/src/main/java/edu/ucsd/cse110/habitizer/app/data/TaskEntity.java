@@ -1,9 +1,10 @@
 package edu.ucsd.cse110.habitizer.app.data;
 
-import androidx.room.Entity;
-import androidx.room.PrimaryKey;
 import androidx.room.ColumnInfo;
+import androidx.room.Entity;
 import androidx.room.Ignore;
+import androidx.room.PrimaryKey;
+
 import edu.ucsd.cse110.habitizer.lib.domain.Task;
 @Entity(tableName = "tasks")
 public class TaskEntity {

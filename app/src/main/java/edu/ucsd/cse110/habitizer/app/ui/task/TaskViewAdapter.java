@@ -1,12 +1,9 @@
 package edu.ucsd.cse110.habitizer.app.ui.task;
 
 
-import static edu.ucsd.cse110.habitizer.lib.domain.TotalTimer.formatTime;
 import static edu.ucsd.cse110.habitizer.lib.domain.TotalTimer.lapformatTime;
 
-
 import android.graphics.Paint;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,13 +12,12 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-import edu.ucsd.cse110.habitizer.lib.domain.Task;
-import edu.ucsd.cse110.habitizer.lib.domain.TotalTimer;
-
-import edu.ucsd.cse110.habitizer.app.R;
 
 import java.util.List;
 import java.util.stream.Collectors;
+
+import edu.ucsd.cse110.habitizer.app.R;
+import edu.ucsd.cse110.habitizer.lib.domain.Task;
 public class TaskViewAdapter extends RecyclerView.Adapter<TaskViewAdapter.TaskViewHolder> {
 
     private List<Task> tasks;
