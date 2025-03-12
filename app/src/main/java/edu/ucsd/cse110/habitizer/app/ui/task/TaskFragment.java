@@ -233,13 +233,13 @@ public class TaskFragment extends Fragment {
     @Override
     public void onPause() {
         super.onPause();
-        // If the fragment is pausing because the app is going to background (and not because the user finished/left)
+        // If the fragment is pausing because the app is going to background
         if (!requireActivity().isFinishing() && !isRemoving() && !routine.getEnded()) {
             // Pause the routine and save state
             if (totalTimer.isRunning()) {
                 totalTimer.togglePause(false);
             }
-            viewModel.updateRoutineState(routine.id(), true, routine.getTotalTimer().getTotalTime());
+            viewModel.updateRoutineState(routine.id(), true, totalTimer.getTotalTime());
         }
     }
 

@@ -25,7 +25,7 @@ public class RoutineEntity {
     public boolean isActive;
 
     @ColumnInfo(name = "elapsedTime")
-    public Integer elapsedTime;
+    public Long elapsedTime;
 
 
     public RoutineEntity(@NonNull String name, Integer timeEstimate){
@@ -38,7 +38,7 @@ public class RoutineEntity {
         RoutineEntity newRoutine = new RoutineEntity(routine.getName(), routine.getTimeEstimate());
         newRoutine.id = routine.id();
         newRoutine.isActive = false;
-        newRoutine.elapsedTime = routine.getTotalTimer().getTotalTime();
+        newRoutine.elapsedTime = (long) routine.getTotalTimer().getTotalTime();
         return newRoutine;
     }
 
@@ -48,7 +48,7 @@ public class RoutineEntity {
             routine.setTimeEstimate(timeEstimate);
         }
         if (isActive && elapsedTime != null) {
-            routine.getTotalTimer().setTime(elapsedTime);
+            routine.getTotalTimer().setTime(Math.toIntExact(elapsedTime));
         }
         return routine;
     }
