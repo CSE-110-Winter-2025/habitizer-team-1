@@ -20,23 +20,36 @@ public class RoutineEntity {
     @ColumnInfo(name="timeEstimate")
     public Integer timeEstimate;
 
+    @ColumnInfo(name = "isActive")
+    public boolean isActive = false;
+
+    @ColumnInfo(name = "elapsedTime")
+    public Integer elapsedTime = 0;
+
 
     public RoutineEntity(@NonNull String name, Integer timeEstimate){
         this.name=name;
         this.timeEstimate=timeEstimate;
+        this.isActive = false;
+        this.elapsedTime = 0;
     }
 
-    public static RoutineEntity fromRoutine(@NonNull Routine routine){
+    public static RoutineEntity fromRoutine(@NonNull Routine routine) {
         RoutineEntity newRoutine = new RoutineEntity(routine.getName(), routine.getTimeEstimate());
         newRoutine.id = routine.id();
+        newRoutine.isActive = false;
+        newRoutine.elapsedTime = 0;
         return newRoutine;
     }
 
-    public @NonNull Routine toRoutine(){
-       var routine = new Routine(id, name);
-       if (timeEstimate != null) {
-           routine.setTimeEstimate(timeEstimate);
-       }
-       return routine;
+    public @NonNull Routine toRoutine() {
+        Routine routine = new Routine(id, name);
+        if (timeEstimate != null) {
+            routine.setTimeEstimate(timeEstimate);
+        }
+        if (isActive && elapsedTime != null) {
+            routine.setLastLapTime(elapsedTime);
+        }
+        return routine;
     }
 }

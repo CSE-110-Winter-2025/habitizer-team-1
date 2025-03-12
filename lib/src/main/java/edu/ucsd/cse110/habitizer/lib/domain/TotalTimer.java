@@ -158,6 +158,11 @@ public class TotalTimer {
         }
     }
 
+    /** Sets the elapsed time counter (used when resuming a paused routine) */
+    public synchronized void setSecondsElapsed(int seconds) {
+        this.secondsElapsed = seconds;
+    }
+
     /**
      * Returns the total seconds elapsed since the timer started.
      */
@@ -194,7 +199,7 @@ public class TotalTimer {
     }
 
     // returns total time
-    public int getTotalTime() {
+    public synchronized int getTotalTime() {
         return secondsElapsed;
     }
 

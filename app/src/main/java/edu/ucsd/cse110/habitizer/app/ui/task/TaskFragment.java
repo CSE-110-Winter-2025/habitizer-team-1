@@ -4,6 +4,7 @@ import android.app.Activity;
 
 import android.os.Bundle;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,6 +30,8 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.material.button.MaterialButton;
 
+import java.util.List;
+
 public class TaskFragment extends Fragment {
 
     private TextView routineName;
@@ -45,6 +48,7 @@ public class TaskFragment extends Fragment {
 
 
     private boolean isEditing;
+    private boolean resumeMode;
 
     public TaskFragment(Routine routine) {
         this.routine = routine;
@@ -119,6 +123,9 @@ public class TaskFragment extends Fragment {
             viewModel.resetRoutine(routine.id());
             requireActivity().getSupportFragmentManager().popBackStack();
         });
+
+        resumeMode = getArguments() != null && getArguments().getBoolean("resume", false);
+
         // Initialize and start the TotalTimer when the fragment loads
         totalTimer = new TotalTimer(routine);
         totalTimer.setListener(new TotalTimer.TimerListener() {
@@ -156,7 +163,25 @@ public class TaskFragment extends Fragment {
             }
         });
 
-        totalTimer.start(); // Start the timer when the fragment loads
+        if (resumeMode) {
+            int savedSeconds = (int) routine.getLastLapTime();
+            totalTimer.setSecondsElapsed(savedSeconds);
+            totalTimer.togglePause(true);  // keep timer paused on resume
+            // Load tasks from DB (already done via ViewModel)
+            taskAdapter.setTasks(viewModel.getRoutineById(routine.id()).getTasks());
+            taskAdapter.notifyDataSetChanged();
+        } else {
+            viewModel.updateRoutineState(routine.id(), true, 0);
+            totalTimer.start();
+        }
+
+        backButton.setEnabled(false);
+        backButton.setOnClickListener(v -> {
+            // User exiting routine: reset tasks and stop timer
+            viewModel.resetRoutine(routine.id());
+            totalTimer.stop();
+            requireActivity().getSupportFragmentManager().popBackStack();
+        });
 
         // Stop the timer when the routine ends and mark routine as ended
         endRoutineButton.setOnClickListener(v -> {
@@ -205,6 +230,19 @@ public class TaskFragment extends Fragment {
         return view;
     }
 
+    @Override
+    public void onPause() {
+        super.onPause();
+        // If the fragment is pausing because the app is going to background (and not because the user finished/left)
+        if (!requireActivity().isFinishing() && !isRemoving() && !routine.getEnded()) {
+            // Pause the routine and save state
+            if (totalTimer.isRunning()) {
+                totalTimer.togglePause(false);  // pause the timer (not by stop button)
+            }
+            int currentTime = totalTimer.getTotalTime();
+            viewModel.updateRoutineState(routine.id(), true, currentTime);
+        }
+    }
 
     // Everytime fragment is used, get updated routine (if edited)
     @Override
@@ -231,9 +269,8 @@ public class TaskFragment extends Fragment {
     public void markTaskComplete(Task task) {
         if(routine != null && routine.getEnded()) {
             return; // ensure that tasks can't be marked complete after the routine ends
-        }else{
+        } else{
             task.setComplete(true);
-
             // Use `recordLap()` from TotalTimer to get the lap duration
             long lapTime = totalTimer.recordLap();
             task.setLapTime(lapTime); // Store the lap time for the task
@@ -243,6 +280,10 @@ public class TaskFragment extends Fragment {
             requireActivity().runOnUiThread(() -> {
                 taskTimer.setText("Current Task: " + taskTime + " m"); // Display time in MM:SS format
             });
+
+            // Ensure UI updates to reflect lap times
+            requireActivity().runOnUiThread(() -> taskAdapter.notifyDataSetChanged());
+            viewModel.markTaskComplete(task);
 
             // Ensure UI updates to reflect lap times
             requireActivity().runOnUiThread(() -> taskAdapter.notifyDataSetChanged());

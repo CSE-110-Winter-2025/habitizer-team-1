@@ -12,7 +12,10 @@ public class HabitizerApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        var db = Room.databaseBuilder(this, RoutineDatabase.class, "habitizer-database").allowMainThreadQueries().build();
+        var db = Room.databaseBuilder(this, RoutineDatabase.class, "habitizer-database")
+                .allowMainThreadQueries()
+                .fallbackToDestructiveMigration()
+                .build();
 
         SimpleRoutineRepository repository = new RoomRoutineRepository(db.RoutineDao(), db.taskDao());
         viewModelFactory = new MainViewModel.Factory(repository);

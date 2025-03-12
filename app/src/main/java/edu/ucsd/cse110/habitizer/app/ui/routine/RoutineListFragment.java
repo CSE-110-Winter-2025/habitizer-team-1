@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
@@ -23,11 +24,13 @@ import edu.ucsd.cse110.habitizer.lib.domain.Routine;
 public class RoutineListFragment extends Fragment {
     // ViewModel
     private MainViewModel viewModel;
+    private TaskFragment taskFragment;
 
     // UI objects
     private LinearLayout buttonContainer;
     private Button editButton;
     private Button addRoutineButton;
+
 
     // State - tracks edit mode
     private boolean isEditing = false;
@@ -85,6 +88,31 @@ public class RoutineListFragment extends Fragment {
 
         return view;
     }
+
+    @Override
+    public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        Routine activeRoutine = viewModel.getActiveRoutine();
+        if (activeRoutine != null) {
+            // Create a new instance of TaskFragment properly
+            TaskFragment taskFragment = TaskFragment.newInstance(activeRoutine);
+            if (taskFragment != null) {  // Ensure it's not null before using it
+                Bundle args = new Bundle();
+                args.putBoolean("resume", true);
+                taskFragment.setArguments(args);
+
+                requireActivity().getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.fragment_container, taskFragment, "ACTIVE_ROUTINE")
+                        .addToBackStack(null)
+                        .commit();
+            } else {
+                Log.e("RoutineListFragment", "Failed to create TaskFragment");
+            }
+        }
+    }
+
+
 
     private void addRoutineButtonState() {
         int newRoutineId = viewModel.addRoutine(new Routine(null, "New Routine"));

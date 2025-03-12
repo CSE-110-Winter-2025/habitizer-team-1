@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModelProvider;
 
 import java.util.List;
 
+import edu.ucsd.cse110.habitizer.app.data.RoomRoutineRepository;
 import edu.ucsd.cse110.habitizer.app.data.RoutineEntity;
 import edu.ucsd.cse110.habitizer.lib.domain.Routine;
 import edu.ucsd.cse110.habitizer.lib.domain.SimpleRoutineRepository;
@@ -65,6 +66,23 @@ public class MainViewModel extends ViewModel {
     
     public void updateTaskOrder(int routineId, Task task1, Task task2) {
         repository.updateTaskOrder(routineId, task1, task2);
+    }
+
+    public Routine getActiveRoutine() {
+        return repository instanceof RoomRoutineRepository
+                ? ((RoomRoutineRepository) repository).getActiveRoutine() : null;
+    }
+
+    public void updateRoutineState(int routineId, boolean isActive, int elapsedTime) {
+        if (repository instanceof RoomRoutineRepository) {
+            ((RoomRoutineRepository) repository).updateRoutineState(routineId, isActive, elapsedTime);
+        }
+    }
+
+    public void markTaskComplete(Task task) {
+        if (repository instanceof RoomRoutineRepository) {
+            ((RoomRoutineRepository) repository).markTaskComplete(task);
+        }
     }
 
     public static class Factory implements ViewModelProvider.Factory {

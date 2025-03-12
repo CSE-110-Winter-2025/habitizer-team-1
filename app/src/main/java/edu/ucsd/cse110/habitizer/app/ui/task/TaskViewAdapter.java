@@ -98,6 +98,8 @@ public class TaskViewAdapter extends RecyclerView.Adapter<TaskViewAdapter.TaskVi
         holder.upButton.setVisibility(View.VISIBLE);
         holder.downButton.setVisibility(View.VISIBLE);
 
+        // Apply strikethrough
+        holder.taskName.setPaintFlags(holder.taskName.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
         holder.upButton.setOnClickListener(v -> moveTaskUp(holder.getAdapterPosition()));
         holder.downButton.setOnClickListener(v -> moveTaskDown(holder.getAdapterPosition()));
 
@@ -172,10 +174,22 @@ public class TaskViewAdapter extends RecyclerView.Adapter<TaskViewAdapter.TaskVi
         return tasks.size();
     }
 
+    public void updateTaskState(int taskId, long lapTime, long lastLapTime, boolean isComplete) {
+        for (Task task : tasks) {
+            if (task.id() == taskId) {
+                task.setComplete(isComplete);
+                task.setLapTime(lapTime);
+                task.setLastLapTime(lastLapTime);
+                notifyDataSetChanged();
+                break;
+            }
+        }
+    }
+
     public void setTasks(List<Task> tasks) {
         this.tasks = tasks.stream()
-        .sorted((t1, t2) -> Integer.compare(t1.getPosition(), t2.getPosition()))
-        .collect(Collectors.toList());
+                .sorted((t1, t2) -> Integer.compare(t1.getPosition(), t2.getPosition()))
+                .collect(Collectors.toList());
         notifyDataSetChanged();
     }
 
