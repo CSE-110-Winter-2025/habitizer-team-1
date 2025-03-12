@@ -299,6 +299,7 @@ public class TaskFragment extends Fragment {
             routine.setLastLapTime(totalTimer.getSecondsElapsed()); // Update routine tracking
 
             int taskTime = (totalTimer.getSecondsElapsed() - (int) routine.getLastLapTime()) / 60;
+
             requireActivity().runOnUiThread(() -> {
                 taskTimer.setText("Current Task: " + taskTime + " m"); // Display time in MM:SS format
             });
