@@ -44,7 +44,7 @@ public class RoutineListFragment extends Fragment {
 
         buttonContainer = view.findViewById(R.id.buttonContainer);
         editButton = view.findViewById(R.id.editButton);
-        addRoutineButton = view.findViewById(R.id.addRoutineButton);
+        addRoutineButton = view.findViewById(R.id.backButton);
 
         editButton.setOnClickListener(v -> {
             toggleEditState();
