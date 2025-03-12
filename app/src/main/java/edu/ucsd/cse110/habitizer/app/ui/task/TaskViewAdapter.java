@@ -6,6 +6,7 @@ import static edu.ucsd.cse110.habitizer.lib.domain.TotalTimer.lapformatTime;
 
 
 import android.graphics.Paint;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -68,7 +69,13 @@ public class TaskViewAdapter extends RecyclerView.Adapter<TaskViewAdapter.TaskVi
         }
 
         // Set task duration text
-        holder.taskDuration.setText(task.complete() ? lapformatTime(task.getLapTime()) : (isRoutineEnded ? "-" : "0 min"));
+        String durationText = "";
+        if (task.complete()) {
+            durationText = lapformatTime(task.getLapTime());
+        } else if (isRoutineEnded) {
+            durationText = "-";
+        }
+        holder.taskDuration.setText(durationText);
         holder.taskDuration.setVisibility(task.complete() ? View.VISIBLE : View.GONE);
 
         // determine which mode to set up
@@ -103,6 +110,7 @@ public class TaskViewAdapter extends RecyclerView.Adapter<TaskViewAdapter.TaskVi
         holder.deleteButton.setVisibility(View.GONE);
         holder.upButton.setVisibility(View.GONE);
         holder.downButton.setVisibility(View.GONE);
+        holder.taskDuration.setVisibility(View.VISIBLE);
 
         if (!task.complete() && !isRoutineEnded) {
             holder.itemView.setOnClickListener(v -> markTaskComplete(task, holder));
