@@ -205,10 +205,6 @@ public class TaskFragment extends Fragment {
         // text changes
         taskAdapter.setEditingMode(false); // ensures that it can strikethrough
 
-        //stopButton.setOnClickListener(v ->
-                //totalTimer.togglePause(true)); // Marks pause from button_stop
-
-
         testPauseButton.setOnClickListener(v -> {
             if (totalTimer.isRunning()) { // Only allow pause, no resume
                 totalTimer.togglePause(false); // Pause, but don't allow resuming
@@ -217,17 +213,10 @@ public class TaskFragment extends Fragment {
 
         advanceButton.setOnClickListener(v -> {
             totalTimer.advanceTime(); // This should internally reset the lap timer (i.e. set lapStartTime = secondsElapsed
-//            // Update the task timer UI
-//            int taskTime = (totalTimer.getSecondsElapsed() - (int) routine.getLastLapTime()) / 60;
-//            requireActivity().runOnUiThread(() -> {
-//                taskTimer.setText("Current Task: " + taskTime + " m"); // Display time in MM:SS format
-//            });
         });
 
         return view;
     }
-
-
 
     // Everytime fragment is used, get updated routine (if edited)
     @Override
