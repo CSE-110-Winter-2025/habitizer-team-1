@@ -116,6 +116,10 @@ public class Routine implements Serializable {
         this.lastLapTime = lastLapTime;
     }
 
+    public void setTime(int time)
+    {
+        totalTimer.setTime(time);
+    }
 
     // returns stored timeEstimate
     public Integer getTimeEstimate() {

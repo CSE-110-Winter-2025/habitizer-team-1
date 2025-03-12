@@ -10,6 +10,7 @@ import edu.ucsd.cse110.habitizer.lib.domain.Routine;
 
 @Entity(tableName = "routines")
 public class RoutineEntity {
+
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "id")
     public Integer id = null;
@@ -21,7 +22,7 @@ public class RoutineEntity {
     public Integer timeEstimate;
 
     @ColumnInfo(name = "isActive")
-    public boolean isActive = false;
+    public boolean isActive;
 
     @ColumnInfo(name = "elapsedTime")
     public Integer elapsedTime;
@@ -31,14 +32,13 @@ public class RoutineEntity {
         this.name=name;
         this.timeEstimate=timeEstimate;
         this.isActive = false;
-        this.elapsedTime = 0;
     }
 
     public static RoutineEntity fromRoutine(@NonNull Routine routine) {
         RoutineEntity newRoutine = new RoutineEntity(routine.getName(), routine.getTimeEstimate());
         newRoutine.id = routine.id();
         newRoutine.isActive = false;
-        newRoutine.elapsedTime = routine.getTotalTimer().getSecondsElapsed();
+        newRoutine.elapsedTime = routine.getTotalTimer().getTotalTime();
         return newRoutine;
     }
 
@@ -48,7 +48,7 @@ public class RoutineEntity {
             routine.setTimeEstimate(timeEstimate);
         }
         if (isActive && elapsedTime != null) {
-            routine.setLastLapTime(elapsedTime);
+            routine.getTotalTimer().setTime(elapsedTime);
         }
         return routine;
     }

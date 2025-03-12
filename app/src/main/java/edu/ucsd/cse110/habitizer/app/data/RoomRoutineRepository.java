@@ -141,7 +141,7 @@ public class RoomRoutineRepository implements SimpleRoutineRepository {
         return active != null ? active.toRoutine() : null;
     }
 
-    public void updateRoutineState(int routineId, boolean isActive, int elapsedTime) {
+    public void updateRoutineState(int routineId, boolean isActive, long elapsedTime) {
         routineDao.updateRoutineState(routineId, isActive, elapsedTime);
     }
 

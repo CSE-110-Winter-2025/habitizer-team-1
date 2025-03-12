@@ -237,10 +237,9 @@ public class TaskFragment extends Fragment {
         if (!requireActivity().isFinishing() && !isRemoving() && !routine.getEnded()) {
             // Pause the routine and save state
             if (totalTimer.isRunning()) {
-                totalTimer.togglePause(false);  // pause the timer (not by stop button)
+                totalTimer.togglePause(false);
             }
-            int currentTime = totalTimer.getTotalTime();
-            viewModel.updateRoutineState(routine.id(), true, currentTime);
+            viewModel.updateRoutineState(routine.id(), true, routine.getTotalTimer().getTotalTime());
         }
     }
 

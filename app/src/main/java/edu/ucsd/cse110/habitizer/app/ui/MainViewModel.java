@@ -73,7 +73,7 @@ public class MainViewModel extends ViewModel {
                 ? ((RoomRoutineRepository) repository).getActiveRoutine() : null;
     }
 
-    public void updateRoutineState(int routineId, boolean isActive, int elapsedTime) {
+    public void updateRoutineState(int routineId, boolean isActive, long elapsedTime) {
         if (repository instanceof RoomRoutineRepository) {
             ((RoomRoutineRepository) repository).updateRoutineState(routineId, isActive, elapsedTime);
         }

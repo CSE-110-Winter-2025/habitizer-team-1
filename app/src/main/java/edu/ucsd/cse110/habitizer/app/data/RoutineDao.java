@@ -64,5 +64,5 @@ public interface RoutineDao {
     RoutineWithTasks getActiveRoutineWithTasks();
 
     @Query("UPDATE routines SET isActive = :isActive, elapsedTime = :elapsedTime WHERE id = :id")
-    void updateRoutineState(int id, boolean isActive, int elapsedTime);
+    void updateRoutineState(int id, boolean isActive, long elapsedTime);
 }
