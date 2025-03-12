@@ -195,6 +195,11 @@ public class TaskFragment extends Fragment {
 
         advanceButton.setOnClickListener(v -> {
             totalTimer.advanceTime(); // This should internally reset the lap timer (i.e. set lapStartTime = secondsElapsed
+//            // Update the task timer UI
+//            int taskTime = (totalTimer.getSecondsElapsed() - (int) routine.getLastLapTime()) / 60;
+//            requireActivity().runOnUiThread(() -> {
+//                taskTimer.setText("Current Task: " + taskTime + " m"); // Display time in MM:SS format
+//            });
         });
 
         return view;
@@ -234,6 +239,10 @@ public class TaskFragment extends Fragment {
             task.setLapTime(lapTime); // Store the lap time for the task
             routine.setLastLapTime(totalTimer.getSecondsElapsed()); // Update routine tracking
 
+            int taskTime = (totalTimer.getSecondsElapsed() - (int) routine.getLastLapTime()) / 60;
+            requireActivity().runOnUiThread(() -> {
+                taskTimer.setText("Current Task: " + taskTime + " m"); // Display time in MM:SS format
+            });
 
             // Ensure UI updates to reflect lap times
             requireActivity().runOnUiThread(() -> taskAdapter.notifyDataSetChanged());
