@@ -141,6 +141,14 @@
         app:layout_constraintEnd_toStartOf="@+id/button_advance"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <View
+        android:id="@+id/pauseOverlay"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#80000000"
+        android:visibility="gone"/>
+
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -46,6 +46,9 @@ public class TaskFragment extends Fragment {
 
     private boolean isEditing;
 
+    private boolean isPaused = false;
+
+
     public TaskFragment(Routine routine) {
         this.routine = routine;
         this.totalTimer = new TotalTimer(routine);
@@ -114,11 +117,21 @@ public class TaskFragment extends Fragment {
             this.onDestroyView();
         });
 
+
+
         backButton.setOnClickListener(v -> {
             // Reset task states to incomplete before going back
             viewModel.resetRoutine(routine.id());
             requireActivity().getSupportFragmentManager().popBackStack();
         });
+
+        stopButton.setOnClickListener(v -> {
+            isPaused = !isPaused;  // Toggle the paused state manually
+            totalTimer.togglePause(true); // Call pause method
+            toggleUIFreeze(isPaused); // Freeze/unfreeze UI
+        });
+
+
         // Initialize and start the TotalTimer when the fragment loads
         totalTimer = new TotalTimer(routine);
         totalTimer.setListener(new TotalTimer.TimerListener() {
@@ -185,7 +198,9 @@ public class TaskFragment extends Fragment {
         // text changes
         taskAdapter.setEditingMode(false); // ensures that it can strikethrough
 
-        stopButton.setOnClickListener(v -> totalTimer.togglePause(true)); // Marks pause from button_stop
+        //stopButton.setOnClickListener(v ->
+                //totalTimer.togglePause(true)); // Marks pause from button_stop
+
 
         testPauseButton.setOnClickListener(v -> {
             if (totalTimer.isRunning()) { // Only allow pause, no resume
@@ -199,6 +214,7 @@ public class TaskFragment extends Fragment {
 
         return view;
     }
+
 
 
     // Everytime fragment is used, get updated routine (if edited)
@@ -287,10 +303,56 @@ public class TaskFragment extends Fragment {
         }
     }
 
+
+
     private void rerender(){
         routineName.setText(routine.getName());
         taskAdapter.setTasks(routine.getTasks());
         taskAdapter.notifyDataSetChanged();
         updateTimeEstimate(timeEstimateView);
     }
+
+    private void toggleUIFreeze(boolean isFrozen) {
+        requireActivity().runOnUiThread(() -> {
+            // Disable all buttons
+            View view = requireView();
+            disableAllButtons(view, isFrozen);
+
+            // Disable RecyclerView (task list)
+            RecyclerView tasks = view.findViewById(R.id.taskRecyclerView);
+            if (tasks != null) {
+                tasks.setEnabled(!isFrozen); // Disable the RecyclerView itself
+            }
+
+            // Update the task adapter to prevent clicking tasks
+            if (taskAdapter != null) {
+                taskAdapter.setFrozen(isFrozen); // Disable/enable task clicks
+            }
+        });
+
+        View overlay = requireView().findViewById(R.id.pauseOverlay);
+        if (overlay != null) {
+            overlay.setVisibility(isFrozen ? View.VISIBLE : View.GONE);
+        }
+    }
+
+    private void disableAllButtons(View view, boolean disable) {
+        if (view.getId() == R.id.button_stop) {
+            return; // Skip disabling the stop button
+        }
+
+        if (view instanceof Button || view instanceof ImageButton || view instanceof MaterialButton) {
+            view.setEnabled(!disable);
+        } else if (view instanceof ViewGroup) {
+            ViewGroup group = (ViewGroup) view;
+            for (int i = 0; i < group.getChildCount(); i++) {
+                disableAllButtons(group.getChildAt(i), disable);
+            }
+        }
+    }
+
+
+
+
+
 }

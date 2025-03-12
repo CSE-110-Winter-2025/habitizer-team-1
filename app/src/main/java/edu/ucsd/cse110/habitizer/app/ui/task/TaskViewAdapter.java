@@ -29,6 +29,13 @@ public class TaskViewAdapter extends RecyclerView.Adapter<TaskViewAdapter.TaskVi
     private boolean isRoutineEnded = false;
     private boolean isEditing = false;
 
+    private boolean isFrozen = false;
+
+    public void setFrozen(boolean frozen) {
+        this.isFrozen = frozen;
+        notifyDataSetChanged(); // Ensure the adapter updates if the frozen state changes
+    }
+
     public TaskViewAdapter(List<Task> tasks, TaskClickListener clickListener) {
         this.tasks = tasks;
         this.clickListener = clickListener;
@@ -52,6 +59,12 @@ public class TaskViewAdapter extends RecyclerView.Adapter<TaskViewAdapter.TaskVi
     public void onBindViewHolder(TaskViewHolder holder, int position) {
         Task task = tasks.get(position);
         holder.taskName.setText(task.title());
+
+        if (isFrozen) {
+            holder.itemView.setEnabled(false); // Disable the task click view
+        } else {
+            holder.itemView.setEnabled(true); // Enable the task click view
+        }
 
 
         if(isRoutineEnded && !task.complete()) {
@@ -106,6 +119,8 @@ public class TaskViewAdapter extends RecyclerView.Adapter<TaskViewAdapter.TaskVi
                 clickListener.onTaskClick(task); // Notify the fragment for renaming
             });
         }
+
+
     }
 
     @Override
@@ -143,5 +158,14 @@ public class TaskViewAdapter extends RecyclerView.Adapter<TaskViewAdapter.TaskVi
         this.isEditing = isEditing;
         notifyDataSetChanged(); // Refresh the list if editing mode changes
     }
+
+    public void setTimerPaused(boolean isPaused) {
+        if (isPaused) {
+            notifyDataSetChanged(); // Refresh UI to reflect pause state
+        }
+    }
+
+
+
 
 }
