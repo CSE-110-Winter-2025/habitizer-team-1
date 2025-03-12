@@ -62,6 +62,10 @@ public class MainViewModel extends ViewModel {
     public void updateRoutineName(Integer id, String newRoutineName) {
         repository.updateRoutineName(id, newRoutineName);
     }
+    
+    public void updateTaskOrder(int routineId, Task task1, Task task2) {
+        repository.updateTaskOrder(routineId, task1, task2);
+    }
 
     public static class Factory implements ViewModelProvider.Factory {
         private final SimpleRoutineRepository repository;

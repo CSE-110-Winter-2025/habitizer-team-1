@@ -18,13 +18,13 @@ public class RoutineWithTasks {
     
     public List<TaskEntity> tasks;
 
-    public Routine toRoutine(){
-       var routine = this.routine.toRoutine();
-       tasks.stream()
-               .map(TaskEntity::toTask)
-               .forEach(routine::addTask);
-       return routine;
-    }
-
+    public Routine toRoutine() {
+        var routine = this.routine.toRoutine();
+        tasks.stream()
+                .sorted((t1, t2) -> Integer.compare(t1.position, t2.position))
+                .map(TaskEntity::toTask)
+                .forEach(routine::addTask);
+        return routine;
+        }
 }
 

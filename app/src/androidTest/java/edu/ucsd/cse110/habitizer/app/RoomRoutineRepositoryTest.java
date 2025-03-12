@@ -25,7 +25,7 @@ import edu.ucsd.cse110.habitizer.lib.domain.Task;
 
 
 /*
-    US 12, 13, 14, 16 tests
+    US 12, 13, 14, 15, 16 tests
  */
 @RunWith(AndroidJUnit4.class)
 public class RoomRoutineRepositoryTest {
@@ -219,6 +219,32 @@ public class RoomRoutineRepositoryTest {
         // Then: The routine and its tasks should no longer exist in the database
         assertNull(routineDao.findWithTasks(routineId));
         assertTrue(repository.getRoutineTasks(routineId).isEmpty());
+    }
+
+    // US 15 reordering tasks
+    @Test
+    public void testUpdateTaskOrder() {
+        // Given: A routine and two tasks
+        RoutineEntity routineEntity = new RoutineEntity("Morning Routine", 1);
+        int routineId = Math.toIntExact(routineDao.insert(routineEntity));
+
+        Task task1 = new Task(null, "Task A");
+        Task task2 = new Task(null, "Task B");
+
+        repository.addTaskToRoutine(routineId, task1);
+        repository.addTaskToRoutine(routineId, task2);
+
+        List<Task> tasksBeforeSwap = repository.getRoutineTasks(routineId);
+        assertEquals("Task A", tasksBeforeSwap.get(0).title());
+        assertEquals("Task B", tasksBeforeSwap.get(1).title());
+
+        // When: The tasks are swapped
+        repository.updateTaskOrder(routineId, tasksBeforeSwap.get(0), tasksBeforeSwap.get(1));
+
+        // Then: The order should be reversed
+        List<Task> tasksAfterSwap = repository.getRoutineTasks(routineId);
+        assertEquals("Task B", tasksAfterSwap.get(0).title());
+        assertEquals("Task A", tasksAfterSwap.get(1).title());
     }
 
 }
