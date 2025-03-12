@@ -47,6 +47,7 @@ public class TaskFragment extends Fragment {
     private boolean isEditing;
 
     private boolean isPaused = false;
+    private boolean pausedByStopButton = false; // Flag to track pause source
 
     private ImageButton stopButton;
 
@@ -128,9 +129,10 @@ public class TaskFragment extends Fragment {
         });
 
         stopButton.setOnClickListener(v -> {
-            isPaused = !isPaused;  // Toggle the paused state manually
+            //isPaused = !isPaused;  // Toggle the paused state manually
             totalTimer.togglePause(true); // Call pause method
-            toggleUIFreeze(isPaused); // Freeze/unfreeze UI
+            boolean isPausedByStopButton = totalTimer != null && totalTimer.isPausedByStopButton();
+            toggleUIFreeze(isPausedByStopButton); // Freeze/unfreeze UI
         });
 
 
