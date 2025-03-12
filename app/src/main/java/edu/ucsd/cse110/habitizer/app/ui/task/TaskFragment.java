@@ -1,9 +1,7 @@
 package edu.ucsd.cse110.habitizer.app.ui.task;
 
 import android.app.Activity;
-
 import android.os.Bundle;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,21 +11,20 @@ import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.button.MaterialButton;
+
 import edu.ucsd.cse110.habitizer.app.R;
+import edu.ucsd.cse110.habitizer.app.ui.HabitizerApplication;
+import edu.ucsd.cse110.habitizer.app.ui.MainViewModel;
 import edu.ucsd.cse110.habitizer.lib.domain.Routine;
 import edu.ucsd.cse110.habitizer.lib.domain.Task;
 import edu.ucsd.cse110.habitizer.lib.domain.TotalTimer;
-import edu.ucsd.cse110.habitizer.app.ui.HabitizerApplication;
-import edu.ucsd.cse110.habitizer.app.ui.MainViewModel;
 import edu.ucsd.cse110.observables.Observer;
 import edu.ucsd.cse110.observables.Subject;
-
-import androidx.lifecycle.ViewModelProvider;
-
-import com.google.android.material.button.MaterialButton;
 
 public class TaskFragment extends Fragment {
 
@@ -45,6 +42,8 @@ public class TaskFragment extends Fragment {
 
 
     private boolean isEditing;
+    private boolean resumeMode;
+    private boolean isPausedByStopButton = false;
 
     private ImageButton stopButton;
 
@@ -125,9 +124,10 @@ public class TaskFragment extends Fragment {
             requireActivity().getSupportFragmentManager().popBackStack();
         });
 
+        resumeMode = getArguments() != null && getArguments().getBoolean("resume", false);
         stopButton.setOnClickListener(v -> {
             totalTimer.togglePause(true); // Call pause method
-            boolean isPausedByStopButton = totalTimer != null && totalTimer.isPausedByStopButton();
+            isPausedByStopButton = totalTimer != null && totalTimer.isPausedByStopButton();
             toggleUIFreeze(isPausedByStopButton); // Freeze/unfreeze UI
         });
 
@@ -169,7 +169,25 @@ public class TaskFragment extends Fragment {
             }
         });
 
-        totalTimer.start(); // Start the timer when the fragment loads
+        if (resumeMode) {
+            int savedSeconds = routine.getTotalTimer().getTotalTime();
+            totalTimer.setSecondsElapsed(savedSeconds);
+            totalTimer.togglePause(true);  // keep timer paused on resume
+            // Load tasks from DB (already done via ViewModel)
+            taskAdapter.setTasks(viewModel.getRoutineById(routine.id()).getTasks());
+            taskAdapter.notifyDataSetChanged();
+        } else {
+            viewModel.updateRoutineState(routine.id(), true, 0, 0);
+            totalTimer.start();
+        }
+
+        backButton.setEnabled(false);
+        backButton.setOnClickListener(v -> {
+            // User exiting routine: reset tasks and stop timer
+            viewModel.resetRoutine(routine.id());
+            totalTimer.stop();
+            requireActivity().getSupportFragmentManager().popBackStack();
+        });
 
         // Stop the timer when the routine ends and mark routine as ended
         endRoutineButton.setOnClickListener(v -> {
@@ -211,9 +229,25 @@ public class TaskFragment extends Fragment {
 
         advanceButton.setOnClickListener(v -> {
             totalTimer.advanceTime(); // This should internally reset the lap timer (i.e. set lapStartTime = secondsElapsed
+            // Now, commit the updated timer state to the database (Room)
+            viewModel.updateRoutineState(routine.id(), true, totalTimer.getTotalTime(), routine.getLastLapTime());
+
         });
 
         return view;
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        // If the fragment is pausing because the app is going to background
+        if (!requireActivity().isFinishing() && !isRemoving() && !routine.getEnded()) {
+            // Pause the routine and save state
+            if (totalTimer.isRunning()) {
+                totalTimer.togglePause(false);
+            }
+            viewModel.updateRoutineState(routine.id(), true, totalTimer.getTotalTime(), routine.getLastLapTime());
+        }
     }
 
     // Everytime fragment is used, get updated routine (if edited)
@@ -228,6 +262,16 @@ public class TaskFragment extends Fragment {
             taskAdapter.setTasks(routine.getTasks());
             taskAdapter.notifyDataSetChanged();
         }
+
+        if (routine.getTotalTimer().getSecondsElapsed() > 0) {
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e){
+            }
+
+            totalTimer.togglePause(true);
+            requireActivity().runOnUiThread(() -> toggleUIFreeze(true));
+        }
     }
 
     @Override
@@ -241,9 +285,8 @@ public class TaskFragment extends Fragment {
     public void markTaskComplete(Task task) {
         if(routine != null && routine.getEnded()) {
             return; // ensure that tasks can't be marked complete after the routine ends
-        }else{
+        } else{
             task.setComplete(true);
-
             // Use `recordLap()` from TotalTimer to get the lap duration
             long lapTime = totalTimer.recordLap();
             task.setLapTime(lapTime); // Store the lap time for the task
@@ -253,6 +296,10 @@ public class TaskFragment extends Fragment {
             requireActivity().runOnUiThread(() -> {
                 taskTimer.setText("Current Task: " + taskTime + " m"); // Display time in MM:SS format
             });
+
+            // Ensure UI updates to reflect lap times
+            requireActivity().runOnUiThread(() -> taskAdapter.notifyDataSetChanged());
+            viewModel.markTaskComplete(task);
 
             // Ensure UI updates to reflect lap times
             requireActivity().runOnUiThread(() -> taskAdapter.notifyDataSetChanged());

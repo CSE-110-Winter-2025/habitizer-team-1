@@ -1,12 +1,9 @@
 package edu.ucsd.cse110.habitizer.app.ui.task;
 
 
-import static edu.ucsd.cse110.habitizer.lib.domain.TotalTimer.formatTime;
 import static edu.ucsd.cse110.habitizer.lib.domain.TotalTimer.lapformatTime;
 
-
 import android.graphics.Paint;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,13 +12,12 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-import edu.ucsd.cse110.habitizer.lib.domain.Task;
-import edu.ucsd.cse110.habitizer.lib.domain.TotalTimer;
-
-import edu.ucsd.cse110.habitizer.app.R;
 
 import java.util.List;
 import java.util.stream.Collectors;
+
+import edu.ucsd.cse110.habitizer.app.R;
+import edu.ucsd.cse110.habitizer.lib.domain.Task;
 public class TaskViewAdapter extends RecyclerView.Adapter<TaskViewAdapter.TaskViewHolder> {
 
     private List<Task> tasks;
@@ -114,6 +110,8 @@ public class TaskViewAdapter extends RecyclerView.Adapter<TaskViewAdapter.TaskVi
         holder.upButton.setVisibility(View.VISIBLE);
         holder.downButton.setVisibility(View.VISIBLE);
 
+        // Apply strikethrough
+        holder.taskName.setPaintFlags(holder.taskName.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
         holder.upButton.setOnClickListener(v -> moveTaskUp(holder.getAdapterPosition()));
         holder.downButton.setOnClickListener(v -> moveTaskDown(holder.getAdapterPosition()));
 
@@ -192,8 +190,8 @@ public class TaskViewAdapter extends RecyclerView.Adapter<TaskViewAdapter.TaskVi
 
     public void setTasks(List<Task> tasks) {
         this.tasks = tasks.stream()
-        .sorted((t1, t2) -> Integer.compare(t1.getPosition(), t2.getPosition()))
-        .collect(Collectors.toList());
+                .sorted((t1, t2) -> Integer.compare(t1.getPosition(), t2.getPosition()))
+                .collect(Collectors.toList());
         notifyDataSetChanged();
     }
 

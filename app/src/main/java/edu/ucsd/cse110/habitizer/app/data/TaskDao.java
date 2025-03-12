@@ -26,6 +26,9 @@ public interface TaskDao {
     @Query("UPDATE tasks SET isComplete = :isComplete WHERE id = :id")
     void updateCompletedState(int id, boolean isComplete);
 
+    @Query("UPDATE tasks SET isComplete = :isComplete, lapTime = :lapTime WHERE id = :id")
+    void updateCompletedState(int id, boolean isComplete, long lapTime);
+
     @Query("UPDATE tasks SET title = :newTitle WHERE id = :id")
     void updateTitle(int id, String newTitle);
 
@@ -41,5 +44,8 @@ public interface TaskDao {
     @Transaction
     @Query("SELECT position FROM tasks WHERE id = :taskId")
     int getPosition(int taskId);
+
+    @Query("UPDATE tasks SET isComplete = 0, lapTime = 0 WHERE routineId = :routineId")
+    void resetTasksForRoutine(int routineId);
 }
 

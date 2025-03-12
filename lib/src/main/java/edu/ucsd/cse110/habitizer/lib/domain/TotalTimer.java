@@ -81,6 +81,16 @@ public class TotalTimer {
         }
     }
 
+    public synchronized void setTime(int seconds) {
+        if (pausedByStopButton) return; // Block time advancement if paused by button_stop
+
+        this.secondsElapsed = seconds;
+        // Notify the listener with updated time
+        if (listener != null) {
+            listener.onTick(secondsElapsed, formatTime(secondsElapsed));
+        }
+    }
+
     /**
      * Stops the timer if it is currently running.
      * Cancels the timer and resets the reference.
@@ -158,6 +168,11 @@ public class TotalTimer {
         }
     }
 
+    /** Sets the elapsed time counter (used when resuming a paused routine) */
+    public synchronized void setSecondsElapsed(int seconds) {
+        this.secondsElapsed = seconds;
+    }
+
     /**
      * Returns the total seconds elapsed since the timer started.
      */
@@ -194,7 +209,7 @@ public class TotalTimer {
     }
 
     // returns total time
-    public int getTotalTime() {
+    public synchronized int getTotalTime() {
         return secondsElapsed;
     }
 

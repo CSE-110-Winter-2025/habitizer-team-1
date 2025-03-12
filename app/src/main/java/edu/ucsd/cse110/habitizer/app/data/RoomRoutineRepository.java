@@ -3,12 +3,12 @@ package edu.ucsd.cse110.habitizer.app.data;
 
 import java.util.HashMap;
 import java.util.List;
-import java.util.stream.Collectors;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import edu.ucsd.cse110.habitizer.lib.domain.Routine;
-import edu.ucsd.cse110.habitizer.lib.domain.Task;
 import edu.ucsd.cse110.habitizer.lib.domain.SimpleRoutineRepository;
+import edu.ucsd.cse110.habitizer.lib.domain.Task;
 import edu.ucsd.cse110.observables.PlainMutableSubject;
 import edu.ucsd.cse110.observables.Subject;
 
@@ -41,7 +41,7 @@ public class RoomRoutineRepository implements SimpleRoutineRepository {
     @Override
     public Subject<Routine> getRoutineByIdAsSubject(int routineId) {
         return routineSubjects.computeIfAbsent(routineId, id ->
-            new PlainMutableSubject<>(getRoutineById(id))
+                new PlainMutableSubject<>(getRoutineById(id))
         );
     }
 
@@ -75,13 +75,14 @@ public class RoomRoutineRepository implements SimpleRoutineRepository {
     }
 
     @Override
-    public void markTaskComplete(Task task){
-        taskDao.updateCompletedState(task.id(), true);
+    public void markTaskComplete(Task task) {
+        taskDao.updateCompletedState(task.id(), true, task.getLapTime());
     }
 
     @Override
-    public void resetRoutine(int routineId){
-        return;
+    public void resetRoutine(int routineId) {
+        taskDao.resetTasksForRoutine(routineId);
+        routineDao.updateRoutineState(routineId, false, 0, 0);
     }
 
     @Override
@@ -121,17 +122,27 @@ public class RoomRoutineRepository implements SimpleRoutineRepository {
         }
     }
 
+
     @Override
     public void updateTaskOrder(int routineId, Task task1, Task task2) {
         int pos1 = taskDao.getPosition(task1.id());
         int pos2 = taskDao.getPosition(task2.id());
         taskDao.updatePosition(task1.id(), pos2);
         taskDao.updatePosition(task2.id(), pos1);
-        
+
         if (routineSubjects.containsKey(routineId)) {
             Routine updatedRoutine = getRoutineById(routineId);
             routineSubjects.get(routineId).setValue(updatedRoutine);
         }
+    }
+
+    public Routine getActiveRoutine() {
+        RoutineWithTasks active = routineDao.getActiveRoutineWithTasks();
+        return active != null ? active.toRoutine() : null;
+    }
+
+    public void updateRoutineState(int routineId, boolean isActive, long elapsedTime, long lastLapTime) {
+        routineDao.updateRoutineState(routineId, isActive, elapsedTime, lastLapTime);
     }
 
     private void loadDefaultData() {

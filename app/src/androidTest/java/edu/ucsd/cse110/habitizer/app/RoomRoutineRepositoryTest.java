@@ -19,13 +19,15 @@ import edu.ucsd.cse110.habitizer.app.data.RoomRoutineRepository;
 import edu.ucsd.cse110.habitizer.app.data.RoutineDao;
 import edu.ucsd.cse110.habitizer.app.data.RoutineDatabase;
 import edu.ucsd.cse110.habitizer.app.data.RoutineEntity;
+import edu.ucsd.cse110.habitizer.app.data.RoutineWithTasks;
 import edu.ucsd.cse110.habitizer.app.data.TaskDao;
+import edu.ucsd.cse110.habitizer.app.data.TaskEntity;
 import edu.ucsd.cse110.habitizer.lib.domain.Routine;
 import edu.ucsd.cse110.habitizer.lib.domain.Task;
 
 
 /*
-    US 12, 13, 14, 15, 16 tests
+    US 12, 13, 14, 15, 16, 19 tests
  */
 @RunWith(AndroidJUnit4.class)
 public class RoomRoutineRepositoryTest {
@@ -247,4 +249,65 @@ public class RoomRoutineRepositoryTest {
         assertEquals("Task A", tasksAfterSwap.get(1).title());
     }
 
+    @Test
+    public void testSaveTaskCompletionState() {
+        RoutineEntity routine = new RoutineEntity("Morning Routine", 30);
+        int routineId = Math.toIntExact(routineDao.insert(routine));
+        TaskEntity task = new TaskEntity("Brush Teeth", routineId);
+        int taskId = Math.toIntExact(taskDao.insert(task));
+        taskDao.updateCompletedState(taskId, true, 120);
+        TaskEntity updatedTask = taskDao.find(taskId);
+        assertNotNull(updatedTask);
+        assertTrue(updatedTask.isComplete);
+        assertEquals(120, updatedTask.lapTime);
+    }
+
+    @Test
+    public void testRestoreTaskCompletionState() {
+        RoutineEntity routine = new RoutineEntity("Evening Routine", 45);
+        int routineId = Math.toIntExact(routineDao.insert(routine));
+        TaskEntity task1 = new TaskEntity("Charge devices", routineId);
+        TaskEntity task2 = new TaskEntity("Read a book", routineId);
+        task1.id = Math.toIntExact(taskDao.insert(task1));
+        task2.id = Math.toIntExact(taskDao.insert(task2));
+        taskDao.updateCompletedState(task1.id, true, 150);
+        RoutineWithTasks routineWithTasks = routineDao.findWithTasks(routineId);
+        assertNotNull(routineWithTasks);
+        assertEquals(2, routineWithTasks.tasks.size());
+        TaskEntity restoredTask1 = routineWithTasks.tasks.get(0);
+        TaskEntity restoredTask2 = routineWithTasks.tasks.get(1);
+        assertTrue(restoredTask1.isComplete);
+        assertEquals(150, restoredTask1.lapTime);
+        assertFalse(restoredTask2.isComplete);
+        assertEquals(0, restoredTask2.lapTime);
+    }
+
+    @Test
+    public void testRoutineResetClearsTaskStates() {
+        RoutineEntity routine = new RoutineEntity("Workout Routine", 60);
+        int routineId = Math.toIntExact(routineDao.insert(routine));
+        TaskEntity task1 = new TaskEntity("Warm-up", routineId);
+        TaskEntity task2 = new TaskEntity("Push-ups", routineId);
+        task1.id = Math.toIntExact(taskDao.insert(task1));
+        task2.id = Math.toIntExact(taskDao.insert(task2));
+        taskDao.updateCompletedState(task1.id, true, 180);
+        taskDao.updateCompletedState(task2.id, true, 200);
+        taskDao.resetTasksForRoutine(routineId);
+        List<TaskEntity> tasks = taskDao.getTasksForRoutine(routineId);
+        for (TaskEntity task : tasks) {
+            assertFalse(task.isComplete);
+            assertEquals(0, task.lapTime);
+        }
+    }
+
+    @Test
+    public void testPauseAndResumeRoutine() {
+        RoutineEntity routine = new RoutineEntity("Study Session", 120);
+        int routineId = Math.toIntExact(routineDao.insert(routine));
+        routineDao.updateRoutineState(routineId, true, 600, 600);
+        RoutineWithTasks activeRoutine = routineDao.getActiveRoutineWithTasks();
+        assertNotNull(activeRoutine);
+        assertTrue(activeRoutine.routine.isActive);
+        assertEquals((Object) activeRoutine.routine.elapsedTime, 600);
+    }
 }
