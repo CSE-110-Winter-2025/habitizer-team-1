@@ -3,6 +3,7 @@ package edu.ucsd.cse110.habitizer.app.data;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 import androidx.room.ColumnInfo;
+import androidx.room.Ignore;
 import edu.ucsd.cse110.habitizer.lib.domain.Task;
 @Entity(tableName = "tasks")
 public class TaskEntity {
@@ -19,23 +20,37 @@ public class TaskEntity {
     @ColumnInfo(name = "routineId")
     public Integer routineId;
 
-    public TaskEntity(String title, Integer routineId){
-        this.title=title;
-        this.routineId=routineId;
-        this.isComplete=false;
-    }
+    @ColumnInfo(name = "position")
+    public Integer position;
+    
+  // Main constructor that Room will use
+  public TaskEntity(String title, Integer routineId, Integer position) {
+    this.title = title;
+    this.routineId = routineId;
+    this.isComplete = false;
+    this.position = position;
+}
 
+@Ignore
+public TaskEntity(String title, Integer routineId) {
+    this.title = title;
+    this.routineId = routineId;
+    this.isComplete = false;
+    this.position = Integer.MAX_VALUE;
+}
 
     public static TaskEntity fromTask(Task task, Integer routineId){
         var entity = new TaskEntity(task.title(), routineId);
         entity.id = task.id();
         entity.isComplete =  task.complete();
+        entity.position = task.getPosition();
         return entity;
     }
 
     public Task toTask(){
         var task = new Task(id, title);
         task.setComplete(isComplete);
+        task.setPosition(position);
         return task;
 
     }

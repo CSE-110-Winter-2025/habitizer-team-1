@@ -71,4 +71,31 @@ public class TaskDaoTest {
 
         assertNull(retrievedTask);
     }
+
+    // US 15 reordering tasks test
+    @Test
+    public void testSwapTaskPositions() {
+        // Insert routine
+        RoutineEntity routine = new RoutineEntity("Morning Routine", 1);
+        long routineId = routineDao.insert(routine);
+
+        // Insert two tasks
+        TaskEntity task1 = new TaskEntity("Task A", (int) routineId, 0);
+        TaskEntity task2 = new TaskEntity("Task B", (int) routineId, 1);
+        long taskId1 = taskDao.insert(task1);
+        long taskId2 = taskDao.insert(task2);
+
+        // Swap positions
+        int pos1 = taskDao.getPosition((int) taskId1);
+        int pos2 = taskDao.getPosition((int) taskId2);
+        taskDao.updatePosition((int) taskId1, pos2);
+        taskDao.updatePosition((int) taskId2, pos1);
+
+        // Verify positions are swapped
+        int newPos1 = taskDao.getPosition((int) taskId1);
+        int newPos2 = taskDao.getPosition((int) taskId2);
+
+        assertEquals(1, newPos1);
+        assertEquals(0, newPos2);
+    }
 }
