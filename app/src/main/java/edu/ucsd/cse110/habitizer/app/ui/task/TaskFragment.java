@@ -269,8 +269,10 @@ public class TaskFragment extends Fragment {
             taskAdapter.notifyDataSetChanged();
         }
 
-        totalTimer.togglePause(true);
-        requireActivity().runOnUiThread(() -> toggleUIFreeze(true));
+        if (routine.getTotalTimer().getSecondsElapsed() > 0) {
+            totalTimer.togglePause(true);
+            requireActivity().runOnUiThread(() -> toggleUIFreeze(true));
+        }
     }
 
     @Override
