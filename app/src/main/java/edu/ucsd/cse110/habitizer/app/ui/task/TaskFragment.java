@@ -153,6 +153,7 @@ public class TaskFragment extends Fragment {
                 requireActivity().runOnUiThread(() -> {
                     taskTimer.setText("Current Task: " + taskTime + " m"); // Display time in MM:SS format
                 });
+                viewModel.updateRoutineState(routine.id(), true, totalTimer.getTotalTime());
             }
 
             @Override
@@ -236,7 +237,6 @@ public class TaskFragment extends Fragment {
             totalTimer.advanceTime(); // This should internally reset the lap timer (i.e. set lapStartTime = secondsElapsed
             // Now, commit the updated timer state to the database (Room)
             viewModel.updateRoutineState(routine.id(), true, totalTimer.getTotalTime());
-
         });
 
         return view;
