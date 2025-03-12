@@ -24,7 +24,7 @@ public class RoutineEntity {
     public boolean isActive = false;
 
     @ColumnInfo(name = "elapsedTime")
-    public Integer elapsedTime = 0;
+    public Integer elapsedTime;
 
 
     public RoutineEntity(@NonNull String name, Integer timeEstimate){
@@ -38,7 +38,7 @@ public class RoutineEntity {
         RoutineEntity newRoutine = new RoutineEntity(routine.getName(), routine.getTimeEstimate());
         newRoutine.id = routine.id();
         newRoutine.isActive = false;
-        newRoutine.elapsedTime = 0;
+        newRoutine.elapsedTime = routine.getTotalTimer().getSecondsElapsed();
         return newRoutine;
     }
 
