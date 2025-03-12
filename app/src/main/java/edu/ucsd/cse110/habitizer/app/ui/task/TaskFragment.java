@@ -270,6 +270,11 @@ public class TaskFragment extends Fragment {
         }
 
         if (routine.getTotalTimer().getSecondsElapsed() > 0) {
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e){
+            }
+
             totalTimer.togglePause(true);
             requireActivity().runOnUiThread(() -> toggleUIFreeze(true));
         }
