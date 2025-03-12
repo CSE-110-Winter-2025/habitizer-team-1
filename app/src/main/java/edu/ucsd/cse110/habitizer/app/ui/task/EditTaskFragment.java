@@ -81,8 +81,12 @@ public class EditTaskFragment extends Fragment {
         taskAdapter = new TaskViewAdapter(routine.getTasks(),
                 task -> renameTask(task),
                 task -> confirmDeleteTask(task));
+        taskAdapter.setReorderListener((task1, task2) -> {
+            viewModel.updateTaskOrder(routine.id(), task1, task2);
+        });
         tasks.setLayoutManager(new LinearLayoutManager(getActivity()));
         tasks.setAdapter(taskAdapter);
+
 
         backButton.setOnClickListener(v -> requireActivity().getSupportFragmentManager().popBackStack());
 

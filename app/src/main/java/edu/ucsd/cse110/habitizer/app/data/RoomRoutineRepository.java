@@ -41,7 +41,7 @@ public class RoomRoutineRepository implements SimpleRoutineRepository {
     @Override
     public Subject<Routine> getRoutineByIdAsSubject(int routineId) {
         return routineSubjects.computeIfAbsent(routineId, id ->
-                new PlainMutableSubject<>(getRoutineById(id))
+            new PlainMutableSubject<>(getRoutineById(id))
         );
     }
 
@@ -63,7 +63,10 @@ public class RoomRoutineRepository implements SimpleRoutineRepository {
 
     @Override
     public void addTaskToRoutine(int routineId, Task task){
-        taskDao.insert(TaskEntity.fromTask(task, routineId));
+        int nextPosition = taskDao.getNextPosition(routineId);
+        TaskEntity taskEntity = TaskEntity.fromTask(task, routineId);
+        taskEntity.position = nextPosition;
+        taskDao.insert(taskEntity);
 
         if (routineSubjects.containsKey(routineId)) {
             Routine updatedRoutine = getRoutineById(routineId);
@@ -99,7 +102,9 @@ public class RoomRoutineRepository implements SimpleRoutineRepository {
 
     @Override
     public void removeTaskFromRoutine(int routineId, Task task){
+        int deletedPosition = taskDao.getPosition(task.id());
         taskDao.delete(task.id());
+        taskDao.updateAllPositionsAfterDelete(routineId, deletedPosition);
 
         if (routineSubjects.containsKey(routineId)) {
             Routine updatedRoutine = getRoutineById(routineId);
@@ -116,6 +121,19 @@ public class RoomRoutineRepository implements SimpleRoutineRepository {
         }
     }
 
+    @Override
+    public void updateTaskOrder(int routineId, Task task1, Task task2) {
+        int pos1 = taskDao.getPosition(task1.id());
+        int pos2 = taskDao.getPosition(task2.id());
+        taskDao.updatePosition(task1.id(), pos2);
+        taskDao.updatePosition(task2.id(), pos1);
+        
+        if (routineSubjects.containsKey(routineId)) {
+            Routine updatedRoutine = getRoutineById(routineId);
+            routineSubjects.get(routineId).setValue(updatedRoutine);
+        }
+    }
+
     private void loadDefaultData() {
         if (routineDao.count() > 0) return;
 
@@ -126,23 +144,23 @@ public class RoomRoutineRepository implements SimpleRoutineRepository {
         int eveningId = Math.toIntExact(routineDao.insert(eveningRoutine));
 
         List<TaskEntity> morningTasks = List.of(
-                new TaskEntity("Shower", morningId),
-                new TaskEntity("Brush teeth", morningId),
-                new TaskEntity("Dress", morningId),
-                new TaskEntity("Make coffee", morningId),
-                new TaskEntity("Make lunch", morningId),
-                new TaskEntity("Dinner prep", morningId),
-                new TaskEntity("Pack bag", morningId)
+                new TaskEntity("Shower", morningId, 0),
+                new TaskEntity("Brush teeth", morningId, 1),
+                new TaskEntity("Dress", morningId, 2),
+                new TaskEntity("Make coffee", morningId, 3),
+                new TaskEntity("Make lunch", morningId, 4),
+                new TaskEntity("Dinner prep", morningId, 5),
+                new TaskEntity("Pack bag", morningId, 6)
         );
 
 
         List<TaskEntity> eveningTasks = List.of(
-                new TaskEntity("Charge devices", eveningId),
-                new TaskEntity("Make dinner", eveningId),
-                new TaskEntity("Eat dinner", eveningId),
-                new TaskEntity("Wash dishes", eveningId),
-                new TaskEntity("Pack bag for morning", eveningId),
-                new TaskEntity("Homework", eveningId)
+                new TaskEntity("Charge devices", eveningId, 0),
+                new TaskEntity("Make dinner", eveningId, 1),
+                new TaskEntity("Eat dinner", eveningId, 2),
+                new TaskEntity("Wash dishes", eveningId, 3),
+                new TaskEntity("Pack bag for morning", eveningId, 4),
+                new TaskEntity("Homework", eveningId, 5)
         );
         taskDao.insert(morningTasks);
         taskDao.insert(eveningTasks);
