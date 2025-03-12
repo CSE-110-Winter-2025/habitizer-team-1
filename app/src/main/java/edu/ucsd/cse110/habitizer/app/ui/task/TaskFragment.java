@@ -234,6 +234,9 @@ public class TaskFragment extends Fragment {
 
         advanceButton.setOnClickListener(v -> {
             totalTimer.advanceTime(); // This should internally reset the lap timer (i.e. set lapStartTime = secondsElapsed
+            // Now, commit the updated timer state to the database (Room)
+            viewModel.updateRoutineState(routine.id(), true, totalTimer.getTotalTime());
+
         });
 
         return view;
