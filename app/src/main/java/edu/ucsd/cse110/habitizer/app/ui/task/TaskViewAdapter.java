@@ -83,7 +83,7 @@ public class TaskViewAdapter extends RecyclerView.Adapter<TaskViewAdapter.TaskVi
             setupEditMode(holder, task);
         } else {
             setupStartMode(holder, task);
-            holder.deleteButton.setVisibility(View.VISIBLE);
+            holder.deleteButton.setVisibility(View.GONE);
             holder.deleteButton.setOnClickListener(v -> deleteListener.onTaskClick(task));
         }
     }
