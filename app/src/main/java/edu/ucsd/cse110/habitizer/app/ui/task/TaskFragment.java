@@ -48,6 +48,8 @@ public class TaskFragment extends Fragment {
 
     private boolean isPaused = false;
 
+    private ImageButton stopButton;
+
 
     public TaskFragment(Routine routine) {
         this.routine = routine;
@@ -89,11 +91,11 @@ public class TaskFragment extends Fragment {
 
         routineName = view.findViewById(R.id.routineName);
         RecyclerView tasks = view.findViewById(R.id.taskRecyclerView);
-        Button backButton = view.findViewById(R.id.addRoutineButton);
+        Button backButton = view.findViewById(R.id.backButton);
         timeEstimateView = view.findViewById(R.id.timeEstimate);
         Button endRoutineButton = view.findViewById(R.id.endRoutineButton);
         TextView timeRemaining = view.findViewById(R.id.timeRemaining);
-        ImageButton stopButton = view.findViewById(R.id.button_stop);
+        stopButton = view.findViewById(R.id.button_stop);
         ImageButton advanceButton = view.findViewById(R.id.button_advance);
         taskTimer = view.findViewById(R.id.currentTaskTime);
         MaterialButton testPauseButton = view.findViewById(R.id.TestPause);
@@ -274,12 +276,13 @@ public class TaskFragment extends Fragment {
                     routine.setEnded(true);
                     totalTimer.stop();
                     Activity activity = getActivity();
+                    stopButton.setEnabled(false);
 
                     if (activity != null) {
                         activity.runOnUiThread(() -> {
                             TextView timeRemaining = activity.findViewById(R.id.timeRemaining);
                             Button endRoutineButton = activity.findViewById(R.id.endRoutineButton); // find endroutine button
-                            Button backButton = activity.findViewById(R.id.addRoutineButton);
+                            Button backButton = activity.findViewById(R.id.backButton);
 
                             if (timeRemaining != null) {
                                 int time = (totalTimer.getSecondsElapsed() + 59)/60;
@@ -366,7 +369,7 @@ public class TaskFragment extends Fragment {
         }
 
         // Keep the back button frozen until routine ends
-        if (view.getId() == R.id.addRoutineButton && !routine.getEnded()) {
+        if (view.getId() == R.id.backButton && !routine.getEnded()) {
             return; // Don't enable the back button yet
         }
 
@@ -379,13 +382,5 @@ public class TaskFragment extends Fragment {
             }
         }
     }
-
-
-
-
-
-
-
-
 
 }
