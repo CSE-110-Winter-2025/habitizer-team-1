@@ -3,9 +3,9 @@ package edu.ucsd.cse110.habitizer.lib.domain;
 import org.junit.Before;
 import org.junit.Test;
 import static org.mockito.Mockito.*;
-        import static org.junit.Assert.*;
+import static org.junit.Assert.*;
 
-        import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
 public class TaskTimerTest {
