@@ -175,7 +175,7 @@ public class TaskFragment extends Fragment {
         });
 
         if (resumeMode) {
-            int savedSeconds = (int) routine.getLastLapTime();
+            int savedSeconds = routine.getTotalTimer().getTotalTime();
             totalTimer.setSecondsElapsed(savedSeconds);
             totalTimer.togglePause(true);  // keep timer paused on resume
             // Load tasks from DB (already done via ViewModel)
