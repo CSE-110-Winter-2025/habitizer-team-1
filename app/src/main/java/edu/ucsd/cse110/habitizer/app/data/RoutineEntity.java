@@ -27,6 +27,9 @@ public class RoutineEntity {
     @ColumnInfo(name = "elapsedTime")
     public Long elapsedTime;
 
+    @ColumnInfo(name = "lastLapTime")
+    public Long lastLapTime;
+
 
     public RoutineEntity(@NonNull String name, Integer timeEstimate){
         this.name=name;
@@ -39,6 +42,7 @@ public class RoutineEntity {
         newRoutine.id = routine.id();
         newRoutine.isActive = false;
         newRoutine.elapsedTime = (long) routine.getTotalTimer().getTotalTime();
+        newRoutine.lastLapTime = routine.getLastLapTime();
         return newRoutine;
     }
 
@@ -49,6 +53,9 @@ public class RoutineEntity {
         }
         if (isActive && elapsedTime != null) {
             routine.getTotalTimer().setTime(Math.toIntExact(elapsedTime));
+        }
+        if (lastLapTime != null) {
+            routine.setLastLapTime(lastLapTime);
         }
         return routine;
     }

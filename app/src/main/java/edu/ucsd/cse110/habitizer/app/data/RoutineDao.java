@@ -63,6 +63,6 @@ public interface RoutineDao {
     @Query("SELECT * FROM routines WHERE isActive = 1 LIMIT 1")
     RoutineWithTasks getActiveRoutineWithTasks();
 
-    @Query("UPDATE routines SET isActive = :isActive, elapsedTime = :elapsedTime WHERE id = :id")
-    void updateRoutineState(int id, boolean isActive, long elapsedTime);
+    @Query("UPDATE routines SET isActive = :isActive, elapsedTime = :elapsedTime, lastLapTime = :lastLapTime WHERE id = :id")
+    void updateRoutineState(int id, boolean isActive, long elapsedTime, long lastLapTime);
 }
