@@ -49,6 +49,7 @@ public class TaskFragment extends Fragment {
 
     private boolean isEditing;
     private boolean resumeMode;
+    private boolean isPausedByStopButton = false;
 
     private ImageButton stopButton;
 
@@ -132,7 +133,7 @@ public class TaskFragment extends Fragment {
         resumeMode = getArguments() != null && getArguments().getBoolean("resume", false);
         stopButton.setOnClickListener(v -> {
             totalTimer.togglePause(true); // Call pause method
-            boolean isPausedByStopButton = totalTimer != null && totalTimer.isPausedByStopButton();
+            isPausedByStopButton = totalTimer != null && totalTimer.isPausedByStopButton();
             toggleUIFreeze(isPausedByStopButton); // Freeze/unfreeze UI
         });
 
@@ -264,6 +265,9 @@ public class TaskFragment extends Fragment {
             taskAdapter.setTasks(routine.getTasks());
             taskAdapter.notifyDataSetChanged();
         }
+
+        totalTimer.togglePause(true);
+        requireActivity().runOnUiThread(() -> toggleUIFreeze(true));
     }
 
     @Override
