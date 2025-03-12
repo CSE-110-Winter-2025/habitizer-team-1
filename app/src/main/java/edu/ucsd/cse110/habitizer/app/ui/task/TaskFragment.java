@@ -184,6 +184,11 @@ public class TaskFragment extends Fragment {
             // enable back button
             backButton.setEnabled(true);
 
+            //disable pause button
+            stopButton.setEnabled(false);
+            advanceButton.setEnabled(false);
+            testPauseButton.setEnabled(false);
+
             // Get final elapsed time in seconds from the timer
             int finalTime = totalTimer.getTotalTime();
 
@@ -346,16 +351,17 @@ public class TaskFragment extends Fragment {
     }
 
     private void disableAllButtons(View view, boolean disable) {
-        if (view.getId() == R.id.button_stop) {
-            return; // Skip disabling the stop button
+        // Ensure stop button, advance button, and test pause button are disabled when routine ends
+        if (routine.getEnded()) {
+            if (view.getId() == R.id.button_stop || view.getId() == R.id.button_advance || view.getId() == R.id.TestPause) {
+                view.setEnabled(false);
+                return; // Always disable these when routine is ended
+            }
         }
 
-        // Get reference to the Back button
-        Button backButton = requireView().findViewById(R.id.addRoutineButton);
-
-        // Ensure backButton remains disabled until routine is ended
-        if (view == backButton && !routine.getEnded()) {
-            return; // Keep the back button frozen
+        // Keep the back button frozen until routine ends
+        if (view.getId() == R.id.addRoutineButton && !routine.getEnded()) {
+            return; // Don't enable the back button yet
         }
 
         if (view instanceof Button || view instanceof ImageButton || view instanceof MaterialButton) {
@@ -367,6 +373,8 @@ public class TaskFragment extends Fragment {
             }
         }
     }
+
+
 
 
 
