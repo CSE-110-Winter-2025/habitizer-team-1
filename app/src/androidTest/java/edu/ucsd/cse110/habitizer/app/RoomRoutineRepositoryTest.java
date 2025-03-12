@@ -304,7 +304,7 @@ public class RoomRoutineRepositoryTest {
     public void testPauseAndResumeRoutine() {
         RoutineEntity routine = new RoutineEntity("Study Session", 120);
         int routineId = Math.toIntExact(routineDao.insert(routine));
-        routineDao.updateRoutineState(routineId, true, 600);
+        routineDao.updateRoutineState(routineId, true, 600, 600);
         RoutineWithTasks activeRoutine = routineDao.getActiveRoutineWithTasks();
         assertNotNull(activeRoutine);
         assertTrue(activeRoutine.routine.isActive);

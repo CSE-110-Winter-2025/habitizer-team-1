@@ -154,7 +154,7 @@ public class TaskFragment extends Fragment {
                 requireActivity().runOnUiThread(() -> {
                     taskTimer.setText("Current Task: " + taskTime + " m"); // Display time in MM:SS format
                 });
-                viewModel.updateRoutineState(routine.id(), true, totalTimer.getTotalTime());
+                viewModel.updateRoutineState(routine.id(), true, totalTimer.getTotalTime(), routine.getLastLapTime());
             }
 
             @Override
@@ -184,7 +184,7 @@ public class TaskFragment extends Fragment {
             taskAdapter.setTasks(viewModel.getRoutineById(routine.id()).getTasks());
             taskAdapter.notifyDataSetChanged();
         } else {
-            viewModel.updateRoutineState(routine.id(), true, 0);
+            viewModel.updateRoutineState(routine.id(), true, 0, 0);
             totalTimer.start();
         }
 
@@ -237,7 +237,7 @@ public class TaskFragment extends Fragment {
         advanceButton.setOnClickListener(v -> {
             totalTimer.advanceTime(); // This should internally reset the lap timer (i.e. set lapStartTime = secondsElapsed
             // Now, commit the updated timer state to the database (Room)
-            viewModel.updateRoutineState(routine.id(), true, totalTimer.getTotalTime());
+            viewModel.updateRoutineState(routine.id(), true, totalTimer.getTotalTime(), routine.getLastLapTime());
         });
 
         return view;
@@ -252,7 +252,7 @@ public class TaskFragment extends Fragment {
             if (totalTimer.isRunning()) {
                 totalTimer.togglePause(false);
             }
-            viewModel.updateRoutineState(routine.id(), true, totalTimer.getTotalTime());
+            viewModel.updateRoutineState(routine.id(), true, totalTimer.getTotalTime(), routine.getLastLapTime());
         }
     }
 
@@ -270,6 +270,11 @@ public class TaskFragment extends Fragment {
         }
 
         if (routine.getTotalTimer().getSecondsElapsed() > 0) {
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e){
+            }
+
             totalTimer.togglePause(true);
             requireActivity().runOnUiThread(() -> toggleUIFreeze(true));
         }

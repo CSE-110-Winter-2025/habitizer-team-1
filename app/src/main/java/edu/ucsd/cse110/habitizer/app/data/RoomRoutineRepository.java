@@ -82,7 +82,7 @@ public class RoomRoutineRepository implements SimpleRoutineRepository {
     @Override
     public void resetRoutine(int routineId) {
         taskDao.resetTasksForRoutine(routineId);
-        routineDao.updateRoutineState(routineId, false, 0);
+        routineDao.updateRoutineState(routineId, false, 0, 0);
     }
 
     @Override
@@ -141,8 +141,8 @@ public class RoomRoutineRepository implements SimpleRoutineRepository {
         return active != null ? active.toRoutine() : null;
     }
 
-    public void updateRoutineState(int routineId, boolean isActive, long elapsedTime) {
-        routineDao.updateRoutineState(routineId, isActive, elapsedTime);
+    public void updateRoutineState(int routineId, boolean isActive, long elapsedTime, long lastLapTime) {
+        routineDao.updateRoutineState(routineId, isActive, elapsedTime, lastLapTime);
     }
 
     private void loadDefaultData() {
