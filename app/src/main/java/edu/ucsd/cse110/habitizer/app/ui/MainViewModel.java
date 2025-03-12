@@ -6,12 +6,12 @@ import androidx.lifecycle.ViewModelProvider;
 import java.util.List;
 
 import edu.ucsd.cse110.habitizer.app.data.RoomRoutineRepository;
-import edu.ucsd.cse110.habitizer.app.data.RoutineEntity;
 import edu.ucsd.cse110.habitizer.lib.domain.Routine;
 import edu.ucsd.cse110.habitizer.lib.domain.SimpleRoutineRepository;
 import edu.ucsd.cse110.habitizer.lib.domain.Task;
-import edu.ucsd.cse110.observables.Subject;
 import edu.ucsd.cse110.observables.PlainMutableSubject;
+import edu.ucsd.cse110.observables.Subject;
+
 public class MainViewModel extends ViewModel {
     private final SimpleRoutineRepository repository;
 

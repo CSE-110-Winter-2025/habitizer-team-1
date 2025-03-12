@@ -1,10 +1,7 @@
 package edu.ucsd.cse110.habitizer.app.ui.task;
 
 import android.app.Activity;
-
 import android.os.Bundle;
-
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,23 +11,20 @@ import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.button.MaterialButton;
+
 import edu.ucsd.cse110.habitizer.app.R;
+import edu.ucsd.cse110.habitizer.app.ui.HabitizerApplication;
+import edu.ucsd.cse110.habitizer.app.ui.MainViewModel;
 import edu.ucsd.cse110.habitizer.lib.domain.Routine;
 import edu.ucsd.cse110.habitizer.lib.domain.Task;
 import edu.ucsd.cse110.habitizer.lib.domain.TotalTimer;
-import edu.ucsd.cse110.habitizer.app.ui.HabitizerApplication;
-import edu.ucsd.cse110.habitizer.app.ui.MainViewModel;
 import edu.ucsd.cse110.observables.Observer;
 import edu.ucsd.cse110.observables.Subject;
-
-import androidx.lifecycle.ViewModelProvider;
-
-import com.google.android.material.button.MaterialButton;
-
-import java.util.List;
 
 public class TaskFragment extends Fragment {
 
