@@ -1,6 +1,5 @@
 package edu.ucsd.cse110.habitizer.app.ui.task;
 
-
 import android.app.Activity;
 
 import android.os.Bundle;
@@ -42,6 +41,9 @@ public class TaskFragment extends Fragment {
 
     private TotalTimer totalTimer;
 
+    private TextView taskTimer;
+
+
     private boolean isEditing;
 
     public TaskFragment(Routine routine) {
@@ -71,10 +73,10 @@ public class TaskFragment extends Fragment {
                 routineSubject.observe(new Observer<Routine>() {
                     @Override
                     public void onChanged(@Nullable Routine value) {
-                       if(value !=null) {
-                          routine = value;
-                          rerender();
-                       }
+                        if(value !=null) {
+                            routine = value;
+                            rerender();
+                        }
                     }
                 });
             }
@@ -90,6 +92,7 @@ public class TaskFragment extends Fragment {
         TextView timeRemaining = view.findViewById(R.id.timeRemaining);
         ImageButton stopButton = view.findViewById(R.id.button_stop);
         ImageButton advanceButton = view.findViewById(R.id.button_advance);
+        taskTimer = view.findViewById(R.id.currentTaskTime);
         MaterialButton testPauseButton = view.findViewById(R.id.TestPause);
 
         routineName.setText(routine.getName());
@@ -126,6 +129,12 @@ public class TaskFragment extends Fragment {
                 requireActivity().runOnUiThread(() ->
                         timeRemaining.setText(minutes + " m")
                 );
+
+                // Update the task timer UI
+                int taskTime = (secondsElapsed - (int) routine.getLastLapTime()) / 60;
+                requireActivity().runOnUiThread(() -> {
+                    taskTimer.setText("Current Task: " + taskTime + " m"); // Display time in MM:SS format
+                });
             }
 
             @Override
@@ -173,7 +182,6 @@ public class TaskFragment extends Fragment {
         });
 
 
-
         // text changes
         taskAdapter.setEditingMode(false); // ensures that it can strikethrough
 
@@ -187,6 +195,11 @@ public class TaskFragment extends Fragment {
 
         advanceButton.setOnClickListener(v -> {
             totalTimer.advanceTime(); // This should internally reset the lap timer (i.e. set lapStartTime = secondsElapsed
+//            // Update the task timer UI
+//            int taskTime = (totalTimer.getSecondsElapsed() - (int) routine.getLastLapTime()) / 60;
+//            requireActivity().runOnUiThread(() -> {
+//                taskTimer.setText("Current Task: " + taskTime + " m"); // Display time in MM:SS format
+//            });
         });
 
         return view;
@@ -220,14 +233,19 @@ public class TaskFragment extends Fragment {
             return; // ensure that tasks can't be marked complete after the routine ends
         }else{
             task.setComplete(true);
-          
-          // Use `recordLap()` from TotalTimer to get the lap duration
-          long lapTime = totalTimer.recordLap();
-          task.setLapTime(lapTime); // Store the lap time for the task
-          routine.setLastLapTime(totalTimer.getSecondsElapsed()); // Update routine tracking
-          
-          // Ensure UI updates to reflect lap times
-          requireActivity().runOnUiThread(() -> taskAdapter.notifyDataSetChanged());
+
+            // Use `recordLap()` from TotalTimer to get the lap duration
+            long lapTime = totalTimer.recordLap();
+            task.setLapTime(lapTime); // Store the lap time for the task
+            routine.setLastLapTime(totalTimer.getSecondsElapsed()); // Update routine tracking
+
+            int taskTime = (totalTimer.getSecondsElapsed() - (int) routine.getLastLapTime()) / 60;
+            requireActivity().runOnUiThread(() -> {
+                taskTimer.setText("Current Task: " + taskTime + " m"); // Display time in MM:SS format
+            });
+
+            // Ensure UI updates to reflect lap times
+            requireActivity().runOnUiThread(() -> taskAdapter.notifyDataSetChanged());
 
             if (routine != null) { //Null check for safety
                 if (routine.allTasksCompleted()) {
@@ -278,7 +296,7 @@ public class TaskFragment extends Fragment {
         }
     }
 
-   private void rerender(){
+    private void rerender(){
         routineName.setText(routine.getName());
         taskAdapter.setTasks(routine.getTasks());
         taskAdapter.notifyDataSetChanged();

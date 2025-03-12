@@ -63,7 +63,6 @@ public class TaskViewAdapter extends RecyclerView.Adapter<TaskViewAdapter.TaskVi
 //      holder.taskName.setPaintFlags(holder.taskName.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
 
         if (isEditing) {
-            System.out.println("$#$$$$$$$#$#$#$#$#$");
             holder.deleteButton.setVisibility(View.VISIBLE);
             holder.deleteButton.setOnClickListener(v -> deleteListener.onTaskClick(task));
         }
