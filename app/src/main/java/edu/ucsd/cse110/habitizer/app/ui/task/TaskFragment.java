@@ -341,6 +341,14 @@ public class TaskFragment extends Fragment {
             return; // Skip disabling the stop button
         }
 
+        // Get reference to the Back button
+        Button backButton = requireView().findViewById(R.id.addRoutineButton);
+
+        // Ensure backButton remains disabled until routine is ended
+        if (view == backButton && !routine.getEnded()) {
+            return; // Keep the back button frozen
+        }
+
         if (view instanceof Button || view instanceof ImageButton || view instanceof MaterialButton) {
             view.setEnabled(!disable);
         } else if (view instanceof ViewGroup) {
@@ -350,6 +358,7 @@ public class TaskFragment extends Fragment {
             }
         }
     }
+
 
 
 
