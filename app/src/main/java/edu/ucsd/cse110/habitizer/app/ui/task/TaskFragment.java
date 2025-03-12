@@ -46,6 +46,9 @@ public class TaskFragment extends Fragment {
 
     private boolean isEditing;
 
+    private ImageButton stopButton;
+
+
     public TaskFragment(Routine routine) {
         this.routine = routine;
         this.totalTimer = new TotalTimer(routine);
@@ -86,11 +89,11 @@ public class TaskFragment extends Fragment {
 
         routineName = view.findViewById(R.id.routineName);
         RecyclerView tasks = view.findViewById(R.id.taskRecyclerView);
-        Button backButton = view.findViewById(R.id.addRoutineButton);
+        Button backButton = view.findViewById(R.id.backButton);
         timeEstimateView = view.findViewById(R.id.timeEstimate);
         Button endRoutineButton = view.findViewById(R.id.endRoutineButton);
         TextView timeRemaining = view.findViewById(R.id.timeRemaining);
-        ImageButton stopButton = view.findViewById(R.id.button_stop);
+        stopButton = view.findViewById(R.id.button_stop);
         ImageButton advanceButton = view.findViewById(R.id.button_advance);
         taskTimer = view.findViewById(R.id.currentTaskTime);
         MaterialButton testPauseButton = view.findViewById(R.id.TestPause);
@@ -114,11 +117,21 @@ public class TaskFragment extends Fragment {
             this.onDestroyView();
         });
 
+
+
         backButton.setOnClickListener(v -> {
             // Reset task states to incomplete before going back
             viewModel.resetRoutine(routine.id());
             requireActivity().getSupportFragmentManager().popBackStack();
         });
+
+        stopButton.setOnClickListener(v -> {
+            totalTimer.togglePause(true); // Call pause method
+            boolean isPausedByStopButton = totalTimer != null && totalTimer.isPausedByStopButton();
+            toggleUIFreeze(isPausedByStopButton); // Freeze/unfreeze UI
+        });
+
+
         // Initialize and start the TotalTimer when the fragment loads
         totalTimer = new TotalTimer(routine);
         totalTimer.setListener(new TotalTimer.TimerListener() {
@@ -171,6 +184,11 @@ public class TaskFragment extends Fragment {
             // enable back button
             backButton.setEnabled(true);
 
+            //disable pause button
+            stopButton.setEnabled(false);
+            advanceButton.setEnabled(false);
+            testPauseButton.setEnabled(false);
+
             // Get final elapsed time in seconds from the timer
             int finalTime = totalTimer.getTotalTime();
 
@@ -185,8 +203,6 @@ public class TaskFragment extends Fragment {
         // text changes
         taskAdapter.setEditingMode(false); // ensures that it can strikethrough
 
-        stopButton.setOnClickListener(v -> totalTimer.togglePause(true)); // Marks pause from button_stop
-
         testPauseButton.setOnClickListener(v -> {
             if (totalTimer.isRunning()) { // Only allow pause, no resume
                 totalTimer.togglePause(false); // Pause, but don't allow resuming
@@ -195,16 +211,10 @@ public class TaskFragment extends Fragment {
 
         advanceButton.setOnClickListener(v -> {
             totalTimer.advanceTime(); // This should internally reset the lap timer (i.e. set lapStartTime = secondsElapsed
-//            // Update the task timer UI
-//            int taskTime = (totalTimer.getSecondsElapsed() - (int) routine.getLastLapTime()) / 60;
-//            requireActivity().runOnUiThread(() -> {
-//                taskTimer.setText("Current Task: " + taskTime + " m"); // Display time in MM:SS format
-//            });
         });
 
         return view;
     }
-
 
     // Everytime fragment is used, get updated routine (if edited)
     @Override
@@ -253,12 +263,13 @@ public class TaskFragment extends Fragment {
                     routine.setEnded(true);
                     totalTimer.stop();
                     Activity activity = getActivity();
+                    stopButton.setEnabled(false);
 
                     if (activity != null) {
                         activity.runOnUiThread(() -> {
                             TextView timeRemaining = activity.findViewById(R.id.timeRemaining);
                             Button endRoutineButton = activity.findViewById(R.id.endRoutineButton); // find endroutine button
-                            Button backButton = activity.findViewById(R.id.addRoutineButton);
+                            Button backButton = activity.findViewById(R.id.backButton);
 
                             if (timeRemaining != null) {
                                 int time = (totalTimer.getSecondsElapsed() + 59)/60;
@@ -296,10 +307,67 @@ public class TaskFragment extends Fragment {
         }
     }
 
+
+
     private void rerender(){
         routineName.setText(routine.getName());
         taskAdapter.setTasks(routine.getTasks());
         taskAdapter.notifyDataSetChanged();
         updateTimeEstimate(timeEstimateView);
     }
+
+    private void toggleUIFreeze(boolean isFrozen) {
+        requireActivity().runOnUiThread(() -> {
+            // Disable all buttons
+            View view = requireView();
+            disableAllButtons(view, isFrozen);
+
+            // Disable RecyclerView (task list)
+            RecyclerView tasks = view.findViewById(R.id.taskRecyclerView);
+            if (tasks != null) {
+                tasks.setEnabled(!isFrozen); // Disable the RecyclerView itself
+            }
+
+            // Update the task adapter to prevent clicking tasks
+            if (taskAdapter != null) {
+                taskAdapter.setFrozen(isFrozen); // Disable/enable task clicks
+            }
+        });
+
+        View overlay = requireView().findViewById(R.id.pauseOverlay);
+        if (overlay != null) {
+            overlay.setVisibility(isFrozen ? View.VISIBLE : View.GONE);
+        }
+    }
+
+    private void disableAllButtons(View view, boolean disable) {
+        // Ensure advance button and test pause button are disabled when routine ends
+        if (routine.getEnded()) {
+            if (view.getId() == R.id.button_advance || view.getId() == R.id.TestPause) {
+                view.setEnabled(false);
+                return; // Always disable these when routine is ended
+            }
+        }
+
+        // Keep the stop button enabled until routine ends
+        if (view.getId() == R.id.button_stop && !routine.getEnded()) {
+            view.setEnabled(true);
+            return;
+        }
+
+        // Keep the back button frozen until routine ends
+        if (view.getId() == R.id.backButton && !routine.getEnded()) {
+            return; // Don't enable the back button yet
+        }
+
+        if (view instanceof Button || view instanceof ImageButton || view instanceof MaterialButton) {
+            view.setEnabled(!disable);
+        } else if (view instanceof ViewGroup) {
+            ViewGroup group = (ViewGroup) view;
+            for (int i = 0; i < group.getChildCount(); i++) {
+                disableAllButtons(group.getChildAt(i), disable);
+            }
+        }
+    }
+
 }

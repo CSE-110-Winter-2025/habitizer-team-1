@@ -32,6 +32,13 @@ public class TaskViewAdapter extends RecyclerView.Adapter<TaskViewAdapter.TaskVi
     private boolean isRoutineEnded = false;
     private boolean isEditing = false;
 
+    private boolean isFrozen = false;
+
+    public void setFrozen(boolean frozen) {
+        this.isFrozen = frozen;
+        notifyDataSetChanged(); // Ensure the adapter updates if the frozen state changes
+    }
+
     public TaskViewAdapter(List<Task> tasks, TaskClickListener clickListener) {
         this.tasks = tasks;
         this.clickListener = clickListener;
@@ -60,8 +67,17 @@ public class TaskViewAdapter extends RecyclerView.Adapter<TaskViewAdapter.TaskVi
         Task task = tasks.get(position);
         holder.taskName.setText(task.title());
 
+
+        if (isFrozen) {
+            holder.itemView.setEnabled(false); // Disable the task click view
+        } else {
+            holder.itemView.setEnabled(true); // Enable the task click view
+        }
+
+
         // Reset styles before applying changes
         holder.taskName.setPaintFlags(0);
+
 
         // Apply strikethrough only if the task is complete
         if (task.complete()) {
@@ -164,6 +180,8 @@ public class TaskViewAdapter extends RecyclerView.Adapter<TaskViewAdapter.TaskVi
         if (reorderListener != null) {
             reorderListener.onTaskReordered(firstTask, secondTask);
         }
+
+
     }
 
 
@@ -205,5 +223,14 @@ public class TaskViewAdapter extends RecyclerView.Adapter<TaskViewAdapter.TaskVi
         this.isEditing = isEditing;
         notifyDataSetChanged(); // Refresh the list if editing mode changes
     }
+
+    public void setTimerPaused(boolean isPaused) {
+        if (isPaused) {
+            notifyDataSetChanged(); // Refresh UI to reflect pause state
+        }
+    }
+
+
+
 
 }

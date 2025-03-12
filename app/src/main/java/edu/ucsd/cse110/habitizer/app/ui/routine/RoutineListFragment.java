@@ -1,7 +1,6 @@
 package edu.ucsd.cse110.habitizer.app.ui.routine;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -41,7 +40,7 @@ public class RoutineListFragment extends Fragment {
 
         buttonContainer = view.findViewById(R.id.buttonContainer);
         editButton = view.findViewById(R.id.editButton);
-        addRoutineButton = view.findViewById(R.id.addRoutineButton);
+        addRoutineButton = view.findViewById(R.id.backButton);
 
         editButton.setOnClickListener(v -> {
             toggleEditState();
