@@ -351,12 +351,18 @@ public class TaskFragment extends Fragment {
     }
 
     private void disableAllButtons(View view, boolean disable) {
-        // Ensure stop button, advance button, and test pause button are disabled when routine ends
+        // Ensure advance button and test pause button are disabled when routine ends
         if (routine.getEnded()) {
-            if (view.getId() == R.id.button_stop || view.getId() == R.id.button_advance || view.getId() == R.id.TestPause) {
+            if (view.getId() == R.id.button_advance || view.getId() == R.id.TestPause) {
                 view.setEnabled(false);
                 return; // Always disable these when routine is ended
             }
+        }
+
+        // Keep the stop button enabled until routine ends
+        if (view.getId() == R.id.button_stop && !routine.getEnded()) {
+            view.setEnabled(true);
+            return;
         }
 
         // Keep the back button frozen until routine ends
@@ -373,6 +379,7 @@ public class TaskFragment extends Fragment {
             }
         }
     }
+
 
 
 
