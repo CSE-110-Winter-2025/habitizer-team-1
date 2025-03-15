@@ -288,8 +288,9 @@ public class TaskFragment extends Fragment {
         } else{
             task.setComplete(true);
             // Use `recordLap()` from TotalTimer to get the lap duration
-            long lapTime = totalTimer.recordLap();
-            task.setLapTime(lapTime); // Store the lap time for the task
+            //long lapTime = totalTimer.recordLap();
+            //task.setLapTime(lapTime); // Store the lap time for the task
+            task.setLapTime(totalTimer.getSecondsElapsed() - (int) routine.getLastLapTime());
             routine.setLastLapTime(totalTimer.getSecondsElapsed()); // Update routine tracking
 
             int taskTime = (totalTimer.getSecondsElapsed() - (int) routine.getLastLapTime()) / 60;
