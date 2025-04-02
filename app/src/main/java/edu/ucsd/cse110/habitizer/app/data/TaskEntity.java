@@ -56,7 +56,7 @@ public class TaskEntity {
         entity.id = task.id();
         entity.isComplete =  task.complete();
         entity.position = task.getPosition();
-        entity.lapTime = task.getLapTime();
+        entity.lapTime = task.getLastLapTime();
         entity.lastLapTime = task.getLastLapTime();
         return entity;
     }
