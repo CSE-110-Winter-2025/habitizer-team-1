@@ -148,6 +148,7 @@ public class TaskFragment extends Fragment {
                 requireActivity().runOnUiThread(() -> {
                     taskTimer.setText("Current Task: " + taskTime + " m"); // Display time in MM:SS format
                 });
+                viewModel.updateRoutineState(routine.id(), true, totalTimer.getTotalTime(), routine.getLastLapTime());
             }
 
             @Override
@@ -231,7 +232,6 @@ public class TaskFragment extends Fragment {
             totalTimer.advanceTime(); // This should internally reset the lap timer (i.e. set lapStartTime = secondsElapsed
             // Now, commit the updated timer state to the database (Room)
             viewModel.updateRoutineState(routine.id(), true, totalTimer.getTotalTime(), routine.getLastLapTime());
-
         });
 
         return view;
@@ -288,12 +288,13 @@ public class TaskFragment extends Fragment {
         } else{
             task.setComplete(true);
             // Use `recordLap()` from TotalTimer to get the lap duration
-            //long lapTime = totalTimer.recordLap();
+            long lapTime = totalTimer.getSecondsElapsed() - (int) routine.getLastLapTime();
             //task.setLapTime(lapTime); // Store the lap time for the task
-            task.setLapTime(totalTimer.getSecondsElapsed() - (int) routine.getLastLapTime());
+            task.setLapTime(lapTime);
             routine.setLastLapTime(totalTimer.getSecondsElapsed()); // Update routine tracking
 
-            int taskTime = (totalTimer.getSecondsElapsed() - (int) routine.getLastLapTime()) / 60;
+            int taskTime = ((int) lapTime) / 60;
+
             requireActivity().runOnUiThread(() -> {
                 taskTimer.setText("Current Task: " + taskTime + " m"); // Display time in MM:SS format
             });

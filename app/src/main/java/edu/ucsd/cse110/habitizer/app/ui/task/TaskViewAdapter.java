@@ -76,7 +76,7 @@ public class TaskViewAdapter extends RecyclerView.Adapter<TaskViewAdapter.TaskVi
 
 
         // Apply strikethrough only if the task is complete
-        if (task.complete()) {
+        if (task.complete() && !isEditing) {
             holder.taskName.setPaintFlags(holder.taskName.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
         }
 
@@ -111,7 +111,6 @@ public class TaskViewAdapter extends RecyclerView.Adapter<TaskViewAdapter.TaskVi
         holder.downButton.setVisibility(View.VISIBLE);
 
         // Apply strikethrough
-        holder.taskName.setPaintFlags(holder.taskName.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
         holder.upButton.setOnClickListener(v -> moveTaskUp(holder.getAdapterPosition()));
         holder.downButton.setOnClickListener(v -> moveTaskDown(holder.getAdapterPosition()));
 
