@@ -35,7 +35,55 @@ This project was developed as part of a UCSD CSE 110 software engineering course
 
 ## 📸 UI Preview
 
-_(Insert screenshots here for launch screen, routine edit screen, and task timer screen)_
+<table>
+  <tr>
+    <td align="center">
+      <img src="https://github.com/user-attachments/assets/fcb1823d-fecd-4560-9091-8ee740e2590f" width="200px"/><br>
+      <strong>🏠 Launch Page</strong>
+    </td>
+    <td align="center">
+      <img src="https://github.com/user-attachments/assets/4c2caa1c-97ca-4c46-843d-f7dfa6dc86db" width="200px"/><br>
+      <strong>✅ Routine Running</strong>
+    </td>
+    <td align="center">
+      <img src="https://github.com/user-attachments/assets/14d75dcd-5ac7-4632-b3ed-001ba64be137" width="200px"/><br>
+      <strong>⚙️ Edit Tasks</strong>
+    </td>
+    <td align="center">
+      <img src="https://github.com/user-attachments/assets/7bdf0b15-cc60-4c35-9d88-236619e04e6a" width="200px"/><br>
+      <strong>⏸️ Paused State</strong>
+    </td>
+    <td align="center">
+      <img src="https://github.com/user-attachments/assets/d1d44ff1-f9e7-4697-a2fe-538a2e71570e" width="200px"/><br>
+      <strong>✅ Completed Routine </strong>
+    </td>
+  </tr>
+</table>
+
+<table>
+  <tr>
+    <td align="center">
+      <img src="https://github.com/user-attachments/assets/24cadb81-8a3a-4b02-ba64-9670115e0389" width="200px"/><br>
+      <strong>Rename Routine</strong>
+    </td>
+    <td align="center">
+      <img src="https://github.com/user-attachments/assets/931311aa-c0c5-4e36-aa53-cfd8aaa877fa" width="200px"/><br>
+      <strong>Add New Task</strong>
+    </td>
+    <td align="center">
+      <img src="https://github.com/user-attachments/assets/b9272283-63cb-4609-9ba8-d0a49b814ec0" width="200px"/><br>
+      <strong>Delete Task</strong>
+    </td>
+    <td align="center">
+      <img src="https://github.com/user-attachments/assets/e6598803-3652-4f91-ba65-c3d7c0f5c760" width="200px"/><br>
+      <strong>Delete Routine</strong>
+    </td>
+    <td align="center">
+      <img src="https://github.com/user-attachments/assets/6aa85c05-7a12-42b1-856e-281b63366011" width="200px"/><br>
+      <strong>Set Estimated Time</strong>
+    </td>
+  </tr>
+</table>
 
 ---
 
